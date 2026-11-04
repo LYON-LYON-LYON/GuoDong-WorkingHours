@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="北京时间、哈萨克斯坦时间与俄罗斯时间实时钟表，以及三地跨时区上班时间对照">
+  <title>三地时间对照｜北京 · 哈萨克斯坦 · 俄罗斯</title>
+  <style>
+    :root {
+      --bg: #f3f6fa;
+      --surface: #ffffff;
+      --ink: #152238;
+      --muted: #667085;
+      --line: #e4eaf1;
+      --blue: #2457d6;
+      --beijing: #d94b42;
+      --kazakhstan: #078a83;
+      --russia: #4263d5;
+      --shadow: 0 12px 34px rgba(28, 46, 74, 0.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(36, 87, 214, 0.07), transparent 28%),
+        var(--bg);
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+
+    .topbar {
+      border-bottom: 1px solid rgba(220, 228, 238, 0.9);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar-inner, main {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .brand-mark svg { width: 23px; height: 23px; }
+    .brand-title { font-weight: 700; letter-spacing: 0.02em; }
+    .brand-subtitle { margin-top: 2px; color: var(--muted); font-size: 12px; }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #35506f;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #16a278;
+      box-shadow: 0 0 0 5px rgba(22, 162, 120, 0.11);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      50% { box-shadow: 0 0 0 8px rgba(22, 162, 120, 0.03); }
+    }
+
+    main { padding: 48px 0 42px; }
+
+    .intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.2;
+      letter-spacing: -0.035em;
+    }
+
+    .intro p { margin: 12px 0 0; color: var(--muted); line-height: 1.7; }
+
+    .zone-picker {
+      min-width: 235px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 5px 18px rgba(28, 46, 74, 0.04);
+    }
+
+    .zone-picker label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .zone-picker select {
+      width: 100%;
+      padding: 2px 26px 2px 0;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      background: transparent;
+      font-weight: 650;
+    }
+
+    .zone-picker.is-disabled { opacity: 0.48; }
+    .zone-picker select:disabled { cursor: not-allowed; }
+    [hidden] { display: none !important; }
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin: -6px 0 18px;
+      padding: 11px 14px 11px 17px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .filter-group { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .filter-label { margin-right: 3px; color: var(--muted); font-size: 12px; font-weight: 650; }
+
+    .switch-option {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 30px;
+      padding: 4px 9px;
+      border-radius: 9px;
+      color: #344054;
+      background: #f4f7fa;
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .switch-option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .switch-track {
+      position: relative;
+      width: 30px;
+      height: 17px;
+      border-radius: 20px;
+      background: #bdc7d3;
+      transition: background 0.2s ease;
+    }
+
+    .switch-track::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(21, 34, 56, 0.22);
+      transition: transform 0.2s ease;
+    }
+
+    .switch-option input:checked + .switch-track { background: var(--blue); }
+    .switch-option input:checked + .switch-track::after { transform: translateX(13px); }
+    .switch-option input:focus-visible + .switch-track { outline: 3px solid rgba(36, 87, 214, 0.18); outline-offset: 2px; }
+    .switch-option.is-fixed { cursor: default; opacity: 0.68; }
+    .filter-note { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+    .clock-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--visible-clocks, 3), minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .clock-card {
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+      border: 1px solid rgba(225, 232, 241, 0.95);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .clock-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4px;
+      background: var(--accent);
+    }
+
+    .clock-card.beijing { --accent: var(--beijing); --soft: #fff3f1; }
+    .clock-card.kazakhstan { --accent: var(--kazakhstan); --soft: #edf9f7; }
+    .clock-card.russia { --accent: var(--russia); --soft: #f0f3ff; }
+
+    .clock-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .country-code { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; }
+    .clock-head h2 { margin: 5px 0 0; font-size: 18px; }
+
+    .utc-tag {
+      padding: 6px 9px;
+      border-radius: 8px;
+      color: var(--accent);
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .sky-scene {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      width: min(254px, 100%);
+      margin: 15px auto 8px;
+      padding: 10px 10px 7px;
+      border-radius: 20px;
+      background: linear-gradient(165deg, #15244a, #586681);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+      transition: background 0.8s ease;
+    }
+
+    .sky-scene.sky-night { background: linear-gradient(165deg, #111d3e 0%, #26375d 55%, #66718a 100%); }
+    .sky-scene.sky-dawn { background: linear-gradient(165deg, #6475aa 0%, #c48da0 52%, #f6c594 100%); }
+    .sky-scene.sky-day { background: linear-gradient(165deg, #58a9dc 0%, #9fd3eb 58%, #e1f1f5 100%); }
+    .sky-scene.sky-dusk { background: linear-gradient(165deg, #504b7c 0%, #b87587 52%, #efad7f 100%); }
+
+    .sky-stars {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      opacity: 1;
+      background-image:
+        radial-gradient(circle at 15% 25%, #fff 0 1px, transparent 1.5px),
+        radial-gradient(circle at 33% 13%, rgba(255,255,255,.85) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 74% 23%, #fff 0 1.2px, transparent 1.7px),
+        radial-gradient(circle at 88% 47%, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 12% 63%, rgba(255,255,255,.75) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 62% 8%, rgba(255,255,255,.8) 0 1px, transparent 1.5px);
+      transition: opacity 0.8s ease;
+    }
+
+    .sky-day .sky-stars { opacity: 0; }
+    .sky-dawn .sky-stars, .sky-dusk .sky-stars { opacity: 0.32; }
+
+    .sky-orb {
+      position: absolute;
+      z-index: -1;
+      top: 35px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #f5f0d7;
+      box-shadow: 0 0 28px rgba(245, 240, 215, 0.28);
+      transition: all 0.8s ease;
+    }
+
+    .sky-orb::after {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 10px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(151, 153, 154, 0.18);
+      box-shadow: 17px 15px 0 3px rgba(151, 153, 154, 0.12);
+    }
+
+    .sky-day .sky-orb {
+      top: 31px;
+      background: #ffdb78;
+      box-shadow: 0 0 38px rgba(255, 219, 120, 0.72);
+    }
+    .sky-day .sky-orb::after { display: none; }
+    .sky-dawn .sky-orb, .sky-dusk .sky-orb { top: 69px; background: #ffd19a; box-shadow: 0 0 32px rgba(255, 196, 143, 0.52); }
+    .sky-dawn .sky-orb::after, .sky-dusk .sky-orb::after { display: none; }
+
+    .sky-status {
+      position: absolute;
+      z-index: 3;
+      top: 11px;
+      left: 11px;
+      padding: 5px 8px;
+      border-radius: 8px;
+      color: #fff;
+      background: rgba(13, 25, 48, 0.25);
+      backdrop-filter: blur(8px);
+      font-size: 11px;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+    }
+
+    .sky-day .sky-status { color: #23455b; background: rgba(255, 255, 255, 0.35); }
+
+    .clock-face {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0;
+      filter: drop-shadow(0 8px 12px rgba(21, 34, 56, 0.12));
+    }
+
+    .digital-time {
+      margin-top: 4px;
+      text-align: center;
+      font-size: clamp(30px, 3.2vw, 40px);
+      font-weight: 650;
+      line-height: 1.15;
+      letter-spacing: 0.025em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .clock-date { margin-top: 9px; color: var(--muted); text-align: center; font-size: 13px; }
+
+    .difference {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .info-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0 34px;
+      padding: 14px 18px;
+      border: 1px solid #dce5f3;
+      border-radius: 14px;
+      color: #435671;
+      background: #edf3fb;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .info-icon {
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+      font-family: Georgia, serif;
+      font-weight: 700;
+    }
+
+    .work-card {
+      overflow: hidden;
+      margin-bottom: 34px;
+      border: 1px solid rgba(225, 232, 241, 0.95);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .work-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px 26px 0;
+    }
+    .work-head h2 { margin: 0; font-size: 20px; }
+    .work-head p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .workday-tag { padding: 6px 10px; border-radius: 8px; color: #35506f; background: #eef3f8; font-size: 12px; white-space: nowrap; }
+
+    .schedule { margin: 24px 28px 28px; padding: 22px 24px 20px; border: 1px solid var(--line); border-radius: 18px; background: #f8fafc; }
+    .schedule-head { display: flex; align-items: center; justify-content: space-between; gap: 15px; color: var(--muted); font-size: 12px; }
+    .schedule-head strong { color: #344054; font-size: 14px; }
+    .legend-dot { display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 2px; background: rgba(36, 87, 214, 0.32); }
+    .schedule-legend { display: inline-flex; flex-wrap: wrap; gap: 6px 16px; }
+    .schedule-legend > span { white-space: nowrap; }
+    .schedule-axis, .schedule-body { display: grid; grid-template-columns: 200px minmax(0, 1fr); }
+    .schedule-axis { margin-top: 20px; }
+    .axis-labels { display: flex; justify-content: space-between; color: #8490a2; font-size: 11px; font-variant-numeric: tabular-nums; }
+    .schedule-body { margin-top: 9px; }
+    .schedule-label { height: 64px; display: flex; flex-direction: column; justify-content: center; font-size: 13px; font-weight: 650; }
+    .schedule-label small { margin-top: 4px; color: var(--muted); font-size: 11px; font-weight: 400; line-height: 1.4; }
+    .schedule-track {      position: relative;
+      height: 64px;
+      border-right: 1px solid #e6ebf1;
+      background-image: linear-gradient(to right, #e6ebf1 1px, transparent 1px);
+      background-size: calc(100% / 6) 100%;
+    }
+    .schedule-row { position: relative; height: 64px; display: flex; align-items: center; }
+    .work-bar { position: absolute; z-index: 1; height: 38px; display: flex; align-items: center; padding: 0 12px; border-radius: 9px; color: #fff; font-size: 12px; font-weight: 650; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .hq-bar { background: #34527a; }
+    .kz-bar { background: #078a83; }
+    .ru-bar { background: #4263d5; }
+    .lunch-band { position: absolute; z-index: 2; top: 13px; height: 38px; border: 1px solid #e6b46a; border-radius: 8px; background: repeating-linear-gradient(135deg, #fff3df 0 6px, #f7dfb9 6px 12px); }
+
+    .lane-sep { grid-column: 1 / -1; height: 1px; margin: 10px 0 2px; background: #dde5ee; }
+    .legend-dot.lunch { background: #edc788; }
+    .schedule-notes { display: grid; gap: 7px; margin: 17px 0 0 200px; }
+    .schedule-note { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .schedule-note strong { color: #2f4f79; font-weight: 700; }
+
+    footer {
+      padding: 25px 0 4px;
+      color: #8490a2;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      main { padding-top: 34px; }
+      .intro { align-items: flex-start; }
+      .clock-grid { grid-template-columns: 1fr; }
+      .clock-card { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+      .clock-head, .difference { grid-column: 1 / -1; }
+      .sky-scene { grid-column: 1; grid-row: 2 / 5; width: min(230px, 100%); }
+      .digital-time { align-self: end; text-align: left; }
+      .clock-date { align-self: start; text-align: left; }
+      .schedule-axis, .schedule-body { grid-template-columns: 168px minmax(0, 1fr); }
+      .schedule-notes { margin-left: 168px; }
+      .schedule-notes { margin-left: 132px; }
+    }
+
+    @media (max-width: 620px) {
+      .topbar-inner, main { width: min(100% - 24px, 1180px); }
+      .brand-subtitle { display: none; }
+      .live-badge { font-size: 12px; }
+      main { padding-top: 28px; }
+      .intro { flex-direction: column; }
+      .zone-picker { width: 100%; }
+      .filter-bar { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .filter-note { padding-left: 2px; white-space: normal; }
+      .clock-card { display: block; padding: 22px; }
+      .sky-scene { width: min(240px, 100%); }
+      .digital-time, .clock-date { text-align: center; }
+      .work-head { padding: 20px 20px 0; }
+      .workday-tag { display: none; }
+      .schedule { margin: 20px; padding: 17px 13px; }
+      .schedule-head { align-items: flex-start; flex-direction: column; gap: 7px; }
+      .schedule-axis, .schedule-body { grid-template-columns: 110px minmax(0, 1fr); }
+      .schedule-label { height: 58px; font-size: 11px; }
+      .schedule-label small { font-size: 9px; }
+      .schedule-track { height: 58px; }
+      .schedule-row { height: 58px; }
+      .work-bar { height: 34px; padding: 0 6px; font-size: 10px; }
+      .lunch-band { top: 12px; height: 34px; }
+      .schedule-notes { margin-left: 110px; }
+      .schedule-note { font-size: 11px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .live-dot { animation: none; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .topbar, .zone-picker, .filter-bar, footer { display: none; }
+      main { width: 100%; padding: 0; }
+      .clock-grid { grid-template-columns: repeat(var(--visible-clocks, 3), 1fr); }
+      .clock-card, .work-card { box-shadow: none; break-inside: avoid; }
+      .sky-scene { width: 175px; }
+      .digital-time { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <circle cx="12" cy="12" r="8.5"></circle>
+            <path d="M12 7v5l3.2 2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div>
+      <div class="brand-title">三地时间对照</div>
+      <div class="brand-subtitle">WORLD TIME COMPARISON</div>
+        </div>
+      </div>
+      <div class="live-badge"><span class="live-dot"></span>实时同步 · 24 小时制</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <div class="eyebrow">BEIJING / KAZAKHSTAN / RUSSIA</div>
+        <h1 id="page-title">三地时间，一眼对照</h1>
+        <p>同一时刻，三种当地时间。时间由设备时钟实时计算。</p>
+      </div>
+      <div class="zone-picker">
+        <label for="russia-zone">俄罗斯时间（默认莫斯科）</label>
+        <select id="russia-zone">
+          <option value="Europe/Moscow" data-offset="UTC+3" data-name="莫斯科" data-zone="东三区">莫斯科 · UTC+3</option>
+          <option value="Europe/Kaliningrad" data-offset="UTC+2" data-name="加里宁格勒" data-zone="东二区">加里宁格勒 · UTC+2</option>
+          <option value="Asia/Yekaterinburg" data-offset="UTC+5" data-name="叶卡捷琳堡" data-zone="东五区">叶卡捷琳堡 · UTC+5</option>
+          <option value="Asia/Novosibirsk" data-offset="UTC+7" data-name="新西伯利亚" data-zone="东七区">新西伯利亚 · UTC+7</option>
+          <option value="Asia/Vladivostok" data-offset="UTC+10" data-name="符拉迪沃斯托克" data-zone="东十区">符拉迪沃斯托克 · UTC+10</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="filter-bar" aria-label="时区筛选项">
+      <div class="filter-group">
+        <span class="filter-label">显示时区</span>
+        <label class="switch-option is-fixed" title="北京时间为对照基准，始终显示">
+          <input type="checkbox" checked disabled aria-label="北京时间始终显示">
+          <span class="switch-track" aria-hidden="true"></span>
+          <span>北京 · 固定</span>
+        </label>
+        <label class="switch-option">
+          <input type="checkbox" id="toggle-kazakhstan" checked>
+          <span class="switch-track" aria-hidden="true"></span>
+          <span>哈萨克斯坦</span>
+        </label>
+        <label class="switch-option">
+          <input type="checkbox" id="toggle-russia" checked>
+          <span class="switch-track" aria-hidden="true"></span>
+          <span>俄罗斯</span>
+        </label>
+      </div>
+      <span class="filter-note" title="05:00–07:00 晨曦；07:00–17:00 白天；17:00–19:00 黄昏；其余时间为黑夜">天空场景随当地时间变化</span>
+    </section>
+
+    <section class="clock-grid" id="clock-grid" aria-label="实时钟表">
+      <article class="clock-card beijing">
+        <div class="clock-head">
+          <div><div class="country-code">CN · CHINA</div><h2>北京时间</h2></div>
+          <span class="utc-tag">UTC+8</span>
+        </div>
+        <div class="sky-scene sky-night" id="sky-beijing">
+          <div class="sky-stars" aria-hidden="true"></div>
+          <span class="sky-orb" aria-hidden="true"></span>
+          <span class="sky-status" id="sky-label-beijing">当地 · 黑夜</span>
+          <svg class="clock-face" id="clock-beijing" viewBox="0 0 240 240" role="img" aria-label="北京时间模拟钟表"></svg>
+        </div>
+        <div class="digital-time" id="digital-beijing">--:--:--</div>
+        <div class="clock-date" id="date-beijing">正在读取时间</div>
+        <div class="difference">东八区 · 本土基准时区</div>
+      </article>
+
+      <article class="clock-card kazakhstan">
+        <div class="clock-head">
+          <div><div class="country-code">KZ · KAZAKHSTAN</div><h2>哈萨克斯坦时间</h2></div>
+          <span class="utc-tag">UTC+5</span>
+        </div>
+        <div class="sky-scene sky-night" id="sky-kazakhstan">
+          <div class="sky-stars" aria-hidden="true"></div>
+          <span class="sky-orb" aria-hidden="true"></span>
+          <span class="sky-status" id="sky-label-kazakhstan">当地 · 黑夜</span>
+          <svg class="clock-face" id="clock-kazakhstan" viewBox="0 0 240 240" role="img" aria-label="哈萨克斯坦时间模拟钟表"></svg>
+        </div>
+        <div class="digital-time" id="digital-kazakhstan">--:--:--</div>
+        <div class="clock-date" id="date-kazakhstan">正在读取时间</div>
+        <div class="difference">东五区 · 较北京晚 3 小时</div>
+      </article>
+
+      <article class="clock-card russia">
+        <div class="clock-head">
+          <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯 · 莫斯科</h2></div>
+          <span class="utc-tag" id="russia-offset">UTC+3</span>
+        </div>
+        <div class="sky-scene sky-night" id="sky-russia">
+          <div class="sky-stars" aria-hidden="true"></div>
+          <span class="sky-orb" aria-hidden="true"></span>
+          <span class="sky-status" id="sky-label-russia">当地 · 黑夜</span>
+          <svg class="clock-face" id="clock-russia" viewBox="0 0 240 240" role="img" aria-label="俄罗斯时间模拟钟表"></svg>
+        </div>
+        <div class="digital-time" id="digital-russia">--:--:--</div>
+        <div class="clock-date" id="date-russia">正在读取时间</div>
+        <div class="difference" id="russia-difference">东三区 · 较北京晚 5 小时</div>
+      </article>
+    </section>
+
+    <div class="info-strip">
+      <span class="info-icon" aria-hidden="true">i</span>
+      <span id="time-summary">哈萨克斯坦（东五区）较北京晚 3 小时；莫斯科（东三区）较北京晚 5 小时。所显示时区均不实行夏令时。</span>
+    </div>
+
+    <section class="work-card" aria-labelledby="work-title">
+      <div class="work-head">
+        <div>
+          <h2 id="work-title">跨时区上班时间</h2>
+          <p>集团本部 09:00–17:30；哈萨克斯坦公司 09:00–18:00；俄罗斯公司暂定 09:00–18:00；各地当地 12:00–13:00 午休</p>
+        </div>
+        <span class="workday-tag">工作日 · 已扣除午休</span>
+      </div>
+
+      <div class="schedule" aria-label="三地工作时间北京时间轴">
+        <div class="schedule-head">
+          <strong>三地工作时间对照 · 北京时间轴</strong>
+          <span class="schedule-legend">
+            <span><span class="legend-dot lunch" aria-hidden="true"></span>当地午休</span>
+          </span>
+        </div>
+        <div class="schedule-axis" aria-hidden="true">
+          <span></span>
+          <div class="axis-labels"><span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>24:00</span></div>
+        </div>
+        <div class="schedule-body" id="schedule-body"></div>
+        <div class="schedule-notes">
+          <p class="schedule-note" id="common-work-note"></p>
+          <p class="schedule-note" id="russia-work-note"></p>
+          <p class="schedule-note" id="off-work-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <footer>时区依据 IANA 时区数据库由浏览器计算 · 哈萨克斯坦自 2024 年起全国统一使用 UTC+5<br>天空为当地时间示意：05:00–07:00 晨曦，07:00–17:00 白天，17:00–19:00 黄昏，其余为黑夜<br>本页面无需联网，可作为单个 HTML 文件离线使用</footer>
+  </main>
+
+  <script>
+    const ZONES = {
+      beijing: { timeZone: "Asia/Shanghai", offset: 8 },
+      kazakhstan: { timeZone: "Asia/Almaty", offset: 5 }
+    };
+
+    const timeFormatters = new Map();
+    const dateFormatters = new Map();
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    function getTimeFormatter(timeZone) {
+      if (!timeFormatters.has(timeZone)) {
+        timeFormatters.set(timeZone, new Intl.DateTimeFormat("zh-CN", {
+          timeZone, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
+        }));
+      }
+      return timeFormatters.get(timeZone);
+    }
+
+    function getDateFormatter(timeZone) {
+      if (!dateFormatters.has(timeZone)) {
+        dateFormatters.set(timeZone, new Intl.DateTimeFormat("zh-CN", {
+          timeZone, year: "numeric", month: "long", day: "numeric", weekday: "long"
+        }));
+      }
+      return dateFormatters.get(timeZone);
+    }
+
+    function partsToObject(parts) {
+      return Object.fromEntries(parts.filter(part => part.type !== "literal").map(part => [part.type, part.value]));
+    }
+
+    function makeSVGElement(tag, attributes) {
+      const element = document.createElementNS(svgNS, tag);
+      Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+      return element;
+    }
+
+    function buildClock(id, accent) {
+      const svg = document.getElementById(id);
+      svg.appendChild(makeSVGElement("circle", { cx: 120, cy: 120, r: 108, fill: "#ffffff", "fill-opacity": 0.82, stroke: "#ffffff", "stroke-opacity": 0.65, "stroke-width": 1.5 }));
+
+      for (let i = 0; i < 60; i++) {
+        const isHour = i % 5 === 0;
+        svg.appendChild(makeSVGElement("line", {
+          x1: 120, y1: isHour ? 20 : 22, x2: 120, y2: isHour ? 29 : 26,
+          stroke: isHour ? "#6c7888" : "#c8d0da", "stroke-width": isHour ? 2.3 : 1,
+          "stroke-linecap": "round", transform: `rotate(${i * 6} 120 120)`
+        }));
+      }
+
+      [[12, 120, 49], [3, 191, 125], [6, 120, 197], [9, 49, 125]].forEach(([label, x, y]) => {
+        const text = makeSVGElement("text", {
+          x, y, fill: "#526174", "font-size": 14, "font-weight": 600,
+          "font-family": "Segoe UI, Arial, sans-serif", "text-anchor": "middle"
+        });
+        text.textContent = label;
+        svg.appendChild(text);
+      });
+
+      const hands = [
+        { id: "hour", y2: 76, width: 5, color: "#26364b" },
+        { id: "minute", y2: 55, width: 3.5, color: "#26364b" },
+        { id: "second", y2: 45, width: 1.8, color: accent }
+      ];
+
+      hands.forEach(hand => {
+        svg.appendChild(makeSVGElement("line", {
+          id: `${id}-${hand.id}`, x1: 120, y1: hand.id === "second" ? 132 : 128,
+          x2: 120, y2: hand.y2, stroke: hand.color, "stroke-width": hand.width,
+          "stroke-linecap": "round", transform: "rotate(0 120 120)"
+        }));
+      });
+      svg.appendChild(makeSVGElement("circle", { cx: 120, cy: 120, r: 5.5, fill: accent, stroke: "#fff", "stroke-width": 2 }));
+    }
+
+    buildClock("clock-beijing", "#d94b42");
+    buildClock("clock-kazakhstan", "#078a83");
+    buildClock("clock-russia", "#4263d5");
+
+    function getRussiaZone() {
+      const select = document.getElementById("russia-zone");
+      const option = select.options[select.selectedIndex];
+      return {
+        timeZone: select.value,
+        offset: Number(option.dataset.offset.replace("UTC", "")),
+        name: option.dataset.name,
+        label: option.dataset.offset,
+        zone: option.dataset.zone
+      };
+    }
+
+    function zoneName(offset) {
+      if (offset === 8) return "东八区";
+      if (offset > 0) return `东${offset}区`;
+      if (offset < 0) return `西${Math.abs(offset)}区`;
+      return "零时区";
+    }
+
+    function isZoneVisible(key) {
+      if (key === "beijing") return true;
+      return document.getElementById(`toggle-${key}`).checked;
+    }
+
+    function getSkyPhase(hours, minutes) {
+      const localTime = hours + minutes / 60;
+      if (localTime >= 5 && localTime < 7) return { name: "晨曦", className: "sky-dawn" };
+      if (localTime >= 7 && localTime < 17) return { name: "白天", className: "sky-day" };
+      if (localTime >= 17 && localTime < 19) return { name: "黄昏", className: "sky-dusk" };
+      return { name: "黑夜", className: "sky-night" };
+    }
+
+    function updateSky(key, hours, minutes) {
+      const phase = getSkyPhase(hours, minutes);
+      const scene = document.getElementById(`sky-${key}`);
+      if (scene.dataset.phase !== phase.className) {
+        scene.classList.remove("sky-night", "sky-dawn", "sky-day", "sky-dusk");
+        scene.classList.add(phase.className);
+        scene.dataset.phase = phase.className;
+      }
+      document.getElementById(`sky-label-${key}`).textContent = `当地 · ${phase.name}`;
+    }
+
+    function updateClock(key, timeZone, now) {
+      const parts = partsToObject(getTimeFormatter(timeZone).formatToParts(now));
+      const hours = Number(parts.hour);
+      const minutes = Number(parts.minute);
+      const preciseSeconds = Number(parts.second) + now.getMilliseconds() / 1000;
+      const preciseMinutes = minutes + preciseSeconds / 60;
+      const preciseHours = (hours % 12) + preciseMinutes / 60;
+
+      document.getElementById(`digital-${key}`).textContent = `${parts.hour}:${parts.minute}:${parts.second}`;
+      document.getElementById(`date-${key}`).textContent = getDateFormatter(timeZone).format(now);
+      document.getElementById(`clock-${key}-hour`).setAttribute("transform", `rotate(${preciseHours * 30} 120 120)`);
+      document.getElementById(`clock-${key}-minute`).setAttribute("transform", `rotate(${preciseMinutes * 6} 120 120)`);
+      document.getElementById(`clock-${key}-second`).setAttribute("transform", `rotate(${preciseSeconds * 6} 120 120)`);
+      updateSky(key, hours, minutes);
+    }
+
+    function updateAllClocks() {
+      const now = new Date();
+      const russia = getRussiaZone();
+      updateClock("beijing", ZONES.beijing.timeZone, now);
+      if (isZoneVisible("kazakhstan")) updateClock("kazakhstan", ZONES.kazakhstan.timeZone, now);
+      if (isZoneVisible("russia")) updateClock("russia", russia.timeZone, now);
+    }
+
+    const WORK_SCHEDULES = [
+      { key: "hq", name: "集团本部", offset: 8, start: 9 * 60, end: 17 * 60 + 30, className: "hq-bar" },
+      { key: "kz", name: "哈萨克斯坦公司", offset: 5, start: 9 * 60, end: 18 * 60, className: "kz-bar" },
+      { key: "ru", name: "俄罗斯公司", offset: null, start: 9 * 60, end: 18 * 60, className: "ru-bar" }
+    ];
+
+    function formatClock(minutes) {
+      if (minutes === 1440) return "24:00";
+      const wrapped = ((Math.round(minutes) % 1440) + 1440) % 1440;
+      const hours = Math.floor(wrapped / 60);
+      const mins = wrapped % 60;
+      return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    }
+
+    function formatClockWithDay(minutes) {
+      const dayLabel = minutes >= 1440 ? "次日 " : minutes < 0 ? "前一日 " : "";
+      const wrapped = ((Math.round(minutes) % 1440) + 1440) % 1440;
+      const hours = Math.floor(wrapped / 60);
+      const mins = wrapped % 60;
+      return `${dayLabel}${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    }
+
+    function toBeijing(localMinutes, offset) {
+      return localMinutes + (8 - offset) * 60;
+    }
+
+    function fromBeijing(beijingMinutes, offset) {
+      return beijingMinutes - (8 - offset) * 60;
+    }
+
+    function buildScheduleModel() {
+      const russia = getRussiaZone();
+      return WORK_SCHEDULES.map(item => {
+        const offset = item.key === "ru" ? russia.offset : item.offset;
+        const name = item.key === "ru" ? `俄罗斯公司 · ${russia.name}` : item.name;
+        return {
+          ...item,
+          offset,
+          name,
+          morningStart: toBeijing(item.start, offset),
+          morningEnd: toBeijing(12 * 60, offset),
+          lunchStart: toBeijing(12 * 60, offset),
+          lunchEnd: toBeijing(13 * 60, offset),
+          afternoonStart: toBeijing(13 * 60, offset),
+          afternoonEnd: toBeijing(item.end, offset)
+        };
+      });
+    }
+
+    function collectCommonSegments(model, keys) {
+      const blocks = keys.map(key => {
+        const zone = model.find(item => item.key === key);
+        return [
+          { start: zone.morningStart, end: zone.morningEnd },
+          { start: zone.afternoonStart, end: zone.afternoonEnd }
+        ];
+      });
+      const found = [];
+      const walk = (index, picked) => {
+        if (index === blocks.length) {
+          const start = Math.max(...picked.map(item => item.start));
+          const end = Math.min(...picked.map(item => item.end));
+          if (end > start) found.push({ start, end });
+          return;
+        }
+        blocks[index].forEach(block => walk(index + 1, [...picked, block]));
+      };
+      walk(0, []);
+      found.sort((a, b) => a.start - b.start);
+      const merged = [];
+      found.forEach(segment => {
+        const last = merged[merged.length - 1];
+        if (last && segment.start <= last.end) last.end = Math.max(last.end, segment.end);
+        else merged.push({ ...segment });
+      });
+      return merged;
+    }
+
+    function formatDuration(minutes) {
+      if (!minutes) return "0 分钟";
+      const hours = Math.floor(minutes / 60);
+      const rest = minutes % 60;
+      if (!hours) return `${rest} 分钟`;
+      return rest ? `${hours} 小时 ${rest} 分钟` : `${hours} 小时`;
+    }
+
+    function describeSegments(segments, model, keys) {
+      return keys.filter(key => key !== "hq").map(key => {
+        const zone = model.find(item => item.key === key);
+        const ranges = segments.map(item =>
+          `${formatClock(fromBeijing(item.start, zone.offset))}–${formatClock(fromBeijing(item.end, zone.offset))}`);
+        return `${zone.name.replace("公司", "")} ${ranges.join(" / ")}`;
+      }).join(" ｜ ");
+    }
+
+    function renderWorkSchedule() {
+      const model = buildScheduleModel();
+      const russia = getRussiaZone();
+      const body = document.getElementById("schedule-body");
+      body.replaceChildren();
+
+      const pairs = [
+        { keys: ["hq", "kz"], title: "集团 & 哈国" },
+        { keys: ["hq", "ru"], title: "集团 & 俄国" }
+      ];
+      const tripleKeys = ["hq", "kz", "ru"];
+
+      model.forEach(zone => {
+        const label = document.createElement("div");
+        label.className = "schedule-label";
+        const name = document.createElement("span");
+        name.textContent = zone.name;
+        const detail = document.createElement("small");
+        detail.textContent = `当地 ${formatClock(zone.start)}–12:00 / 13:00–${formatClock(zone.end)}`;
+        label.appendChild(name);
+        label.appendChild(detail);
+
+        const track = document.createElement("div");
+        track.className = "schedule-track";
+        [[zone.morningStart, zone.morningEnd], [zone.afternoonStart, zone.afternoonEnd]].forEach(([start, end]) => {
+          const bar = document.createElement("div");
+          bar.className = `work-bar ${zone.className}`;
+          bar.style.left = `${start / 1440 * 100}%`;
+          bar.style.width = `${(end - start) / 1440 * 100}%`;
+          bar.textContent = `${formatClock(start)}–${formatClock(end)}`;
+          bar.title = `${zone.name}：北京时间 ${formatClock(start)}–${formatClock(end)}`;
+          track.appendChild(bar);
+        });
+        const lunch = document.createElement("span");
+        lunch.className = "lunch-band";
+        lunch.style.left = `${zone.lunchStart / 1440 * 100}%`;
+        lunch.style.width = `${(zone.lunchEnd - zone.lunchStart) / 1440 * 100}%`;
+        lunch.title = `午休 当地 12:00–13:00（北京时间 ${formatClock(zone.lunchStart)}–${formatClock(zone.lunchEnd)}）`;
+        track.appendChild(lunch);
+
+        body.appendChild(label);
+        body.appendChild(track);
+      });
+
+      const separator = document.createElement("div");
+      separator.className = "lane-sep";
+      body.appendChild(separator);
+
+      const commonNote = document.getElementById("common-work-note");
+      const noteLines = pairs.map(pair => {
+        const segments = collectCommonSegments(model, pair.keys);
+        const total = segments.reduce((sum, item) => sum + (item.end - item.start), 0);
+        if (!segments.length) return `<strong>${pair.title}</strong>：无共同在岗时段`;
+        const beijingText = segments.map(item => `${formatClock(item.start)}–${formatClock(item.end)}`).join(" / ");
+        return `<strong>${pair.title}</strong>：共 ${formatDuration(total)} · 北京 ${beijingText} ｜ ${describeSegments(segments, model, pair.keys)}`;
+      });
+
+      const common = collectCommonSegments(model, tripleKeys);
+      const commonTotal = common.reduce((sum, item) => sum + (item.end - item.start), 0);
+      if (common.length) {
+        const beijingText = common.map(item => `${formatClock(item.start)}–${formatClock(item.end)}`).join(" / ");
+        noteLines.push(`<strong>三方共同上班</strong>：共 ${formatDuration(commonTotal)} · 北京 ${beijingText} ｜ ${describeSegments(common, model, tripleKeys)}`);
+      } else {
+        noteLines.push("<strong>三方共同上班</strong>：三方暂无同时在岗时段");
+      }
+      commonNote.innerHTML = noteLines.join("<br>");
+
+      const offNote = document.getElementById("off-work-note");
+      offNote.innerHTML = model.map(zone => {
+        const beijingEnd = toBeijing(zone.end, zone.offset);
+        const peers = model.filter(other => other.key !== zone.key).map(other =>
+          `${other.name.replace("公司", "")} ${formatClockWithDay(fromBeijing(beijingEnd, other.offset))}`);
+        return `<strong>${zone.name}下班</strong> ${formatClock(zone.end)}（当地）→ 北京 ${formatClockWithDay(beijingEnd)} ｜ ${peers.join(" ｜ ")}`;
+      }).join("<br>");
+
+      document.getElementById("russia-work-note").textContent = `俄罗斯公司上班时间暂定当地 ${formatClock(model[2].start)}–${formatClock(model[2].end)}（${russia.zone} ${russia.label}，${russia.name}）`;
+    }
+
+    function formatDifference(offset) {
+      const difference = 8 - offset;
+      if (difference > 0) return `较北京晚 ${difference} 小时`;
+      if (difference < 0) return `较北京早 ${Math.abs(difference)} 小时`;
+      return "与北京相同";
+    }
+
+    function updateTimeSummary() {
+      const russia = getRussiaZone();
+      const summaries = [];
+      if (isZoneVisible("kazakhstan")) summaries.push("哈萨克斯坦（东五区）较北京晚 3 小时");
+      if (isZoneVisible("russia")) summaries.push(`${russia.name}（${russia.zone}）${formatDifference(russia.offset)}`);
+      document.getElementById("time-summary").textContent = summaries.length
+        ? `${summaries.join("；")}。所显示时区均不实行夏令时。`
+        : "当前仅显示北京时间（东八区）。东八区不实行夏令时。";
+    }
+
+    function updateRussiaLabels() {
+      const russia = getRussiaZone();
+      document.getElementById("russia-title").textContent = `俄罗斯 · ${russia.name}`;
+      document.getElementById("russia-offset").textContent = russia.label;
+      document.getElementById("russia-difference").textContent = `${russia.zone} · ${formatDifference(russia.offset)}`;
+      document.getElementById("clock-russia").setAttribute("aria-label", `俄罗斯${russia.name}时间模拟钟表`);
+      updateTimeSummary();
+    }
+
+    function updateVisibility() {
+      const showKazakhstan = isZoneVisible("kazakhstan");
+      const showRussia = isZoneVisible("russia");
+      const visibleCount = 1 + Number(showKazakhstan) + Number(showRussia);
+      document.querySelector(".clock-card.kazakhstan").hidden = !showKazakhstan;
+      document.querySelector(".clock-card.russia").hidden = !showRussia;
+      document.getElementById("clock-grid").style.setProperty("--visible-clocks", visibleCount);
+      document.getElementById("russia-zone").disabled = !showRussia;
+      document.querySelector(".zone-picker").classList.toggle("is-disabled", !showRussia);
+      updateTimeSummary();
+      updateAllClocks();
+      renderWorkSchedule();
+    }
+
+    document.getElementById("russia-zone").addEventListener("change", () => {
+      updateRussiaLabels();
+      updateAllClocks();
+      renderWorkSchedule();
+    });
+    document.getElementById("toggle-kazakhstan").addEventListener("change", updateVisibility);
+    document.getElementById("toggle-russia").addEventListener("change", updateVisibility);
+
+    updateRussiaLabels();
+    updateVisibility();
+    setInterval(updateAllClocks, 100);
+  </script>
+</body>
+</html>
