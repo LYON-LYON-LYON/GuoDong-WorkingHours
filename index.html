@@ -217,29 +217,35 @@
     .reach-body .sep { color: #a9b8cc; margin: 0 8px; }
 
     /* 办公状态徽标 */
+    /* 办公状态徽标：置于钟表下方 */
+    .clock-duty {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
     .duty-badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      margin-top: 6px;
-      padding: 3px 8px;
+      gap: 7px;
+      padding: 5px 13px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 650;
       white-space: nowrap;
     }
 
     .duty-badge::before {
       content: "";
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: currentColor;
     }
 
-    .duty-badge.on { color: #0f6e56; background: #e1f5ee; }
-    .duty-badge.break { color: #854f0b; background: #faeeda; }
-    .duty-badge.off { color: #667085; background: #f1f3f6; }
+    .duty-badge.on { color: #0b5c46; background: #cdeee1; }
+    .duty-badge.break { color: #7a4606; background: #fce9c8; }
+    .duty-badge.off { color: #4d5866; background: #dfe4ea; }
 
     @media (max-width: 900px) {
       .status-board { grid-template-columns: 1fr; }
@@ -259,10 +265,36 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(28px, 4vw, 42px);
-      line-height: 1.2;
-      letter-spacing: -0.035em;
+      font-size: clamp(38px, 6.4vw, 76px);
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+      font-weight: 700;
+      color: #16273f;
+      text-wrap: balance;
     }
+
+    .intro-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin-top: 20px;
+    }
+
+    .intro-tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 7px 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .intro-tag b { color: #2f4f79; font-weight: 650; }
+    .intro-tag i { font-style: normal; color: #8490a2; font-size: 12px; font-variant-numeric: tabular-nums; }
 
     .intro p { margin: 12px 0 0; color: var(--muted); line-height: 1.7; }
 
@@ -683,9 +715,12 @@
   <main>
     <section class="intro" aria-labelledby="page-title">
       <div>
-        <div class="eyebrow">国动集团 · 跨国协作</div>
-        <h1 id="page-title">联络前，先看对方几点上班</h1>
-        <p>国动集团本部与哈萨克斯坦国动、俄罗斯国动分处三个时区，工作时间相差数小时。发起联络前，先确认对方当地时间是否在办公窗口内。</p>
+        <h1 id="page-title">联络前，<br>先看对方几点上班</h1>
+        <div class="intro-tags">
+          <span class="intro-tag"><b>国动集团本部</b> 北京 <i>东八区 · 09:00–17:30</i></span>
+          <span class="intro-tag"><b>哈萨克斯坦国动</b> 阿拉木图 <i>东五区 · 09:00–18:00</i></span>
+          <span class="intro-tag"><b>俄罗斯国动</b> 莫斯科 <i>东三区 · 09:00–17:30</i></span>
+        </div>
       </div>
     </section>
 
@@ -694,7 +729,6 @@
         <div class="status-text">
           <div class="status-name">国动集团本部·北京</div>
           <div class="status-meta">东八区 · <b id="status-diff-beijing">基准</b></div>
-          <span class="duty-badge" id="duty-beijing">计算中</span>
         </div>
         <div class="status-clock" id="status-time-beijing">--:--<small>当地</small></div>
       </article>
@@ -703,7 +737,6 @@
         <div class="status-text">
           <div class="status-name">哈萨克斯坦国动·阿拉木图</div>
           <div class="status-meta">东五区 · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
-          <span class="duty-badge" id="duty-kazakhstan">计算中</span>
         </div>
         <div class="status-clock" id="status-time-kazakhstan">--:--<small>当地</small></div>
       </article>
@@ -712,7 +745,6 @@
         <div class="status-text">
           <div class="status-name" id="status-name-russia">俄罗斯国动·莫斯科</div>
           <div class="status-meta" id="status-zone-russia">东三区 · 较北京 <b>晚 5 小时</b></div>
-          <span class="duty-badge" id="duty-russia">计算中</span>
         </div>
         <div class="status-clock" id="status-time-russia">--:--<small>当地</small></div>
       </article>
@@ -756,6 +788,7 @@
         <div class="digital-time" id="digital-beijing">--:--:--</div>
         <div class="clock-date" id="date-beijing">正在读取时间</div>
         <div class="difference">东八区 · 本土基准时区</div>
+        <div class="clock-duty"><span class="duty-badge" id="duty-beijing">计算中</span></div>
       </article>
 
       <article class="clock-card kazakhstan">
@@ -773,6 +806,7 @@
         <div class="digital-time" id="digital-kazakhstan">--:--:--</div>
         <div class="clock-date" id="date-kazakhstan">正在读取时间</div>
         <div class="difference">东五区 · 较北京晚 3 小时</div>
+        <div class="clock-duty"><span class="duty-badge" id="duty-kazakhstan">计算中</span></div>
       </article>
 
       <article class="clock-card russia">
@@ -790,6 +824,7 @@
         <div class="digital-time" id="digital-russia">--:--:--</div>
         <div class="clock-date" id="date-russia">正在读取时间</div>
         <div class="difference" id="russia-difference">东三区 · 较北京晚 5 小时</div>
+        <div class="clock-duty"><span class="duty-badge" id="duty-russia">计算中</span></div>
       </article>
     </section>
 
@@ -1482,7 +1517,7 @@
       } else {
         const allOn = reachParts.every(part => part.hint.includes("双方同时在岗"));
         const lead = allOn
-          ? '<span class="hint">此刻双方均在岗，可直接发起联络。</span>'
+          ? `<span class="hint">此刻${reachParts.length > 1 ? "双方" : "对方"}均在岗，可直接发起联络。</span>`
           : '';
         const items = reachParts.map(part =>
           `<span class="who">${part.name}</span>` +
@@ -1501,13 +1536,12 @@
     }
 
     function updateTimeSummary() {
-      const russia = getRussiaZone();
-      const summaries = [];
-      if (isZoneVisible("kazakhstan")) summaries.push("哈萨克斯坦国动（东五区）较北京晚 3 小时");
-      if (isZoneVisible("russia")) summaries.push(`俄罗斯国动·${russia.name}（${russia.zone}）${formatDifference(russia.offset)}`);
-      document.getElementById("time-summary").textContent = summaries.length
-        ? `${summaries.join("；")}。所显示时区均不实行夏令时。`
-        : "当前仅显示北京时间（东八区）。东八区不实行夏令时。";
+      const visible = [];
+      if (isZoneVisible("kazakhstan")) visible.push("哈萨克斯坦国动");
+      if (isZoneVisible("russia")) visible.push("俄罗斯国动");
+      document.getElementById("time-summary").textContent = visible.length
+        ? "所显示时区均不实行夏令时，全年采用统一时区。"
+        : "东八区不实行夏令时，全年采用统一时区。";
     }
 
     function updateRussiaLabels() {
@@ -1531,6 +1565,7 @@
       document.getElementById("clock-grid").style.setProperty("--visible-clocks", visibleCount);
       updateTimeSummary();
       updateAllClocks();
+      updateStatusBoard(new Date());
       renderWorkSchedule();
     }
 
