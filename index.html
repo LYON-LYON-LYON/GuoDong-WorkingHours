@@ -668,7 +668,7 @@
       <div class="work-head">
         <div>
           <h2 id="work-title">跨时区上班时间</h2>
-          <p>集团本部 09:00–17:30 ｜ 哈萨克斯坦、俄罗斯公司 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
+          <p>集团本部 09:00–17:30 ｜ 俄罗斯公司 09:00–17:30 ｜ 哈萨克斯坦公司 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
         </div>
         <span class="workday-tag">工作日 · 已扣除午休</span>
       </div>
@@ -846,7 +846,7 @@
     const WORK_SCHEDULES = [
       { key: "hq", name: "集团本部", offset: 8, start: 9 * 60, end: 17 * 60 + 30, className: "hq-bar" },
       { key: "kz", name: "哈萨克斯坦公司", offset: 5, start: 9 * 60, end: 18 * 60, className: "kz-bar" },
-      { key: "ru", name: "俄罗斯公司", offset: null, start: 9 * 60, end: 18 * 60, className: "ru-bar" }
+      { key: "ru", name: "俄罗斯公司", offset: null, start: 9 * 60, end: 17 * 60 + 30, className: "ru-bar" }
     ];
 
     function formatClock(minutes) {
