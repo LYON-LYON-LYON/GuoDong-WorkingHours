@@ -425,49 +425,13 @@
     .legend-dot { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; background: rgba(36, 87, 214, 0.32); }
     .schedule-legend { display: inline-flex; flex-wrap: wrap; gap: 6px 16px; justify-content: flex-end; }
     .schedule-legend > span { white-space: nowrap; }
-    .legend-dot.tri { background: rgba(36, 87, 214, 0.55); }
-    .legend-dot.pair-kz { background: rgba(15, 156, 140, 0.55); }
-    .legend-dot.pair-ru { background: rgba(124, 92, 214, 0.55); }
-    .legend-dot.pair-kzru { background: rgba(140, 152, 168, 0.6); }
-    .legend-dot.lunch { background: #edc788; }
-    .schedule-axis, .schedule-body { display: grid; grid-template-columns: 200px minmax(0, 1fr); }
+    .legend-dot.lunch { background: #edc788; }    .schedule-axis, .schedule-body { display: grid; grid-template-columns: 200px minmax(0, 1fr); }
     .schedule-axis { margin-top: 20px; }
     .axis-labels { position: relative; height: 16px; color: #8490a2; font-size: 11px; font-variant-numeric: tabular-nums; }
     .axis-labels span { position: absolute; top: 0; transform: translateX(-50%); }
     .schedule-body { margin-top: 9px; }
-    .schedule-summary {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 18px;
-      margin: 12px 0 0 200px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-    .schedule-summary .sum-item { white-space: nowrap; }
-    .schedule-summary .sum-item strong { color: #2f4f79; font-weight: 700; }
-    .schedule-summary .sum-dot { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 3px; vertical-align: middle; }
-    .schedule-summary .sum-dot.tri { background: rgba(36, 87, 214, 0.55); }
-    .schedule-summary .sum-dot.pair-kz { background: rgba(15, 156, 140, 0.55); }
-    .schedule-summary .sum-dot.pair-ru { background: rgba(124, 92, 214, 0.55); }
-    .schedule-summary .sum-dot.pair-kzru { background: rgba(140, 152, 168, 0.6); }
     .schedule-label { height: 64px; display: flex; flex-direction: column; justify-content: center; font-size: 13px; font-weight: 650; }
     .schedule-label small { margin-top: 4px; color: var(--muted); font-size: 11px; font-weight: 400; line-height: 1.4; }
-    .schedule-label.band-label { height: 58px; border-top: 1px dashed #dde5ee; }
-    .schedule-track.band-track { height: 58px; border-top: 1px dashed #dde5ee; background-image: none; }
-    .schedule-track.band-track .overlap-stripe { top: 10px; bottom: 10px; border-radius: 5px; overflow: visible; }
-    .schedule-track.band-track .overlap-stripe::after {
-      content: attr(data-label);
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      color: #26364b;
-      font-size: 9.5px;
-      font-weight: 700;
-      white-space: nowrap;
-      letter-spacing: -0.03em;
-    }
     .schedule-track {
       position: relative;
       height: 64px;
@@ -481,11 +445,6 @@
     .kz-bar { background: #078a83; }
     .ru-bar { background: #4263d5; }
     .lunch-band { position: absolute; z-index: 3; top: 13px; height: 38px; border: 1px solid #e6b46a; border-radius: 8px; background: repeating-linear-gradient(135deg, #fff3df 0 6px, #f7dfb9 6px 12px); }
-    .overlap-stripe { position: absolute; z-index: 1; top: 0; bottom: 0; border-left: 1px solid rgba(255, 255, 255, 0.9); border-right: 1px solid rgba(255, 255, 255, 0.9); }
-    .overlap-stripe.tri { background: rgba(36, 87, 214, 0.20); }
-    .overlap-stripe.pair-kz { background: rgba(15, 156, 140, 0.20); }
-    .overlap-stripe.pair-ru { background: rgba(124, 92, 214, 0.20); }
-    .overlap-stripe.pair-kzru { background: rgba(140, 152, 168, 0.22); }
 
     footer {
       padding: 25px 0 4px;
@@ -505,7 +464,6 @@
       .digital-time { align-self: end; text-align: left; }
       .clock-date { align-self: start; text-align: left; }
       .schedule-axis, .schedule-body { grid-template-columns: 168px minmax(0, 1fr); }
-      .schedule-summary { margin-left: 168px; }
     }
 
     @media (max-width: 620px) {
@@ -525,7 +483,6 @@
       .schedule { margin: 20px; padding: 17px 13px; }
       .schedule-head { align-items: flex-start; flex-direction: column; gap: 7px; }
       .schedule-axis, .schedule-body { grid-template-columns: 110px minmax(0, 1fr); }
-      .schedule-summary { margin-left: 110px; font-size: 11px; }
       .schedule-label { height: 58px; font-size: 11px; }
       .schedule-label small { font-size: 9px; }
       .schedule-track { height: 58px; }
@@ -668,7 +625,7 @@
       <div class="work-head">
         <div>
           <h2 id="work-title">跨时区上班时间</h2>
-          <p>集团本部 09:00–17:30 ｜ 俄罗斯公司 09:00–17:30 ｜ 哈萨克斯坦公司 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
+          <p id="work-schedule-desc">集团本部 09:00–17:30 ｜ 俄罗斯公司 09:00–17:30 ｜ 哈萨克斯坦公司 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
         </div>
         <span class="workday-tag">工作日 · 已扣除午休</span>
       </div>
@@ -677,10 +634,6 @@
         <div class="schedule-head">
           <strong>三地工作时间对照 · 北京时间轴</strong>
           <span class="schedule-legend">
-            <span><span class="legend-dot tri" aria-hidden="true"></span>三方共同在岗</span>
-            <span><span class="legend-dot pair-kz" aria-hidden="true"></span>集团 &amp; 哈国</span>
-            <span><span class="legend-dot pair-ru" aria-hidden="true"></span>集团 &amp; 俄国</span>
-            <span><span class="legend-dot pair-kzru" aria-hidden="true"></span>哈国 &amp; 俄国</span>
             <span><span class="legend-dot lunch" aria-hidden="true"></span>当地午休</span>
           </span>
         </div>
@@ -688,7 +641,6 @@
           <span></span>
           <div class="axis-labels" id="axis-labels"></div>
         </div>
-        <div class="schedule-summary" id="schedule-summary"></div>
         <div class="schedule-body" id="schedule-body"></div>
       </div>
     </section>
@@ -796,7 +748,9 @@
     }
 
     function isZoneVisible(key) {
-      if (key === "beijing") return true;
+      if (key === "beijing" || key === "hq") return true;
+      if (key === "kz") return document.getElementById("toggle-kazakhstan").checked;
+      if (key === "ru") return document.getElementById("toggle-russia").checked;
       return document.getElementById(`toggle-${key}`).checked;
     }
 
@@ -905,62 +859,17 @@
       }
     }
 
-    // 判断某一方在给定区间内是否在岗（排除午休）
-    function isOnDuty(zone, start, end) {
-      const inMorning = zone.morningStart < end && zone.morningEnd > start;
-      const inAfternoon = zone.afternoonStart < end && zone.afternoonEnd > start;
-      return inMorning || inAfternoon;
-    }
-
-    // 将时间轴切分为互斥的基本区间，每段按实际重叠组合归类
-    function buildOverlapZones(model) {
-      const boundaries = new Set([AXIS_START, AXIS_END]);
-      model.forEach(zone => {
-        [zone.morningStart, zone.morningEnd, zone.afternoonStart, zone.afternoonEnd].forEach(point => {
-          if (point > AXIS_START && point < AXIS_END) boundaries.add(point);
-        });
-      });
-      const points = [...boundaries].sort((a, b) => a - b);
-      const result = [];
-      for (let i = 0; i < points.length - 1; i++) {
-        const start = points[i];
-        const end = points[i + 1];
-        const active = model.filter(zone => isOnDuty(zone, start, end)).map(zone => zone.key);
-        let type = null;
-        if (active.includes("hq")) {
-          if (active.includes("kz") && active.includes("ru")) type = "tri";
-          else if (active.includes("kz")) type = "pair-kz";
-          else if (active.includes("ru")) type = "pair-ru";
-        } else if (active.includes("kz") && active.includes("ru")) {
-          type = "pair-kzru";
-        }
-        if (type) result.push({ start, end, type });
-      }
-      return result;
-    }
-
-    const OVERLAP_LABELS = {
-      "tri": "三方共同在岗",
-      "pair-kz": "集团 & 哈国共同在岗",
-      "pair-ru": "集团 & 俄国共同在岗",
-      "pair-kzru": "哈国 & 俄国共同在岗（本部不在岗）"
-    };
-
-    const OVERLAP_SHORT = {
-      "tri": "三方",
-      "pair-kz": "集团·哈",
-      "pair-ru": "集团·俄",
-      "pair-kzru": "哈·俄"
-    };
-
     function renderWorkSchedule() {
-      const model = buildScheduleModel();
+      // 仅渲染当前开启显示的时区，与上方筛选开关联动
+      const model = buildScheduleModel().filter(zone => isZoneVisible(zone.key));
       const body = document.getElementById("schedule-body");
       body.replaceChildren();
       renderAxisLabels();
 
-      // 互斥的共同在岗区间
-      const overlapZones = buildOverlapZones(model);
+      // 顶部说明随可见时区同步
+      document.getElementById("work-schedule-desc").textContent = model.length
+        ? `${model.map(zone => `${zone.name} ${formatClock(zone.start)}–${formatClock(zone.end)}`).join(" ｜ ")} ｜ 各地当地 12:00–13:00 午休`
+        : "当前未显示任何时区";
 
       model.forEach(zone => {
         const label = document.createElement("div");
@@ -994,50 +903,6 @@
         body.appendChild(label);
         body.appendChild(track);
       });
-
-      // 贯穿三行的"共同在岗"色带行
-      const bandLabel = document.createElement("div");
-      bandLabel.className = "schedule-label band-label";
-      bandLabel.innerHTML = "<span>共同在岗</span><small>色带为互斥区间</small>";
-      const bandTrack = document.createElement("div");
-      bandTrack.className = "schedule-track band-track";
-      overlapZones.forEach(segment => {
-        const widthPercent = toPercent(segment.end) - toPercent(segment.start);
-        const stripe = document.createElement("div");
-        stripe.className = `overlap-stripe ${segment.type}`;
-        stripe.style.left = `${toPercent(segment.start)}%`;
-        stripe.style.width = `${widthPercent}%`;
-        if (widthPercent >= 8) stripe.dataset.label = OVERLAP_SHORT[segment.type];
-        stripe.title = `${OVERLAP_LABELS[segment.type]}：北京时间 ${formatClock(segment.start)}–${formatClock(segment.end)}`;
-        bandTrack.appendChild(stripe);
-      });
-      body.appendChild(bandLabel);
-      body.appendChild(bandTrack);
-
-      // 一行紧凑的共同在岗摘要，替代大段文字说明
-      const summary = document.getElementById("schedule-summary");
-      summary.replaceChildren();
-      if (!overlapZones.length) {
-        summary.textContent = "当前无任何双方或三方同时在岗时段";
-      } else {
-        const byType = new Map();
-        overlapZones.forEach(segment => {
-          if (!byType.has(segment.type)) byType.set(segment.type, []);
-          byType.get(segment.type).push(`${formatClock(segment.start)}–${formatClock(segment.end)}`);
-        });
-        byType.forEach((ranges, type) => {
-          const item = document.createElement("span");
-          item.className = "sum-item";
-          const dot = document.createElement("span");
-          dot.className = `sum-dot ${type}`;
-          const text = document.createElement("strong");
-          text.textContent = `${OVERLAP_SHORT[type]} `;
-          item.appendChild(dot);
-          item.appendChild(text);
-          item.appendChild(document.createTextNode(ranges.join(" / ")));
-          summary.appendChild(item);
-        });
-      }
     }
 
     function formatDifference(offset) {
