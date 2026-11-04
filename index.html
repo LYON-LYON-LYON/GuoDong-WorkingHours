@@ -101,6 +101,107 @@
       margin-bottom: 26px;
     }
 
+    /* 联络速览：三地时差与当前办公状态 */
+    .status-board {
+      display: grid;
+      grid-template-columns: repeat(var(--visible-zones, 3), minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .status-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--card-accent, var(--blue));
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 4px 14px rgba(28, 46, 74, 0.045);
+    }
+
+    .status-card.beijing { --card-accent: var(--beijing); }
+    .status-card.kazakhstan { --card-accent: var(--kazakhstan); }
+    .status-card.russia { --card-accent: var(--russia); }
+
+    .status-text { min-width: 0; flex: 1; }
+    .status-name { font-size: 13px; font-weight: 650; line-height: 1.35; }
+    .status-meta { margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .status-meta b { color: #3d5878; font-weight: 650; }
+
+    .status-clock {
+      flex: 0 0 auto;
+      text-align: right;
+      font-size: 22px;
+      font-weight: 650;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-clock small { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; font-weight: 400; }
+
+    /* 联络可行性结论条 */
+    .reach-note {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: -8px 0 22px;
+      padding: 11px 16px;
+      border: 1px solid #dce5f3;
+      border-radius: 12px;
+      color: #435671;
+      background: #edf3fb;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .reach-note b { color: #1f3d63; font-weight: 700; }
+    .reach-note .reach-mark {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+      font-family: Georgia, serif;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    /* 办公状态徽标 */
+    .duty-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .duty-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .duty-badge.on { color: #0f6e56; background: #e1f5ee; }
+    .duty-badge.break { color: #854f0b; background: #faeeda; }
+    .duty-badge.off { color: #667085; background: #f1f3f6; }
+
+    @media (max-width: 900px) {
+      .status-board { grid-template-columns: 1fr; }
+    }
+
     .eyebrow {
       margin-bottom: 10px;
       color: var(--blue);
@@ -386,14 +487,15 @@
     .digital-time {
       margin-top: 4px;
       text-align: center;
-      font-size: clamp(30px, 3.2vw, 40px);
-      font-weight: 650;
+      font-size: clamp(22px, 2.2vw, 27px);
+      font-weight: 600;
       line-height: 1.15;
-      letter-spacing: 0.025em;
+      letter-spacing: 0.01em;
       font-variant-numeric: tabular-nums;
+      color: #3d5878;
     }
 
-    .clock-date { margin-top: 9px; color: var(--muted); text-align: center; font-size: 13px; }
+    .clock-date { margin-top: 7px; color: var(--muted); text-align: center; font-size: 12px; }
 
     .difference {
       display: inline-flex;
@@ -564,9 +666,9 @@
   <main>
     <section class="intro" aria-labelledby="page-title">
       <div>
-        <div class="eyebrow">BEIJING / KAZAKHSTAN / RUSSIA</div>
-        <h1 id="page-title">三地时间，一眼对照</h1>
-        <p>同一时刻，三种当地时间。时间由设备时钟实时计算。</p>
+        <div class="eyebrow">国动集团 · 跨国协作</div>
+        <h1 id="page-title">联络前，先看对方几点上班</h1>
+        <p>国动集团与哈萨克斯坦、俄罗斯公司分处三个时区，工作时间相差数小时。发起联络前，先确认对方当地时间是否在办公窗口内。</p>
       </div>
       <div class="zone-picker">
         <label for="russia-zone">俄罗斯时间（默认莫斯科）</label>
@@ -579,6 +681,40 @@
         </select>
       </div>
     </section>
+
+    <section class="status-board" id="status-board" aria-label="三地联络速览">
+      <article class="status-card beijing">
+        <div class="status-text">
+          <div class="status-name">国动集团 · 北京</div>
+          <div class="status-meta">东八区 · <b id="status-diff-beijing">基准</b></div>
+          <span class="duty-badge" id="duty-beijing">计算中</span>
+        </div>
+        <div class="status-clock" id="status-time-beijing">--:--<small>当地</small></div>
+      </article>
+
+      <article class="status-card kazakhstan">
+        <div class="status-text">
+          <div class="status-name">哈萨克斯坦 · 阿拉木图</div>
+          <div class="status-meta">东五区 · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
+          <span class="duty-badge" id="duty-kazakhstan">计算中</span>
+        </div>
+        <div class="status-clock" id="status-time-kazakhstan">--:--<small>当地</small></div>
+      </article>
+
+      <article class="status-card russia">
+        <div class="status-text">
+          <div class="status-name" id="status-name-russia">俄罗斯 · 莫斯科</div>
+          <div class="status-meta" id="status-zone-russia">东三区 · 较北京 <b>晚 5 小时</b></div>
+          <span class="duty-badge" id="duty-russia">计算中</span>
+        </div>
+        <div class="status-clock" id="status-time-russia">--:--<small>当地</small></div>
+      </article>
+    </section>
+
+    <div class="reach-note">
+      <span class="reach-mark" aria-hidden="true">i</span>
+      <span id="reach-text">正在计算联络可行性…</span>
+    </div>
 
     <section class="filter-bar" aria-label="时区筛选项">
       <div class="filter-group">
@@ -599,7 +735,7 @@
           <span>俄罗斯</span>
         </label>
       </div>
-      <span class="filter-note" title="05:00–07:00 晨曦；07:00–17:00 白天；17:00–19:00 黄昏；其余时间为黑夜">天空场景随当地时间变化</span>
+      <span class="filter-note" title="天空由各地经纬度与真实太阳位置实时推算">天空场景按真实太阳位置推算</span>
     </section>
 
     <section class="clock-grid" id="clock-grid" aria-label="实时钟表">
@@ -671,7 +807,7 @@
 
       <div class="schedule" aria-label="三地工作时间北京时间轴">
         <div class="schedule-head">
-          <strong>三地工作时间对照 · 北京时间轴</strong>
+          <strong>各地当前天象与工作时段</strong>
           <span class="schedule-legend">
             <span><span class="legend-dot lunch" aria-hidden="true"></span>当地午休</span>
           </span>
@@ -1203,6 +1339,138 @@
       });
     }
 
+    /* ============ 联络速览板 ============
+     * 把「现在几点 / 差几小时 / 是否在办公时间内」直接摆在标题下方，
+     * 供同事发起联络前一眼判断。
+     */
+    const DUTY_RULES = {
+      beijing: { start: 9 * 60, end: 17 * 60 + 30 },
+      kazakhstan: { start: 9 * 60, end: 18 * 60 },
+      russia: { start: 9 * 60, end: 17 * 60 + 30 }
+    };
+
+    // 依据当地时间判定办公状态
+    function getDutyState(localMinutes, rule) {
+      if (localMinutes < rule.start) return { text: "未上班", className: "off" };
+      if (localMinutes < 12 * 60) return { text: "办公中", className: "on" };
+      if (localMinutes < 13 * 60) return { text: "午休中", className: "break" };
+      if (localMinutes < rule.end) return { text: "办公中", className: "on" };
+      return { text: "已下班", className: "off" };
+    }
+
+    // 计算北京时间轴上，某方与本部同时在岗的窗口（本地分钟）
+    function getOverlapWindows(rule, offset) {
+      const shift = (8 - offset) * 60;
+      const windows = [];
+      [[rule.start, 12 * 60], [13 * 60, rule.end]].forEach(([localStart, localEnd]) => {
+        const beijingStart = localStart + shift;
+        const beijingEnd = localEnd + shift;
+        if (beijingEnd > 0 && beijingStart < 1440) {
+          windows.push({
+            localStart,
+            localEnd,
+            beijingStart: Math.max(0, beijingStart),
+            beijingEnd: Math.min(1440, beijingEnd)
+          });
+        }
+      });
+      return windows;
+    }
+
+    // 描述某方此刻能否联络，以及下一个可用窗口
+    function describeReach(localMinutes, rule, offset) {
+      const duty = getDutyState(localMinutes, rule);
+      const beijingNow = ((localMinutes + (offset - 8) * 60) % 1440 + 1440) % 1440;
+      const hqRule = DUTY_RULES.beijing;
+      const hqNow = beijingNow;
+      const hqWorking = hqNow >= hqRule.start && hqNow < 12 * 60 ||
+        (hqNow >= 13 * 60 && hqNow < hqRule.end);
+
+      if (duty.className === "on") {
+        return {
+          duty,
+          hint: hqWorking ? "双方同时在岗，可直接联络" : "对方在岗，但本部已下班"
+        };
+      }
+      if (duty.className === "break") {
+        return { duty, hint: "午休中，13:00 后可联络" };
+      }
+
+      // 对方未上班：给出下一个双方同时在岗的窗口
+      const windows = getOverlapWindows(rule, offset);
+      const upcoming = windows.find(item => localMinutes < item.localStart);
+      if (upcoming) {
+        return {
+          duty,
+          hint: `对方 ${formatClock(upcoming.localStart)} 上班，北京时间 ${formatClock(upcoming.beijingStart)} 可联络`
+        };
+      }
+      const tomorrow = windows[0];
+      if (tomorrow) {
+        return {
+          duty,
+          hint: `今日已下班，明早 ${formatClock(tomorrow.localStart)}（北京时间 ${formatClock(tomorrow.beijingStart)}）可联络`
+        };
+      }
+      return { duty, hint: "当日无双方同时在岗时段" };
+    }
+
+    function updateStatusBoard(now) {
+      const russia = getRussiaZone();
+      const zones = [
+        { key: "beijing", offset: 8, name: "国动集团 · 北京" },
+        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦 · 阿拉木图" },
+        { key: "russia", offset: russia.offset, name: `俄罗斯 · ${russia.name}` }
+      ];
+      const utcMinutes = Math.floor((now.getTime() / 60000) % 1440);
+      const reachParts = [];
+
+      zones.forEach(zone => {
+        const card = document.querySelector(`.status-card.${zone.key}`);
+        const timeEl = document.getElementById(`status-time-${zone.key}`);
+        const dutyEl = document.getElementById(`duty-${zone.key}`);
+        if (!card || !timeEl || !dutyEl) return;
+
+        // 当地分钟数（用 UTC 偏移换算，不依赖浏览器时区）
+        const localMinutes = ((utcMinutes + zone.offset * 60) % 1440 + 1440) % 1440;
+        const hh = String(Math.floor(localMinutes / 60)).padStart(2, "0");
+        const mm = String(localMinutes % 60).padStart(2, "0");
+
+        timeEl.innerHTML = `${hh}:${mm}<small>当地时间</small>`;
+        const reach = describeReach(localMinutes, DUTY_RULES[zone.key], zone.offset);
+        dutyEl.textContent = reach.duty.text;
+        dutyEl.className = `duty-badge ${reach.duty.className}`;
+        dutyEl.title = reach.hint;
+
+        const diff = 8 - zone.offset;
+        const diffText = diff === 0 ? "基准" : diff > 0 ? `晚 ${diff} 小时` : `早 ${Math.abs(diff)} 小时`;
+        const diffEl = document.getElementById(`status-diff-${zone.key}`);
+        if (diffEl) diffEl.textContent = diffText;
+
+        if (zone.key !== "beijing" && isZoneVisible(zone.key)) {
+          reachParts.push(`<b>${zone.name.split(" · ")[0]}</b>${reach.duty.text}，${reach.hint}`);
+        }
+      });
+
+      // 俄罗斯卡片额外更新城市名与时区
+      document.getElementById("status-name-russia").textContent = `俄罗斯 · ${russia.name}`;
+      document.getElementById("status-zone-russia").innerHTML =
+        `${russia.zone} · 较北京 <b id="status-diff-russia">${formatDifference(russia.offset).replace("较北京", "")}</b>`;
+
+      // 顶部结论：能否现在联络
+      const reachText = document.getElementById("reach-text");
+      if (!reachText) return;
+      if (!reachParts.length) {
+        reachText.textContent = "当前仅显示国动集团（东八区）时间。开启其他时区可查看对方办公状态。";
+      } else {
+        const allOn = reachParts.every(part => part.includes("双方同时在岗"));
+        const lead = allOn
+          ? "此刻双方均在岗，可直接发起联络。"
+          : "当前联络状态：";
+        reachText.innerHTML = lead + reachParts.join("；") + "。";
+      }
+    }
+
     function formatDifference(offset) {
       const difference = 8 - offset;
       if (difference > 0) return `较北京晚 ${difference} 小时`;
@@ -1235,6 +1503,9 @@
       const visibleCount = 1 + Number(showKazakhstan) + Number(showRussia);
       document.querySelector(".clock-card.kazakhstan").hidden = !showKazakhstan;
       document.querySelector(".clock-card.russia").hidden = !showRussia;
+      document.querySelector(".status-card.kazakhstan").hidden = !showKazakhstan;
+      document.querySelector(".status-card.russia").hidden = !showRussia;
+      document.getElementById("status-board").style.setProperty("--visible-zones", visibleCount);
       document.getElementById("clock-grid").style.setProperty("--visible-clocks", visibleCount);
       document.getElementById("russia-zone").disabled = !showRussia;
       document.querySelector(".zone-picker").classList.toggle("is-disabled", !showRussia);
@@ -1246,6 +1517,7 @@
     document.getElementById("russia-zone").addEventListener("change", () => {
       updateRussiaLabels();
       updateAllClocks();
+      updateStatusBoard(new Date());
       renderWorkSchedule();
     });
     document.getElementById("toggle-kazakhstan").addEventListener("change", updateVisibility);
@@ -1287,21 +1559,35 @@
       if (isZoneVisible("russia")) updateSky("russia", russia, now);
     }
 
+    // 速览板每分钟刷新一次即可
+    function updateStatusOnly() {
+      updateStatusBoard(new Date());
+    }
+
     updateRussiaLabels();
     updateVisibility();
+    updateStatusBoard(new Date());
     setInterval(updateClocksOnly, 100);
     setInterval(updateSkyOnly, 30000);
+    setInterval(updateStatusOnly, 30000);
 
     // 页面从后台恢复时立即重算，避免长时间挂起导致的天象滞后
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
         updateAllClocks();
+        updateStatusBoard(new Date());
         renderWorkSchedule();
       }
     });
     // 系统休眠唤醒后同样需要重算
-    window.addEventListener("focus", updateAllClocks);
-    window.addEventListener("pageshow", updateAllClocks);
+    window.addEventListener("focus", () => {
+      updateAllClocks();
+      updateStatusBoard(new Date());
+    });
+    window.addEventListener("pageshow", () => {
+      updateAllClocks();
+      updateStatusBoard(new Date());
+    });
   </script>
 </body>
 </html>
