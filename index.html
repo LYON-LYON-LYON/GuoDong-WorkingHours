@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="北京时间、哈萨克斯坦时间与俄罗斯时间实时钟表，以及三地跨时区上班时间对照">
-  <title>三地时间对照｜北京 · 哈萨克斯坦 · 俄罗斯</title>
+  <title>国动 世界时钟 Guodong World Clock</title>
   <style>
     :root {
       --bg: #f3f6fa;
@@ -143,26 +143,38 @@
 
     .status-clock small { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; font-weight: 400; }
 
-    /* 联络可行性结论条 */
-    .reach-note {
+    /* 联络可行性结论面板：置于时钟卡片下方，放大字号并高亮状态 */
+    .reach-panel {
       display: flex;
-      align-items: center;
-      gap: 9px;
-      margin: -8px 0 22px;
-      padding: 11px 16px;
-      border: 1px solid #dce5f3;
-      border-radius: 12px;
-      color: #435671;
-      background: #edf3fb;
-      font-size: 13px;
-      line-height: 1.55;
+      align-items: flex-start;
+      gap: 18px;
+      margin: 22px 0 26px;
+      padding: 20px 24px;
+      border: 1px solid #d7e2f2;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #f2f7fd 0%, #e9f1fb 100%);
+      box-shadow: 0 6px 22px rgba(28, 46, 74, 0.06);
     }
 
-    .reach-note b { color: #1f3d63; font-weight: 700; }
-    .reach-note .reach-mark {
+    .reach-head {
       flex: 0 0 auto;
-      width: 20px;
-      height: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+    .reach-title {
+      color: #33507a;
+      font-size: 14px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .reach-mark {
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
       display: grid;
       place-items: center;
       border-radius: 50%;
@@ -170,8 +182,39 @@
       background: var(--blue);
       font-family: Georgia, serif;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 15px;
     }
+
+    .reach-body {
+      flex: 1;
+      min-width: 0;
+      color: #2c4467;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.62;
+    }
+
+    /* 状态词高亮 */
+    .reach-body .who {
+      font-weight: 700;
+      color: #16365c;
+    }
+
+    .reach-body .state {
+      display: inline-block;
+      margin: 0 2px;
+      padding: 1px 9px;
+      border-radius: 20px;
+      font-size: 17px;
+      font-weight: 700;
+      vertical-align: 1px;
+    }
+
+    .reach-body .state.on { color: #0b5c46; background: #cdeee1; }
+    .reach-body .state.break { color: #7a4606; background: #fce9c8; }
+    .reach-body .state.off { color: #4d5866; background: #dfe4ea; }
+    .reach-body .hint { color: #526b8c; }
+    .reach-body .sep { color: #a9b8cc; margin: 0 8px; }
 
     /* 办公状态徽标 */
     .duty-badge {
@@ -200,6 +243,9 @@
 
     @media (max-width: 900px) {
       .status-board { grid-template-columns: 1fr; }
+      .reach-panel { flex-direction: column; gap: 10px; padding: 18px 20px; }
+      .reach-body { font-size: 17px; }
+      .reach-body .state { font-size: 15px; }
     }
 
     .eyebrow {
@@ -626,8 +672,8 @@
           </svg>
         </div>
         <div>
-      <div class="brand-title">三地时间对照</div>
-      <div class="brand-subtitle">WORLD TIME COMPARISON</div>
+      <div class="brand-title">国动 世界时钟</div>
+      <div class="brand-subtitle">GUODONG WORLD CLOCK</div>
         </div>
       </div>
       <div class="live-badge"><span class="live-dot"></span>实时同步 · 24 小时制</div>
@@ -639,14 +685,14 @@
       <div>
         <div class="eyebrow">国动集团 · 跨国协作</div>
         <h1 id="page-title">联络前，先看对方几点上班</h1>
-        <p>国动集团与哈萨克斯坦、俄罗斯公司分处三个时区，工作时间相差数小时。发起联络前，先确认对方当地时间是否在办公窗口内。</p>
+        <p>国动集团本部与哈萨克斯坦国动、俄罗斯国动分处三个时区，工作时间相差数小时。发起联络前，先确认对方当地时间是否在办公窗口内。</p>
       </div>
     </section>
 
     <section class="status-board" id="status-board" aria-label="三地联络速览">
       <article class="status-card beijing">
         <div class="status-text">
-          <div class="status-name">国动集团·北京</div>
+          <div class="status-name">国动集团本部·北京</div>
           <div class="status-meta">东八区 · <b id="status-diff-beijing">基准</b></div>
           <span class="duty-badge" id="duty-beijing">计算中</span>
         </div>
@@ -655,7 +701,7 @@
 
       <article class="status-card kazakhstan">
         <div class="status-text">
-          <div class="status-name">哈萨克斯坦·阿拉木图</div>
+          <div class="status-name">哈萨克斯坦国动·阿拉木图</div>
           <div class="status-meta">东五区 · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
           <span class="duty-badge" id="duty-kazakhstan">计算中</span>
         </div>
@@ -664,18 +710,13 @@
 
       <article class="status-card russia">
         <div class="status-text">
-          <div class="status-name" id="status-name-russia">俄罗斯·莫斯科</div>
+          <div class="status-name" id="status-name-russia">俄罗斯国动·莫斯科</div>
           <div class="status-meta" id="status-zone-russia">东三区 · 较北京 <b>晚 5 小时</b></div>
           <span class="duty-badge" id="duty-russia">计算中</span>
         </div>
         <div class="status-clock" id="status-time-russia">--:--<small>当地</small></div>
       </article>
     </section>
-
-    <div class="reach-note">
-      <span class="reach-mark" aria-hidden="true">i</span>
-      <span id="reach-text">正在计算联络可行性…</span>
-    </div>
 
     <section class="filter-bar" aria-label="时区筛选项">
       <div class="filter-group">
@@ -736,7 +777,7 @@
 
       <article class="clock-card russia">
         <div class="clock-head">
-          <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯·莫斯科时间</h2></div>
+          <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯国动·莫斯科时间</h2></div>
           <span class="utc-tag" id="russia-offset">UTC+3</span>
         </div>
         <div class="sky-scene" id="sky-russia">
@@ -752,16 +793,24 @@
       </article>
     </section>
 
+    <section class="reach-panel" aria-label="当前联络状态">
+      <div class="reach-head">
+        <span class="reach-mark" aria-hidden="true">i</span>
+        <span class="reach-title">当前联络状态</span>
+      </div>
+      <div class="reach-body" id="reach-text">正在计算联络可行性…</div>
+    </section>
+
     <div class="info-strip">
       <span class="info-icon" aria-hidden="true">i</span>
-      <span id="time-summary">哈萨克斯坦（东五区）较北京晚 3 小时；莫斯科（东三区）较北京晚 5 小时。所显示时区均不实行夏令时。</span>
+      <span id="time-summary">哈萨克斯坦国动（东五区）较北京晚 3 小时；俄罗斯国动·莫斯科（东三区）较北京晚 5 小时。所显示时区均不实行夏令时。</span>
     </div>
 
     <section class="work-card" aria-labelledby="work-title">
       <div class="work-head">
         <div>
           <h2 id="work-title">跨时区上班时间</h2>
-          <p id="work-schedule-desc">集团本部 09:00–17:30 ｜ 俄罗斯公司 09:00–17:30 ｜ 哈萨克斯坦公司 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
+          <p id="work-schedule-desc">国动集团本部 09:00–17:30 ｜ 俄罗斯国动 09:00–17:30 ｜ 哈萨克斯坦国动 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
         </div>
         <span class="workday-tag">工作日 · 已扣除午休</span>
       </div>
@@ -1196,8 +1245,8 @@
 
     const WORK_SCHEDULES = [
       { key: "hq", name: "集团本部", offset: 8, start: 9 * 60, end: 17 * 60 + 30, className: "hq-bar" },
-      { key: "kz", name: "哈萨克斯坦公司", offset: 5, start: 9 * 60, end: 18 * 60, className: "kz-bar" },
-      { key: "ru", name: "俄罗斯公司", offset: null, start: 9 * 60, end: 17 * 60 + 30, className: "ru-bar" }
+      { key: "kz", name: "哈萨克斯坦国动", offset: 5, start: 9 * 60, end: 18 * 60, className: "kz-bar" },
+      { key: "ru", name: "俄罗斯国动", offset: null, start: 9 * 60, end: 17 * 60 + 30, className: "ru-bar" }
     ];
 
     function formatClock(minutes) {
@@ -1220,7 +1269,7 @@
       const russia = getRussiaZone();
       return WORK_SCHEDULES.map(item => {
         const offset = item.key === "ru" ? russia.offset : item.offset;
-        const name = item.key === "ru" ? `俄罗斯公司 · ${russia.name}` : item.name;
+        const name = item.key === "ru" ? `俄罗斯国动 · ${russia.name}` : item.name;
         return {
           ...item,
           offset,
@@ -1380,9 +1429,9 @@
     function updateStatusBoard(now) {
       const russia = getRussiaZone();
       const zones = [
-        { key: "beijing", offset: 8, name: "国动集团·北京" },
-        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦·阿拉木图" },
-        { key: "russia", offset: russia.offset, name: `俄罗斯·${russia.name}` }
+        { key: "beijing", offset: 8, name: "国动集团本部·北京" },
+        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦国动·阿拉木图" },
+        { key: "russia", offset: russia.offset, name: `俄罗斯国动·${russia.name}` }
       ];
       const utcMinutes = Math.floor((now.getTime() / 60000) % 1440);
       const reachParts = [];
@@ -1411,26 +1460,36 @@
 
         if (zone.key !== "beijing" && isZoneVisible(zone.key)) {
           const shortName = zone.name.split("·")[0];
-          reachParts.push(`<b>${shortName}</b>${reach.duty.text}，${reach.hint}`);
+          reachParts.push({
+            name: shortName,
+            duty: reach.duty,
+            hint: reach.hint
+          });
         }
       });
 
       // 俄罗斯卡片额外更新城市名与时区
-      document.getElementById("status-name-russia").textContent = `俄罗斯·${russia.name}`;
+      document.getElementById("status-name-russia").textContent = `俄罗斯国动·${russia.name}`;
       document.getElementById("status-zone-russia").innerHTML =
         `${russia.zone} · 较北京 <b id="status-diff-russia">${formatDifference(russia.offset).replace("较北京", "")}</b>`;
 
-      // 顶部结论：能否现在联络
+      // 时钟下方的联络状态面板
       const reachText = document.getElementById("reach-text");
       if (!reachText) return;
       if (!reachParts.length) {
-        reachText.textContent = "当前仅显示国动集团（东八区）时间。开启其他时区可查看对方办公状态。";
+        reachText.innerHTML =
+          '<span class="hint">当前仅显示国动集团本部（东八区）时间。开启其他时区可查看对方办公状态。</span>';
       } else {
-        const allOn = reachParts.every(part => part.includes("双方同时在岗"));
+        const allOn = reachParts.every(part => part.hint.includes("双方同时在岗"));
         const lead = allOn
-          ? "此刻双方均在岗，可直接发起联络。"
-          : "当前联络状态：";
-        reachText.innerHTML = lead + reachParts.join("；") + "。";
+          ? '<span class="hint">此刻双方均在岗，可直接发起联络。</span>'
+          : '';
+        const items = reachParts.map(part =>
+          `<span class="who">${part.name}</span>` +
+          `<span class="state ${part.duty.className}">${part.duty.text}</span>` +
+          `<span class="hint">${part.hint}</span>`
+        );
+        reachText.innerHTML = lead + items.join('<span class="sep">｜</span>');
       }
     }
 
@@ -1444,8 +1503,8 @@
     function updateTimeSummary() {
       const russia = getRussiaZone();
       const summaries = [];
-      if (isZoneVisible("kazakhstan")) summaries.push("哈萨克斯坦（东五区）较北京晚 3 小时");
-      if (isZoneVisible("russia")) summaries.push(`${russia.name}（${russia.zone}）${formatDifference(russia.offset)}`);
+      if (isZoneVisible("kazakhstan")) summaries.push("哈萨克斯坦国动（东五区）较北京晚 3 小时");
+      if (isZoneVisible("russia")) summaries.push(`俄罗斯国动·${russia.name}（${russia.zone}）${formatDifference(russia.offset)}`);
       document.getElementById("time-summary").textContent = summaries.length
         ? `${summaries.join("；")}。所显示时区均不实行夏令时。`
         : "当前仅显示北京时间（东八区）。东八区不实行夏令时。";
@@ -1453,7 +1512,7 @@
 
     function updateRussiaLabels() {
       const russia = getRussiaZone();
-      document.getElementById("russia-title").textContent = `俄罗斯·${russia.name}时间`;
+      document.getElementById("russia-title").textContent = `俄罗斯国动·${russia.name}时间`;
       document.getElementById("russia-offset").textContent = russia.label;
       document.getElementById("russia-difference").textContent = `${russia.zone} · ${formatDifference(russia.offset)}`;
       document.getElementById("clock-russia").setAttribute("aria-label", `俄罗斯${russia.name}时间模拟钟表`);
