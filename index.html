@@ -220,34 +220,6 @@
 
     .intro p { margin: 12px 0 0; color: var(--muted); line-height: 1.7; }
 
-    .zone-picker {
-      min-width: 235px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--surface);
-      box-shadow: 0 5px 18px rgba(28, 46, 74, 0.04);
-    }
-
-    .zone-picker label {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .zone-picker select {
-      width: 100%;
-      padding: 2px 26px 2px 0;
-      border: 0;
-      outline: 0;
-      color: var(--ink);
-      background: transparent;
-      font-weight: 650;
-    }
-
-    .zone-picker.is-disabled { opacity: 0.48; }
-    .zone-picker select:disabled { cursor: not-allowed; }
     [hidden] { display: none !important; }
 
     .filter-bar {
@@ -610,7 +582,6 @@
       .live-badge { font-size: 12px; }
       main { padding-top: 28px; }
       .intro { flex-direction: column; }
-      .zone-picker { width: 100%; }
       .filter-bar { align-items: flex-start; flex-direction: column; gap: 8px; }
       .filter-note { padding-left: 2px; white-space: normal; }
       .clock-card { display: block; padding: 22px; }
@@ -635,7 +606,7 @@
 
     @media print {
       body { background: #fff; }
-      .topbar, .zone-picker, .filter-bar, footer { display: none; }
+      .topbar, .filter-bar, footer { display: none; }
       main { width: 100%; padding: 0; }
       .clock-grid { grid-template-columns: repeat(var(--visible-clocks, 3), 1fr); }
       .clock-card, .work-card { box-shadow: none; break-inside: avoid; }
@@ -670,22 +641,12 @@
         <h1 id="page-title">联络前，先看对方几点上班</h1>
         <p>国动集团与哈萨克斯坦、俄罗斯公司分处三个时区，工作时间相差数小时。发起联络前，先确认对方当地时间是否在办公窗口内。</p>
       </div>
-      <div class="zone-picker">
-        <label for="russia-zone">俄罗斯时间（默认莫斯科）</label>
-        <select id="russia-zone">
-          <option value="Europe/Moscow" data-offset="UTC+3" data-name="莫斯科" data-zone="东三区" data-lat="55.7558" data-lon="37.6173">莫斯科 · UTC+3</option>
-          <option value="Europe/Kaliningrad" data-offset="UTC+2" data-name="加里宁格勒" data-zone="东二区" data-lat="54.7104" data-lon="20.4522">加里宁格勒 · UTC+2</option>
-          <option value="Asia/Yekaterinburg" data-offset="UTC+5" data-name="叶卡捷琳堡" data-zone="东五区" data-lat="56.8389" data-lon="60.6057">叶卡捷琳堡 · UTC+5</option>
-          <option value="Asia/Novosibirsk" data-offset="UTC+7" data-name="新西伯利亚" data-zone="东七区" data-lat="55.0084" data-lon="82.9357">新西伯利亚 · UTC+7</option>
-          <option value="Asia/Vladivostok" data-offset="UTC+10" data-name="符拉迪沃斯托克" data-zone="东十区" data-lat="43.1155" data-lon="131.8855">符拉迪沃斯托克 · UTC+10</option>
-        </select>
-      </div>
     </section>
 
     <section class="status-board" id="status-board" aria-label="三地联络速览">
       <article class="status-card beijing">
         <div class="status-text">
-          <div class="status-name">国动集团 · 北京</div>
+          <div class="status-name">国动集团·北京</div>
           <div class="status-meta">东八区 · <b id="status-diff-beijing">基准</b></div>
           <span class="duty-badge" id="duty-beijing">计算中</span>
         </div>
@@ -694,7 +655,7 @@
 
       <article class="status-card kazakhstan">
         <div class="status-text">
-          <div class="status-name">哈萨克斯坦 · 阿拉木图</div>
+          <div class="status-name">哈萨克斯坦·阿拉木图</div>
           <div class="status-meta">东五区 · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
           <span class="duty-badge" id="duty-kazakhstan">计算中</span>
         </div>
@@ -703,7 +664,7 @@
 
       <article class="status-card russia">
         <div class="status-text">
-          <div class="status-name" id="status-name-russia">俄罗斯 · 莫斯科</div>
+          <div class="status-name" id="status-name-russia">俄罗斯·莫斯科</div>
           <div class="status-meta" id="status-zone-russia">东三区 · 较北京 <b>晚 5 小时</b></div>
           <span class="duty-badge" id="duty-russia">计算中</span>
         </div>
@@ -775,7 +736,7 @@
 
       <article class="clock-card russia">
         <div class="clock-head">
-          <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯 · 莫斯科</h2></div>
+          <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯·莫斯科时间</h2></div>
           <span class="utc-tag" id="russia-offset">UTC+3</span>
         </div>
         <div class="sky-scene" id="sky-russia">
@@ -1099,18 +1060,20 @@
     buildClock("clock-kazakhstan", "#078a83");
     buildClock("clock-russia", "#4263d5");
 
+    // 俄罗斯固定为莫斯科（东三区）
+    const RUSSIA_ZONE = {
+      key: "russia",
+      timeZone: "Europe/Moscow",
+      offset: 3,
+      name: "莫斯科",
+      label: "UTC+3",
+      zone: "东三区",
+      lat: 55.7558,
+      lon: 37.6173
+    };
+
     function getRussiaZone() {
-      const select = document.getElementById("russia-zone");
-      const option = select.options[select.selectedIndex];
-      return {
-        timeZone: select.value,
-        offset: Number(option.dataset.offset.replace("UTC", "")),
-        name: option.dataset.name,
-        label: option.dataset.offset,
-        zone: option.dataset.zone,
-        lat: Number(option.dataset.lat),
-        lon: Number(option.dataset.lon)
-      };
+      return RUSSIA_ZONE;
     }
 
     function zoneName(offset) {
@@ -1382,9 +1345,8 @@
       const duty = getDutyState(localMinutes, rule);
       const beijingNow = ((localMinutes + (offset - 8) * 60) % 1440 + 1440) % 1440;
       const hqRule = DUTY_RULES.beijing;
-      const hqNow = beijingNow;
-      const hqWorking = hqNow >= hqRule.start && hqNow < 12 * 60 ||
-        (hqNow >= 13 * 60 && hqNow < hqRule.end);
+      const hqWorking = (beijingNow >= hqRule.start && beijingNow < 12 * 60) ||
+        (beijingNow >= 13 * 60 && beijingNow < hqRule.end);
 
       if (duty.className === "on") {
         return {
@@ -1393,7 +1355,7 @@
         };
       }
       if (duty.className === "break") {
-        return { duty, hint: "午休中，13:00 后可联络" };
+        return { duty, hint: "13:00 后可联络" };
       }
 
       // 对方未上班：给出下一个双方同时在岗的窗口
@@ -1418,9 +1380,9 @@
     function updateStatusBoard(now) {
       const russia = getRussiaZone();
       const zones = [
-        { key: "beijing", offset: 8, name: "国动集团 · 北京" },
-        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦 · 阿拉木图" },
-        { key: "russia", offset: russia.offset, name: `俄罗斯 · ${russia.name}` }
+        { key: "beijing", offset: 8, name: "国动集团·北京" },
+        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦·阿拉木图" },
+        { key: "russia", offset: russia.offset, name: `俄罗斯·${russia.name}` }
       ];
       const utcMinutes = Math.floor((now.getTime() / 60000) % 1440);
       const reachParts = [];
@@ -1448,12 +1410,13 @@
         if (diffEl) diffEl.textContent = diffText;
 
         if (zone.key !== "beijing" && isZoneVisible(zone.key)) {
-          reachParts.push(`<b>${zone.name.split(" · ")[0]}</b>${reach.duty.text}，${reach.hint}`);
+          const shortName = zone.name.split("·")[0];
+          reachParts.push(`<b>${shortName}</b>${reach.duty.text}，${reach.hint}`);
         }
       });
 
       // 俄罗斯卡片额外更新城市名与时区
-      document.getElementById("status-name-russia").textContent = `俄罗斯 · ${russia.name}`;
+      document.getElementById("status-name-russia").textContent = `俄罗斯·${russia.name}`;
       document.getElementById("status-zone-russia").innerHTML =
         `${russia.zone} · 较北京 <b id="status-diff-russia">${formatDifference(russia.offset).replace("较北京", "")}</b>`;
 
@@ -1490,7 +1453,7 @@
 
     function updateRussiaLabels() {
       const russia = getRussiaZone();
-      document.getElementById("russia-title").textContent = `俄罗斯 · ${russia.name}`;
+      document.getElementById("russia-title").textContent = `俄罗斯·${russia.name}时间`;
       document.getElementById("russia-offset").textContent = russia.label;
       document.getElementById("russia-difference").textContent = `${russia.zone} · ${formatDifference(russia.offset)}`;
       document.getElementById("clock-russia").setAttribute("aria-label", `俄罗斯${russia.name}时间模拟钟表`);
@@ -1507,19 +1470,11 @@
       document.querySelector(".status-card.russia").hidden = !showRussia;
       document.getElementById("status-board").style.setProperty("--visible-zones", visibleCount);
       document.getElementById("clock-grid").style.setProperty("--visible-clocks", visibleCount);
-      document.getElementById("russia-zone").disabled = !showRussia;
-      document.querySelector(".zone-picker").classList.toggle("is-disabled", !showRussia);
       updateTimeSummary();
       updateAllClocks();
       renderWorkSchedule();
     }
 
-    document.getElementById("russia-zone").addEventListener("change", () => {
-      updateRussiaLabels();
-      updateAllClocks();
-      updateStatusBoard(new Date());
-      renderWorkSchedule();
-    });
     document.getElementById("toggle-kazakhstan").addEventListener("change", updateVisibility);
     document.getElementById("toggle-russia").addEventListener("change", updateVisibility);
 
