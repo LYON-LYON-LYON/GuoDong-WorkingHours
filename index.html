@@ -250,7 +250,19 @@
       white-space: nowrap;
     }
 
+    /* 天空场景：由 JS 写入 --sky-* 变量驱动，太阳/月亮位置由 --orb-x/--orb-y 定位 */
     .sky-scene {
+      --sky-zenith: #15244a;
+      --sky-mid: #2c3f66;
+      --sky-horizon: #4a5f85;
+      --sky-ground: #2c3a52;
+      --star-opacity: 1;
+      --sun-opacity: 0;
+      --moon-opacity: 0;
+      --orb-x: 50%;
+      --orb-y: 30%;
+      --orb-size: 46px;
+      --orb-tint: #ffdb78;
       position: relative;
       isolation: isolate;
       overflow: hidden;
@@ -258,67 +270,90 @@
       margin: 15px auto 8px;
       padding: 10px 10px 7px;
       border-radius: 20px;
-      background: linear-gradient(165deg, #15244a, #586681);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-      transition: background 0.8s ease;
+      background:
+        linear-gradient(180deg, var(--sky-zenith) 0%, var(--sky-mid) 46%, var(--sky-horizon) 82%, var(--sky-ground) 100%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+      transition: background 1.2s linear;
     }
-
-    .sky-scene.sky-night { background: linear-gradient(165deg, #111d3e 0%, #26375d 55%, #66718a 100%); }
-    .sky-scene.sky-dawn { background: linear-gradient(165deg, #6475aa 0%, #c48da0 52%, #f6c594 100%); }
-    .sky-scene.sky-day { background: linear-gradient(165deg, #58a9dc 0%, #9fd3eb 58%, #e1f1f5 100%); }
-    .sky-scene.sky-dusk { background: linear-gradient(165deg, #504b7c 0%, #b87587 52%, #efad7f 100%); }
 
     .sky-stars {
       position: absolute;
-      z-index: -1;
+      z-index: -2;
       inset: 0;
-      opacity: 1;
+      opacity: var(--star-opacity);
       background-image:
         radial-gradient(circle at 15% 25%, #fff 0 1px, transparent 1.5px),
         radial-gradient(circle at 33% 13%, rgba(255,255,255,.85) 0 1px, transparent 1.5px),
         radial-gradient(circle at 74% 23%, #fff 0 1.2px, transparent 1.7px),
         radial-gradient(circle at 88% 47%, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
         radial-gradient(circle at 12% 63%, rgba(255,255,255,.75) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 62% 8%, rgba(255,255,255,.8) 0 1px, transparent 1.5px);
-      transition: opacity 0.8s ease;
+        radial-gradient(circle at 62% 8%, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 44% 42%, rgba(255,255,255,.6) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 25% 78%, rgba(255,255,255,.55) 0 1px, transparent 1.5px);
+      transition: opacity 1.2s linear;
     }
 
-    .sky-day .sky-stars { opacity: 0; }
-    .sky-dawn .sky-stars, .sky-dusk .sky-stars { opacity: 0.32; }
-
+    /* 日轮 / 月亮共用一个轨道元素，由 JS 切换其形态与位置
+     * 置于表盘之下、地面之上，保证时钟读数始终清晰 */
     .sky-orb {
       position: absolute;
-      z-index: -1;
-      top: 35px;
-      right: 24px;
-      width: 48px;
-      height: 48px;
+      z-index: 0;
+      left: var(--orb-x);
+      top: var(--orb-y);
+      width: var(--orb-size);
+      height: var(--orb-size);
+      margin-left: calc(var(--orb-size) / -2);
+      margin-top: calc(var(--orb-size) / -2);
       border-radius: 50%;
-      background: #f5f0d7;
-      box-shadow: 0 0 28px rgba(245, 240, 215, 0.28);
-      transition: all 0.8s ease;
+      opacity: var(--sun-opacity);
+      background: var(--orb-tint);
+      box-shadow: 0 0 26px rgba(255, 214, 130, 0.5);
+      transition: left 1.2s linear, top 1.2s linear, opacity 1.2s linear, background 1.2s linear;
     }
 
-    .sky-orb::after {
+    /* 月亮形态：带月相遮罩的冷白圆盘 */
+    .sky-orb.is-moon {
+      opacity: var(--moon-opacity);
+      background: #eef1f6;
+      box-shadow: 0 0 22px rgba(210, 225, 255, 0.34);
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 100%, transparent 100%);
+    }
+
+    /* 月相：用一个偏移的暗色圆遮罩模拟明暗界线，--moon-lit 为被照亮比例 */
+    .sky-orb.is-moon::before {
       content: "";
       position: absolute;
-      top: 9px;
-      left: 10px;
-      width: 9px;
-      height: 9px;
+      inset: 0;
       border-radius: 50%;
-      background: rgba(151, 153, 154, 0.18);
-      box-shadow: 17px 15px 0 3px rgba(151, 153, 154, 0.12);
+      background: #16203c;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      opacity: 0.94;
+      clip-path: inset(0 0 0 var(--moon-lit, 50%));
     }
 
-    .sky-day .sky-orb {
-      top: 31px;
-      background: #ffdb78;
-      box-shadow: 0 0 38px rgba(255, 219, 120, 0.72);
+    .sky-orb.is-moon::after {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 9px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(151, 153, 154, 0.16);
+      box-shadow: 15px 13px 0 3px rgba(151, 153, 154, 0.1);
     }
-    .sky-day .sky-orb::after { display: none; }
-    .sky-dawn .sky-orb, .sky-dusk .sky-orb { top: 69px; background: #ffd19a; box-shadow: 0 0 32px rgba(255, 196, 143, 0.52); }
-    .sky-dawn .sky-orb::after, .sky-dusk .sky-orb::after { display: none; }
+
+    /* 地面：随天空变暗 */
+    .sky-ground {
+      position: absolute;
+      z-index: -1;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 16%;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, var(--sky-ground) 100%);
+      transition: background 1.2s linear;
+    }
 
     .sky-status {
       position: absolute;
@@ -333,9 +368,10 @@
       font-size: 11px;
       font-weight: 650;
       letter-spacing: 0.04em;
+      transition: color 1.2s linear, background 1.2s linear;
     }
 
-    .sky-day .sky-status { color: #23455b; background: rgba(255, 255, 255, 0.35); }
+    .sky-status.is-light { color: #23455b; background: rgba(255, 255, 255, 0.35); }
 
     .clock-face {
       position: relative;
@@ -535,11 +571,11 @@
       <div class="zone-picker">
         <label for="russia-zone">俄罗斯时间（默认莫斯科）</label>
         <select id="russia-zone">
-          <option value="Europe/Moscow" data-offset="UTC+3" data-name="莫斯科" data-zone="东三区">莫斯科 · UTC+3</option>
-          <option value="Europe/Kaliningrad" data-offset="UTC+2" data-name="加里宁格勒" data-zone="东二区">加里宁格勒 · UTC+2</option>
-          <option value="Asia/Yekaterinburg" data-offset="UTC+5" data-name="叶卡捷琳堡" data-zone="东五区">叶卡捷琳堡 · UTC+5</option>
-          <option value="Asia/Novosibirsk" data-offset="UTC+7" data-name="新西伯利亚" data-zone="东七区">新西伯利亚 · UTC+7</option>
-          <option value="Asia/Vladivostok" data-offset="UTC+10" data-name="符拉迪沃斯托克" data-zone="东十区">符拉迪沃斯托克 · UTC+10</option>
+          <option value="Europe/Moscow" data-offset="UTC+3" data-name="莫斯科" data-zone="东三区" data-lat="55.7558" data-lon="37.6173">莫斯科 · UTC+3</option>
+          <option value="Europe/Kaliningrad" data-offset="UTC+2" data-name="加里宁格勒" data-zone="东二区" data-lat="54.7104" data-lon="20.4522">加里宁格勒 · UTC+2</option>
+          <option value="Asia/Yekaterinburg" data-offset="UTC+5" data-name="叶卡捷琳堡" data-zone="东五区" data-lat="56.8389" data-lon="60.6057">叶卡捷琳堡 · UTC+5</option>
+          <option value="Asia/Novosibirsk" data-offset="UTC+7" data-name="新西伯利亚" data-zone="东七区" data-lat="55.0084" data-lon="82.9357">新西伯利亚 · UTC+7</option>
+          <option value="Asia/Vladivostok" data-offset="UTC+10" data-name="符拉迪沃斯托克" data-zone="东十区" data-lat="43.1155" data-lon="131.8855">符拉迪沃斯托克 · UTC+10</option>
         </select>
       </div>
     </section>
@@ -572,10 +608,11 @@
           <div><div class="country-code">CN · CHINA</div><h2>北京时间</h2></div>
           <span class="utc-tag">UTC+8</span>
         </div>
-        <div class="sky-scene sky-night" id="sky-beijing">
+        <div class="sky-scene" id="sky-beijing">
           <div class="sky-stars" aria-hidden="true"></div>
-          <span class="sky-orb" aria-hidden="true"></span>
-          <span class="sky-status" id="sky-label-beijing">当地 · 黑夜</span>
+          <span class="sky-orb" id="orb-beijing" aria-hidden="true"></span>
+          <span class="sky-ground" aria-hidden="true"></span>
+          <span class="sky-status" id="sky-label-beijing">当地 · 计算中</span>
           <svg class="clock-face" id="clock-beijing" viewBox="0 0 240 240" role="img" aria-label="北京时间模拟钟表"></svg>
         </div>
         <div class="digital-time" id="digital-beijing">--:--:--</div>
@@ -588,10 +625,11 @@
           <div><div class="country-code">KZ · KAZAKHSTAN</div><h2>哈萨克斯坦时间</h2></div>
           <span class="utc-tag">UTC+5</span>
         </div>
-        <div class="sky-scene sky-night" id="sky-kazakhstan">
+        <div class="sky-scene" id="sky-kazakhstan">
           <div class="sky-stars" aria-hidden="true"></div>
-          <span class="sky-orb" aria-hidden="true"></span>
-          <span class="sky-status" id="sky-label-kazakhstan">当地 · 黑夜</span>
+          <span class="sky-orb" id="orb-kazakhstan" aria-hidden="true"></span>
+          <span class="sky-ground" aria-hidden="true"></span>
+          <span class="sky-status" id="sky-label-kazakhstan">当地 · 计算中</span>
           <svg class="clock-face" id="clock-kazakhstan" viewBox="0 0 240 240" role="img" aria-label="哈萨克斯坦时间模拟钟表"></svg>
         </div>
         <div class="digital-time" id="digital-kazakhstan">--:--:--</div>
@@ -604,10 +642,11 @@
           <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯 · 莫斯科</h2></div>
           <span class="utc-tag" id="russia-offset">UTC+3</span>
         </div>
-        <div class="sky-scene sky-night" id="sky-russia">
+        <div class="sky-scene" id="sky-russia">
           <div class="sky-stars" aria-hidden="true"></div>
-          <span class="sky-orb" aria-hidden="true"></span>
-          <span class="sky-status" id="sky-label-russia">当地 · 黑夜</span>
+          <span class="sky-orb" id="orb-russia" aria-hidden="true"></span>
+          <span class="sky-ground" aria-hidden="true"></span>
+          <span class="sky-status" id="sky-label-russia">当地 · 计算中</span>
           <svg class="clock-face" id="clock-russia" viewBox="0 0 240 240" role="img" aria-label="俄罗斯时间模拟钟表"></svg>
         </div>
         <div class="digital-time" id="digital-russia">--:--:--</div>
@@ -645,18 +684,214 @@
       </div>
     </section>
 
-    <footer>时区依据 IANA 时区数据库由浏览器计算 · 哈萨克斯坦自 2024 年起全国统一使用 UTC+5<br>天空为当地时间示意：05:00–07:00 晨曦，07:00–17:00 白天，17:00–19:00 黄昏，其余为黑夜<br>本页面无需联网，可作为单个 HTML 文件离线使用</footer>
+    <footer>时区依据 IANA 时区数据库由浏览器计算 · 哈萨克斯坦自 2024 年起全国统一使用 UTC+5<br>天空场景由各地经纬度与 UTC 时刻实时推算太阳高度角与方位角生成，阈值：＞+6° 白天，−6°～+6° 晨昏，＜−6° 暮色，＜−18° 黑夜<br>本页面无需联网，可作为单个 HTML 文件离线使用</footer>
   </main>
 
   <script>
     const ZONES = {
-      beijing: { timeZone: "Asia/Shanghai", offset: 8 },
-      kazakhstan: { timeZone: "Asia/Almaty", offset: 5 }
+      beijing: { timeZone: "Asia/Shanghai", offset: 8, lat: 39.9042, lon: 116.4074, label: "北京" },
+      kazakhstan: { timeZone: "Asia/Almaty", offset: 5, lat: 43.2220, lon: 76.8512, label: "阿拉木图" }
     };
 
     const timeFormatters = new Map();
     const dateFormatters = new Map();
     const svgNS = "http://www.w3.org/2000/svg";
+
+    /* ============ 天象引擎 ============
+     * 采用 Meeus / NOAA 天文算法，仅依赖 UTC 时刻与观测点经纬度，
+     * 与服务器时区、浏览器所在时区完全无关。
+     * 恒星时(GMST) + 赤经计算时角，精度满足民用日出日落需求。
+     */
+
+    const RAD = Math.PI / 180;
+    const DEG = 180 / Math.PI;
+    const J2000 = 2451545.0;
+
+    function mod360(value) {
+      return ((value % 360) + 360) % 360;
+    }
+
+    // 儒略日（UTC）
+    function toJulianDay(date) {
+      return date.getTime() / 86400000 + 2440587.5;
+    }
+
+    // 格林尼治平恒星时（度）
+    function getGmst(jd) {
+      const d = jd - J2000;
+      return mod360(280.46061837 + 360.98564736629 * d);
+    }
+
+    // 太阳：几何黄经、赤纬、轨道要素
+    function solarElements(jd) {
+      const d = jd - J2000;
+      const T = d / 36525;
+      const L0 = mod360(280.46646 + T * (36000.76983 + T * 0.0003032));
+      const M = 357.52911 + T * (35999.05029 - 0.0001537 * T);
+      const e = 0.016708634 - T * (0.000042037 + 0.0000001267 * T);
+      const C =
+        Math.sin(M * RAD) * (1.914602 - T * (0.004817 + 0.000014 * T)) +
+        Math.sin(2 * M * RAD) * (0.019993 - 0.000101 * T) +
+        Math.sin(3 * M * RAD) * 0.000289;
+      const trueLong = L0 + C;
+      const omega = 125.04 - 1934.136 * T;
+      const appLong = trueLong - 0.00569 - 0.00478 * Math.sin(omega * RAD);
+      const eps0 = 23 + (26 + (21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60) / 60;
+      const eps = eps0 + 0.00256 * Math.cos(omega * RAD);
+      const declination = Math.asin(Math.sin(eps * RAD) * Math.sin(appLong * RAD)) * DEG;
+      const rightAscension = mod360(
+        Math.atan2(Math.cos(eps * RAD) * Math.sin(appLong * RAD), Math.cos(appLong * RAD)) * DEG
+      );
+      return { declination, rightAscension, appLong, eps };
+    }
+
+    // 月亮：Meeus 低精度黄道坐标（Meeus《Astronomical Algorithms》第 47 章）
+    function lunarElements(jd) {
+      const d = jd - J2000;
+      const Lp = mod360(218.316 + 13.176396 * d);
+      const D = mod360(297.850 + 12.190749 * d);
+      const M = mod360(357.529 + 0.98560028 * d);
+      const Mp = mod360(134.963 + 13.064993 * d);
+      const F = mod360(93.272 + 13.176350 * d);
+      const lon = mod360(
+        Lp +
+        6.289 * Math.sin(Mp * RAD) +
+        1.274 * Math.sin((2 * D - Mp) * RAD) +
+        0.658 * Math.sin(2 * D * RAD) +
+        0.214 * Math.sin(2 * Mp * RAD) -
+        0.186 * Math.sin(M * RAD) -
+        0.059 * Math.sin((2 * D - 2 * Mp) * RAD) -
+        0.057 * Math.sin((2 * D - M - Mp) * RAD) +
+        0.053 * Math.sin((2 * D + Mp) * RAD) +
+        0.046 * Math.sin((2 * D - M) * RAD) +
+        0.041 * Math.sin((Mp - M) * RAD) -
+        0.035 * Math.sin(D * RAD) -
+        0.031 * Math.sin((M + Mp) * RAD)
+      );
+      const lat =
+        5.128 * Math.sin(F * RAD) +
+        0.281 * Math.sin((Mp + F) * RAD) -
+        0.278 * Math.sin((F - Mp) * RAD) -
+        0.173 * Math.sin((F - 2 * D) * RAD);
+      return { lon, lat };
+    }
+
+    // 由赤纬、赤经与地方恒星时求高度角与方位角
+    function altitudeAzimuth(jd, lat, lon, declination, rightAscension) {
+      const lst = mod360(getGmst(jd) + lon);
+      let hourAngle = lst - rightAscension;
+      if (hourAngle > 180) hourAngle -= 360;
+      if (hourAngle < -180) hourAngle += 360;
+      const latRad = lat * RAD;
+      const declRad = declination * RAD;
+      const haRad = hourAngle * RAD;
+      const sinAlt =
+        Math.sin(latRad) * Math.sin(declRad) + Math.cos(latRad) * Math.cos(declRad) * Math.cos(haRad);
+      const altitude = Math.asin(Math.max(-1, Math.min(1, sinAlt))) * DEG;
+      const cosAz =
+        (Math.sin(declRad) - Math.sin(latRad) * sinAlt) /
+        (Math.cos(latRad) * Math.cos(altitude * RAD) || 1e-6);
+      let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAz))) * DEG;
+      if (Math.sin(haRad) > 0) azimuth = 360 - azimuth;
+      return { altitude, azimuth, hourAngle };
+    }
+
+    // 计算某地此刻的太阳位置（度）
+    function getSunPosition(date, lat, lon) {
+      const jd = toJulianDay(date);
+      const sun = solarElements(jd);
+      return altitudeAzimuth(jd, lat, lon, sun.declination, sun.rightAscension);
+    }
+
+    // 计算某地此刻的月亮位置与月相
+    function getMoonPosition(date, lat, lon) {
+      const jd = toJulianDay(date);
+      const moon = lunarElements(jd);
+      const sun = solarElements(jd);
+      const epsRad = sun.eps * RAD;
+      const lonRad = moon.lon * RAD;
+      const latRad = moon.lat * RAD;
+      const rightAscension = mod360(
+        Math.atan2(
+          Math.sin(lonRad) * Math.cos(epsRad) - Math.tan(latRad) * Math.sin(epsRad),
+          Math.cos(lonRad)
+        ) * DEG
+      );
+      const declination =
+        Math.asin(
+          Math.sin(latRad) * Math.cos(epsRad) + Math.cos(latRad) * Math.sin(epsRad) * Math.sin(lonRad)
+        ) * DEG;
+      const position = altitudeAzimuth(jd, lat, lon, declination, rightAscension);
+      // 日月黄经差即月龄角，据此求被照亮比例
+      const elongation = mod360(moon.lon - sun.appLong);
+      const illuminated = (1 - Math.cos(elongation * RAD)) / 2;
+      return { ...position, illuminated, elongation };
+    }
+
+    // 昼夜状态判定阈值（度）
+    const SUN_THRESHOLDS = {
+      daylight: 6,      // 太阳高度角 > 6° 视为白天
+      twilight: -6,     // -6° ~ 6° 视为晨昏（金色时刻）
+      night: -18        // < -18° 视为天文夜
+    };
+
+    // 依据太阳高度角判定状态
+    function getSkyPhaseByAltitude(altitude) {
+      if (altitude > SUN_THRESHOLDS.daylight) return { name: "白天", key: "day" };
+      if (altitude > SUN_THRESHOLDS.twilight) return { name: "晨昏", key: "twilight" };
+      if (altitude > SUN_THRESHOLDS.night) return { name: "暮色", key: "dusk" };
+      return { name: "黑夜", key: "night" };
+    }
+
+    // 极地判定：正午与午夜太阳高度角同时高于/低于地平线
+    // 正午高度角 = 90° - |纬度 - 赤纬|；午夜高度角 = |纬度 + 赤纬| - 90°
+    function getPolarState(date, lat, lon) {
+      const sun = solarElements(toJulianDay(date));
+      const altNoon = 90 - Math.abs(lat - sun.declination);
+      const altMidnight = Math.abs(lat + sun.declination) - 90;
+      if (altNoon > 0 && altMidnight > 0) return "polar-day";
+      if (altNoon < 0 && altMidnight < 0) return "polar-night";
+      return null;
+    }
+
+    // 颜色插值：按太阳高度角在关键色标间线性过渡
+    const SKY_PALETTE = [
+      { alt: -18, zenith: [4, 7, 24], mid: [9, 15, 38], horizon: [20, 30, 58], ground: [6, 10, 22], star: 1, sun: 0 },
+      { alt: -8, zenith: [10, 17, 44], mid: [26, 36, 74], horizon: [58, 64, 104], ground: [16, 21, 40], star: 0.88, sun: 0 },
+      { alt: -4, zenith: [34, 48, 96], mid: [92, 80, 126], horizon: [196, 120, 108], ground: [38, 32, 50], star: 0.3, sun: 0.15 },
+      { alt: -0.5, zenith: [70, 90, 148], mid: [176, 116, 128], horizon: [246, 172, 116], ground: [58, 44, 56], star: 0.06, sun: 0.7 },
+      { alt: 3, zenith: [86, 130, 190], mid: [188, 172, 168], horizon: [250, 206, 150], ground: [74, 68, 66], star: 0, sun: 1 },
+      { alt: 12, zenith: [62, 134, 206], mid: [136, 194, 228], horizon: [214, 236, 242], ground: [92, 106, 104], star: 0, sun: 1 },
+      { alt: 45, zenith: [38, 110, 198], mid: [110, 178, 224], horizon: [206, 232, 242], ground: [104, 118, 116], star: 0, sun: 1 }
+    ];
+
+    function mixColor(a, b, t) {
+      const to = (v) => Math.round(v).toString(16).padStart(2, "0");
+      return `#${to(a[0] + (b[0] - a[0]) * t)}${to(a[1] + (b[1] - a[1]) * t)}${to(a[2] + (b[2] - a[2]) * t)}`;
+    }
+
+    function samplePalette(altitude) {
+      const stops = SKY_PALETTE;
+      if (altitude <= stops[0].alt) return stops[0];
+      if (altitude >= stops[stops.length - 1].alt) return stops[stops.length - 1];
+      for (let i = 0; i < stops.length - 1; i++) {
+        const lower = stops[i];
+        const upper = stops[i + 1];
+        if (altitude >= lower.alt && altitude <= upper.alt) {
+          const t = (altitude - lower.alt) / (upper.alt - lower.alt);
+          return {
+            zenith: mixColor(lower.zenith, upper.zenith, t),
+            mid: mixColor(lower.mid, upper.mid, t),
+            horizon: mixColor(lower.horizon, upper.horizon, t),
+            ground: mixColor(lower.ground, upper.ground, t),
+            star: lower.star + (upper.star - lower.star) * t,
+            sun: lower.sun + (upper.sun - lower.sun) * t
+          };
+        }
+      }
+      return stops[stops.length - 1];
+    }
+
 
     function getTimeFormatter(timeZone) {
       if (!timeFormatters.has(timeZone)) {
@@ -688,7 +923,7 @@
 
     function buildClock(id, accent) {
       const svg = document.getElementById(id);
-      svg.appendChild(makeSVGElement("circle", { cx: 120, cy: 120, r: 108, fill: "#ffffff", "fill-opacity": 0.82, stroke: "#ffffff", "stroke-opacity": 0.65, "stroke-width": 1.5 }));
+      svg.appendChild(makeSVGElement("circle", { cx: 120, cy: 120, r: 108, fill: "#ffffff", "fill-opacity": 0.72, stroke: "#ffffff", "stroke-opacity": 0.7, "stroke-width": 1.5 }));
 
       for (let i = 0; i < 60; i++) {
         const isHour = i % 5 === 0;
@@ -736,7 +971,9 @@
         offset: Number(option.dataset.offset.replace("UTC", "")),
         name: option.dataset.name,
         label: option.dataset.offset,
-        zone: option.dataset.zone
+        zone: option.dataset.zone,
+        lat: Number(option.dataset.lat),
+        lon: Number(option.dataset.lon)
       };
     }
 
@@ -754,26 +991,87 @@
       return document.getElementById(`toggle-${key}`).checked;
     }
 
-    function getSkyPhase(hours, minutes) {
-      const localTime = hours + minutes / 60;
-      if (localTime >= 5 && localTime < 7) return { name: "晨曦", className: "sky-dawn" };
-      if (localTime >= 7 && localTime < 17) return { name: "白天", className: "sky-day" };
-      if (localTime >= 17 && localTime < 19) return { name: "黄昏", className: "sky-dusk" };
-      return { name: "黑夜", className: "sky-night" };
+    // 将太阳的方位角与高度角映射到天空面板内的坐标
+    // 方位角：正南 180° 居中，东(90°)/西(270°) 分居左右
+    function azimuthToX(azimuth) {
+      const delta = ((azimuth - 180 + 540) % 360) - 180;
+      return 50 + delta / 180 * 50;
     }
 
-    function updateSky(key, hours, minutes) {
-      const phase = getSkyPhase(hours, minutes);
+    // 高度角：0° 贴地平线，90° 位于天顶
+    function altitudeToY(altitude) {
+      const clamped = Math.max(-18, Math.min(90, altitude));
+      return 88 - (clamped / 90) * 78;
+    }
+
+    function updateSky(key, geo, now) {
       const scene = document.getElementById(`sky-${key}`);
-      if (scene.dataset.phase !== phase.className) {
-        scene.classList.remove("sky-night", "sky-dawn", "sky-day", "sky-dusk");
-        scene.classList.add(phase.className);
-        scene.dataset.phase = phase.className;
+      const orb = document.getElementById(`orb-${key}`);
+      const label = document.getElementById(`sky-label-${key}`);
+      if (!scene || !orb) return;
+
+      const sun = getSunPosition(now, geo.lat, geo.lon);
+      const moon = getMoonPosition(now, geo.lat, geo.lon);
+      const polar = getPolarState(now, geo.lat, geo.lon);
+      const palette = samplePalette(sun.altitude);
+      let phase = getSkyPhaseByAltitude(sun.altitude);
+      let phaseText = phase.name;
+
+      // 极地降级：极昼恒为白天，极夜恒为黑夜
+      if (polar === "polar-day") {
+        phase = { name: "极昼", key: "day" };
+        phaseText = "极昼";
+      } else if (polar === "polar-night") {
+        phase = { name: "极夜", key: "night" };
+        phaseText = "极夜";
       }
-      document.getElementById(`sky-label-${key}`).textContent = `当地 · ${phase.name}`;
+
+      scene.style.setProperty("--sky-zenith", palette.zenith);
+      scene.style.setProperty("--sky-mid", palette.mid);
+      scene.style.setProperty("--sky-horizon", palette.horizon);
+      scene.style.setProperty("--sky-ground", palette.ground);
+      scene.style.setProperty("--star-opacity", palette.star.toFixed(3));
+
+      const isDay = sun.altitude > SUN_THRESHOLDS.daylight;
+      const isTwilight = sun.altitude <= SUN_THRESHOLDS.daylight && sun.altitude > SUN_THRESHOLDS.twilight;
+      const sunUp = sun.altitude > -1;
+
+      if (sunUp) {
+        // 太阳在地平线以上：显示日轮
+        orb.classList.remove("is-moon");
+        scene.style.setProperty("--sun-opacity", Math.max(palette.sun, isTwilight ? 0.8 : 1).toFixed(2));
+        scene.style.setProperty("--moon-opacity", "0");
+        scene.style.setProperty("--orb-x", `${azimuthToX(sun.azimuth).toFixed(2)}%`);
+        scene.style.setProperty("--orb-y", `${altitudeToY(sun.altitude).toFixed(2)}%`);
+        // 贴近地平线时太阳偏暖偏大
+        const warmth = Math.max(0, 1 - sun.altitude / 18);
+        scene.style.setProperty("--orb-tint", warmth > 0.25 ? "#ffc98a" : "#ffdf8a");
+        scene.style.setProperty("--orb-size", `${(46 + warmth * 10).toFixed(0)}px`);
+      } else {
+        // 太阳落下：显示真实位置的月亮，并按月相绘制明暗
+        const moonUp = moon.altitude > 0;
+        orb.classList.toggle("is-moon", moonUp);
+        scene.style.setProperty("--sun-opacity", "0");
+        scene.style.setProperty("--moon-opacity", moonUp ? Math.min(1, palette.star).toFixed(2) : "0");
+        if (moonUp) {
+          scene.style.setProperty("--orb-x", `${azimuthToX(moon.azimuth).toFixed(2)}%`);
+          scene.style.setProperty("--orb-y", `${altitudeToY(moon.altitude).toFixed(2)}%`);
+        }
+        scene.style.setProperty("--orb-size", "38px");
+        // 月相：以 CSS 遮罩近似明暗界线
+        const phaseFraction = Math.round(moon.illuminated * 100);
+        const waxing = moon.elongation < 180;
+        orb.style.setProperty("--moon-lit", `${phaseFraction}%`);
+        orb.style.setProperty("--moon-waxing", waxing ? "1" : "0");
+      }
+
+      label.textContent = `当地 · ${phaseText}`;
+      label.classList.toggle("is-light", isDay);
+      scene.dataset.phase = phase.key;
+      scene.dataset.altitude = sun.altitude.toFixed(1);
     }
 
-    function updateClock(key, timeZone, now) {
+    function updateClock(key, timeZone, geo, now) {
       const parts = partsToObject(getTimeFormatter(timeZone).formatToParts(now));
       const hours = Number(parts.hour);
       const minutes = Number(parts.minute);
@@ -786,15 +1084,15 @@
       document.getElementById(`clock-${key}-hour`).setAttribute("transform", `rotate(${preciseHours * 30} 120 120)`);
       document.getElementById(`clock-${key}-minute`).setAttribute("transform", `rotate(${preciseMinutes * 6} 120 120)`);
       document.getElementById(`clock-${key}-second`).setAttribute("transform", `rotate(${preciseSeconds * 6} 120 120)`);
-      updateSky(key, hours, minutes);
+      updateSky(key, geo, now);
     }
 
     function updateAllClocks() {
       const now = new Date();
       const russia = getRussiaZone();
-      updateClock("beijing", ZONES.beijing.timeZone, now);
-      if (isZoneVisible("kazakhstan")) updateClock("kazakhstan", ZONES.kazakhstan.timeZone, now);
-      if (isZoneVisible("russia")) updateClock("russia", russia.timeZone, now);
+      updateClock("beijing", ZONES.beijing.timeZone, ZONES.beijing, now);
+      if (isZoneVisible("kazakhstan")) updateClock("kazakhstan", ZONES.kazakhstan.timeZone, ZONES.kazakhstan, now);
+      if (isZoneVisible("russia")) updateClock("russia", russia.timeZone, russia, now);
     }
 
     const WORK_SCHEDULES = [
@@ -953,9 +1251,57 @@
     document.getElementById("toggle-kazakhstan").addEventListener("change", updateVisibility);
     document.getElementById("toggle-russia").addEventListener("change", updateVisibility);
 
+    /* ============ 刷新调度 ============
+     * 时钟走针需要 100ms 平滑；天空/太阳位置变化极慢，独立用 30s 节拍，
+     * 配合 CSS 1.2s 过渡实现视觉平滑，避免高频重排造成的开销。
+     */
+    function updateClocksOnly() {
+      const now = new Date();
+      const russia = getRussiaZone();
+      const parts = key => partsToObject(getTimeFormatter(
+        key === "beijing" ? ZONES.beijing.timeZone : key === "kz" ? ZONES.kazakhstan.timeZone : russia.timeZone
+      ).formatToParts(now));
+      [
+        ["beijing", ZONES.beijing.timeZone, ZONES.beijing],
+        ["kz", ZONES.kazakhstan.timeZone, ZONES.kazakhstan],
+        ["ru", russia.timeZone, russia]
+      ].forEach(([key, timeZone, geo]) => {
+        if (key !== "beijing" && !isZoneVisible(key)) return;
+        const p = parts(key);
+        const hours = Number(p.hour);
+        const minutes = Number(p.minute);
+        const preciseSeconds = Number(p.second) + now.getMilliseconds() / 1000;
+        const preciseMinutes = minutes + preciseSeconds / 60;
+        const preciseHours = (hours % 12) + preciseMinutes / 60;
+        document.getElementById(`clock-${key}-hour`).setAttribute("transform", `rotate(${preciseHours * 30} 120 120)`);
+        document.getElementById(`clock-${key}-minute`).setAttribute("transform", `rotate(${preciseMinutes * 6} 120 120)`);
+        document.getElementById(`clock-${key}-second`).setAttribute("transform", `rotate(${preciseSeconds * 6} 120 120)`);
+      });
+    }
+
+    function updateSkyOnly() {
+      const now = new Date();
+      const russia = getRussiaZone();
+      updateSky("beijing", ZONES.beijing, now);
+      if (isZoneVisible("kazakhstan")) updateSky("kazakhstan", ZONES.kazakhstan, now);
+      if (isZoneVisible("russia")) updateSky("russia", russia, now);
+    }
+
     updateRussiaLabels();
     updateVisibility();
-    setInterval(updateAllClocks, 100);
+    setInterval(updateClocksOnly, 100);
+    setInterval(updateSkyOnly, 30000);
+
+    // 页面从后台恢复时立即重算，避免长时间挂起导致的天象滞后
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        updateAllClocks();
+        renderWorkSchedule();
+      }
+    });
+    // 系统休眠唤醒后同样需要重算
+    window.addEventListener("focus", updateAllClocks);
+    window.addEventListener("pageshow", updateAllClocks);
   </script>
 </body>
 </html>
