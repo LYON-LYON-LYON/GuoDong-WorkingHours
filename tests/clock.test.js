@@ -47,8 +47,14 @@ async function snapshot(page) {
     const scroller = document.querySelector('.schedule-scroll');
     return {
       reachPanelCount: document.querySelectorAll('#reach-panel').length,
+      statusBoardCount: document.querySelectorAll('#status-board').length,
       badges: ['beijing', 'kazakhstan', 'russia'].map(key => text(`#duty-${key}`)),
-      hints: ['beijing', 'kazakhstan', 'russia'].map(key => text(`#hint-${key}`)),
+      badgeClasses: ['beijing', 'kazakhstan', 'russia'].map(key =>
+        document.querySelector(`#duty-${key}`)?.classList.item(1) ?? null
+      ),
+      dutyInClock: ['beijing', 'kazakhstan', 'russia'].map(key =>
+        Boolean(document.querySelector(`.clock-card.${key} #duty-${key}`))
+      ),
       commonBars: [...document.querySelectorAll('.common-bar')].map(element => ({
         text: element.textContent.trim(),
         width: Math.round(element.getBoundingClientRect().width * 10) / 10,
@@ -148,10 +154,10 @@ test('Monday 14:30 shows three-way coverage and refreshes all second hands', { t
     const state = await snapshot(run.page);
     assert.equal(state.h1, '国动 世界时钟');
     assert.equal(state.reachPanelCount, 0);
+    assert.equal(state.statusBoardCount, 0);
+    assert.deepEqual(state.dutyInClock, [true, true, true]);
     assert.deepEqual(state.badges, ['办公中', '办公中', '办公中']);
-    assert.ok(state.hints[0].includes('本部在岗'));
-    assert.ok(state.hints[1].includes('双方同时在岗'));
-    assert.ok(state.hints[2].includes('双方同时在岗'));
+    assert.deepEqual(state.badgeClasses, ['on', 'on', 'on']);
     assert.deepEqual(state.commonBars.map(bar => bar.text), ['14–15', '16–17']);
     assert.ok(state.workBars.includes('09:00–12:00'));
     assert.ok(state.workBars.includes('16:00–21:00'));
@@ -180,42 +186,42 @@ test('workday boundaries and weekend state stay accurate', { timeout: 45000 }, a
     {
       time: '2026-11-09T06:30:00+08:00',
       badges: ['未上班', '未上班', '未上班'],
-      checks: [[0, '本部尚未上班'], [1, '今天 13:00–15:00'], [2, '今天 14:00–17:00']]
+      classes: ['off', 'off', 'off']
     },
     {
       time: '2026-11-09T10:00:00+08:00',
       badges: ['办公中', '未上班', '未上班'],
-      checks: [[0, '本部在岗'], [1, '今天 13:00–15:00'], [2, '今天 14:00–17:00']]
+      classes: ['on', 'off', 'off']
     },
     {
       time: '2026-11-09T12:30:00+08:00',
       badges: ['午休中', '办公中', '未上班'],
-      checks: [[0, '本部午休中'], [1, '北京时间 13:00'], [2, '今天 14:00–17:00']]
+      classes: ['break', 'on', 'off']
     },
     {
       time: '2026-11-09T14:59:30+08:00',
       badges: ['办公中', '办公中', '办公中'],
-      checks: [[1, '双方同时在岗'], [2, '双方同时在岗']]
+      classes: ['on', 'on', 'on']
     },
     {
       time: '2026-11-09T15:30:00+08:00',
       badges: ['办公中', '午休中', '办公中'],
-      checks: [[1, '北京时间 16:00'], [2, '双方同时在岗']]
+      classes: ['on', 'break', 'on']
     },
     {
       time: '2026-11-09T17:30:00+08:00',
       badges: ['已下班', '办公中', '午休中'],
-      checks: [[0, '本部已下班'], [1, '明天 13:00–15:00'], [2, '明天 14:00–17:00']]
+      classes: ['off', 'on', 'break']
     },
     {
       time: '2026-11-09T23:00:00+08:00',
       badges: ['已下班', '已下班', '已下班'],
-      checks: [[1, '明天 13:00–15:00'], [2, '明天 14:00–17:00']]
+      classes: ['off', 'off', 'off']
     },
     {
       time: '2026-11-07T10:00:00+08:00',
       badges: ['周末休息', '周末休息', '周末休息'],
-      checks: [[0, '本部周末休息'], [1, '周一 13:00–15:00'], [2, '周一 14:00–17:00']]
+      classes: ['off', 'off', 'off']
     }
   ];
 
@@ -224,9 +230,7 @@ test('workday boundaries and weekend state stay accurate', { timeout: 45000 }, a
     try {
       const state = await snapshot(run.page);
       assert.deepEqual(state.badges, item.badges, item.time);
-      for (const [index, expected] of item.checks) {
-        assert.ok(state.hints[index].includes(expected), `${item.time}: ${state.hints[index]}`);
-      }
+      assert.deepEqual(state.badgeClasses, item.classes, item.time);
       assertHealthy(run.pageErrors, run.consoleErrors);
     } finally {
       await run.context.close();
@@ -234,25 +238,24 @@ test('workday boundaries and weekend state stay accurate', { timeout: 45000 }, a
   }
 });
 
-test('timezone filters update status cards and the common window', { timeout: 30000 }, async () => {
+test('timezone filters update clock cards and the common window', { timeout: 30000 }, async () => {
   const run = await openAt('2026-11-09T14:30:00+08:00');
   try {
     await run.page.locator('#toggle-kazakhstan').evaluate(element => element.click());
     await run.page.waitForTimeout(80);
     const twoPlaces = await snapshot(run.page);
     assert.equal(await run.page.locator('.clock-card.kazakhstan').isHidden(), true);
-    assert.equal(await run.page.locator('.status-card.kazakhstan').isHidden(), true);
     assert.equal(twoPlaces.calendars.length, 1);
     assert.ok(!twoPlaces.calendars[0].localDates.includes('哈萨克斯坦'));
     assert.ok(!twoPlaces.calendars[0].notes.join(' ').includes('哈萨克斯坦'));
-    assert.ok(twoPlaces.hints[2].includes('双方同时在岗'));
+    assert.equal(twoPlaces.badges[2], '办公中');
     assert.deepEqual(twoPlaces.commonBars.map(bar => bar.text), ['14–17']);
 
     await run.page.locator('#toggle-russia').evaluate(element => element.click());
     await run.page.waitForTimeout(80);
     const onePlace = await snapshot(run.page);
-    assert.equal(await run.page.locator('.status-card.russia').isHidden(), true);
-    assert.ok(onePlace.hints[0].includes('本部在岗'));
+    assert.equal(await run.page.locator('.clock-card.russia').isHidden(), true);
+    assert.equal(onePlace.badges[0], '办公中');
     assert.deepEqual(onePlace.commonBars.map(bar => bar.text), ['09–12', '13–17:30']);
     assertHealthy(run.pageErrors, run.consoleErrors);
   } finally {
@@ -362,7 +365,7 @@ test('merged calendar anchors on Beijing month and shows local date differences'
   }
 });
 
-test('holidays and makeup workdays drive duty state and contact hints', { timeout: 30000 }, async () => {
+test('holidays and makeup workdays drive clock badge state', { timeout: 30000 }, async () => {
   const holidayRun = await openAt('2026-10-01T14:30:00+08:00');
   try {
     const state = await snapshot(holidayRun.page);
@@ -376,8 +379,7 @@ test('holidays and makeup workdays drive duty state and contact hints', { timeou
     assert.ok(merged.notes.some(note => note.includes('10月26日') && note.includes('共和国日（补休）')));
     assert.deepEqual(merged.holidayMarks[25], ['kazakhstan']);
     assert.deepEqual(merged.holidayMarks[1], ['beijing']);
-    assert.ok(state.hints[1].includes('10月8日') && state.hints[1].includes('13:00–15:00'), state.hints[1]);
-    assert.ok(state.hints[2].includes('10月8日') && state.hints[2].includes('14:00–17:00'), state.hints[2]);
+    assert.deepEqual(state.badgeClasses, ['off', 'on', 'on']);
     assertHealthy(holidayRun.pageErrors, holidayRun.consoleErrors);
   } finally {
     await holidayRun.context.close();
@@ -389,8 +391,7 @@ test('holidays and makeup workdays drive duty state and contact hints', { timeou
     assert.deepEqual(state.badges, ['办公中', '周末休息', '周末休息']);
     assert.deepEqual(state.calendars[0].overrides, [20]);
     assert.ok(state.calendars[0].notes.some(note => note.includes('20日') && note.includes('中国调休上班')));
-    assert.ok(state.hints[1].includes('明天 13:00–15:00'), state.hints[1]);
-    assert.ok(state.hints[2].includes('明天 14:00–17:00'), state.hints[2]);
+    assert.deepEqual(state.badgeClasses, ['on', 'off', 'off']);
     assertHealthy(overrideRun.pageErrors, overrideRun.consoleErrors);
   } finally {
     await overrideRun.context.close();

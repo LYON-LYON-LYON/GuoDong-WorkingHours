@@ -340,47 +340,6 @@
     .intro-tag b { color: #2f4f79; font-weight: 650; }
     .intro-tag i { font-style: normal; color: #5f6b7a; font-size: 12px; font-variant-numeric: tabular-nums; }
 
-    /* 三地速览卡 */
-    .status-board {
-      display: grid;
-      grid-template-columns: repeat(var(--visible-zones, 3), minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .status-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 13px 15px;
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--card-accent, var(--blue));
-      border-radius: 14px;
-      background: var(--surface);
-      box-shadow: 0 4px 14px rgba(28, 46, 74, 0.045);
-    }
-
-    .status-card.beijing { --card-accent: var(--beijing); }
-    .status-card.kazakhstan { --card-accent: var(--kazakhstan); }
-    .status-card.russia { --card-accent: var(--russia); }
-
-    .status-text { flex: 1; min-width: 0; }
-    .status-name { font-size: 13px; font-weight: 650; line-height: 1.35; }
-    .status-meta { margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.4; }
-    .status-meta b { color: #3d5878; font-weight: 650; }
-    .status-hint { min-height: 2.8em; margin-top: 5px; color: #4d5866; font-size: 11.5px; line-height: 1.45; }
-
-    .status-right { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-    .status-clock {
-      text-align: right;
-      font-size: 22px;
-      font-weight: 650;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-      font-variant-numeric: tabular-nums;
-    }
-    .status-clock small { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; font-weight: 400; }
-
     .duty-badge {
       display: inline-flex;
       align-items: center;
@@ -482,6 +441,7 @@
     .clock-card.russia { --accent: var(--russia); --soft: #f0f3ff; }
 
     .clock-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .clock-head-tags { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 7px; }
     .country-code { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; }
     .clock-head h2 { margin: 5px 0 0; font-size: 18px; }
     .utc-tag {
@@ -789,8 +749,6 @@
       .sky-scene { grid-column: 1; grid-row: 2 / 5; width: min(230px, 100%); }
       .digital-time { align-self: end; text-align: left; }
       .clock-date { align-self: start; text-align: left; }
-      .status-board { grid-template-columns: 1fr; }
-      .status-hint { min-height: 0; }
       .schedule-axis, .schedule-body, .schedule-common-row { grid-template-columns: 168px minmax(0, 1fr); }
     }
 
@@ -825,9 +783,6 @@
       .calendar-mark { width: 11px; height: 10px; font-size: 7px; }
       .calendar-note { grid-template-columns: 56px minmax(0, 1fr); gap: 5px; font-size: 9.5px; }
       .calendar-notes-sub { display: none; }
-
-      .status-card { padding: 12px 13px; }
-      .status-clock { font-size: 20px; }
 
       .filter-bar { align-items: flex-start; flex-direction: column; gap: 8px; }
       .filter-note { white-space: normal; }
@@ -964,44 +919,6 @@
       </div>
     </section>
 
-    <section class="status-board" id="status-board" aria-label="联络速览">
-      <article class="status-card beijing">
-        <div class="status-text">
-          <div class="status-name" id="status-name-beijing">国动集团本部·北京</div>
-          <div class="status-meta"><span id="status-zone-beijing">东八区</span> · <b id="status-diff-beijing">基准</b></div>
-          <div class="status-hint" id="hint-beijing">计算中</div>
-        </div>
-        <div class="status-right">
-          <div class="status-clock" id="status-time-beijing">--:--<small>当地时间</small></div>
-          <span class="duty-badge off" id="duty-beijing">计算中</span>
-        </div>
-      </article>
-
-      <article class="status-card kazakhstan">
-        <div class="status-text">
-          <div class="status-name" id="status-name-kazakhstan">哈萨克斯坦·阿拉木图</div>
-          <div class="status-meta"><span id="status-zone-kazakhstan">东五区</span> · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
-          <div class="status-hint" id="hint-kazakhstan">计算中</div>
-        </div>
-        <div class="status-right">
-          <div class="status-clock" id="status-time-kazakhstan">--:--<small>当地时间</small></div>
-          <span class="duty-badge off" id="duty-kazakhstan">计算中</span>
-        </div>
-      </article>
-
-      <article class="status-card russia">
-        <div class="status-text">
-          <div class="status-name" id="status-name-russia">俄罗斯·莫斯科</div>
-          <div class="status-meta"><span id="status-zone-russia">东三区</span> · 较北京 <b id="status-diff-russia">晚 5 小时</b></div>
-          <div class="status-hint" id="hint-russia">计算中</div>
-        </div>
-        <div class="status-right">
-          <div class="status-clock" id="status-time-russia">--:--<small>当地时间</small></div>
-          <span class="duty-badge off" id="duty-russia">计算中</span>
-        </div>
-      </article>
-    </section>
-
     <section class="filter-bar" aria-label="时区筛选项">
       <div class="filter-group">
         <span class="filter-label">显示时区</span>
@@ -1028,7 +945,10 @@
       <article class="clock-card beijing">
         <div class="clock-head">
           <div><div class="country-code">CN · CHINA</div><h2>北京时间</h2></div>
-          <span class="utc-tag" id="utc-beijing">UTC+8</span>
+          <div class="clock-head-tags">
+            <span class="duty-badge off" id="duty-beijing">计算中</span>
+            <span class="utc-tag" id="utc-beijing">UTC+8</span>
+          </div>
         </div>
         <div class="sky-scene" id="sky-beijing">
           <div class="sky-stars" aria-hidden="true"></div>
@@ -1046,7 +966,10 @@
       <article class="clock-card kazakhstan">
         <div class="clock-head">
           <div><div class="country-code">KZ · KAZAKHSTAN</div><h2>哈萨克斯坦时间</h2></div>
-          <span class="utc-tag" id="utc-kazakhstan">UTC+5</span>
+          <div class="clock-head-tags">
+            <span class="duty-badge off" id="duty-kazakhstan">计算中</span>
+            <span class="utc-tag" id="utc-kazakhstan">UTC+5</span>
+          </div>
         </div>
         <div class="sky-scene" id="sky-kazakhstan">
           <div class="sky-stars" aria-hidden="true"></div>
@@ -1064,7 +987,10 @@
       <article class="clock-card russia">
         <div class="clock-head">
           <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯·莫斯科时间</h2></div>
-          <span class="utc-tag" id="utc-russia">UTC+3</span>
+          <div class="clock-head-tags">
+            <span class="duty-badge off" id="duty-russia">计算中</span>
+            <span class="utc-tag" id="utc-russia">UTC+3</span>
+          </div>
         </div>
         <div class="sky-scene" id="sky-russia">
           <div class="sky-stars" aria-hidden="true"></div>
@@ -1128,7 +1054,6 @@ const BEIJING_TZ = "Asia/Shanghai";
 const ORDER = ["beijing", "kazakhstan", "russia"];
 const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 const STEP_MS = 5 * 60 * 1000;
-const STATUS_HORIZON_DAYS = 14;
 const CALENDAR_DATA_YEAR = 2026;
 const REDUCE_MOTION = Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
@@ -1409,37 +1334,6 @@ function threeWayWindows() {
   return windows;
 }
 
-function floorToStep(date, step = STEP_MS) {
-  return new Date(Math.floor(date.getTime() / step) * step);
-}
-
-function buildStateTimeline(places, from, days = STATUS_HORIZON_DAYS) {
-  const start = floorToStep(from);
-  const count = Math.ceil(days * 86400000 / STEP_MS);
-  const timeline = [];
-  for (let index = 0; index < count; index += 1) {
-    const time = new Date(start.getTime() + index * STEP_MS);
-    const states = {};
-    for (const place of places) states[place.key] = getDutyStateAt(place, time);
-    timeline.push({ time, states });
-  }
-  return timeline;
-}
-
-function findWindow(timeline, predicate) {
-  let start = null;
-  for (const sample of timeline) {
-    const matched = predicate(sample.states);
-    if (matched && start === null) start = sample.time;
-    if (!matched && start !== null) return { start, end: sample.time };
-  }
-  if (start !== null) {
-    const last = timeline[timeline.length - 1];
-    return { start, end: new Date(last.time.getTime() + STEP_MS) };
-  }
-  return null;
-}
-
 function pad2(value) {
   return String(value).padStart(2, "0");
 }
@@ -1448,25 +1342,6 @@ function formatClock(minutes) {
   if (minutes === 1440) return "24:00";
   const wrapped = ((Math.round(minutes) % 1440) + 1440) % 1440;
   return `${pad2(Math.floor(wrapped / 60))}:${pad2(wrapped % 60)}`;
-}
-
-function clockAt(date, timeZone) {
-  return formatClock(getZonedParts(date, timeZone).minutes);
-}
-
-function formatDayLabel(date, now) {
-  const target = getZonedParts(date, BEIJING_TZ);
-  const today = getZonedParts(now, BEIJING_TZ);
-  const diff = dayNumber(target) - dayNumber(today);
-  if (diff === 0) return "今天";
-  if (diff === 1) return "明天";
-  if (diff > 1 && diff < 7) return WEEKDAYS[target.weekday];
-  return `${target.month}月${target.day}日`;
-}
-
-function formatNextShort(window, now) {
-  if (!window) return `未来 ${STATUS_HORIZON_DAYS} 天暂无共同窗口`;
-  return `${formatDayLabel(window.start, now)} ${clockAt(window.start, BEIJING_TZ)}–${clockAt(window.end, BEIJING_TZ)}（北京时间）`;
 }
 
 function formatDifference(offset) {
@@ -1497,9 +1372,6 @@ function renderPlaceMeta() {
     const zone = place.zoneLabel || formatUtcOffset(place.offset);
     const workRange = formatWorkRange(place);
     setText(`intro-meta-${key}`, `${zone} · ${workRange}`);
-    setText(`status-name-${key}`, place.displayName);
-    setText(`status-zone-${key}`, zone);
-    setText(`status-diff-${key}`, key === "beijing" ? "基准" : formatDifference(place.offset));
     setText(`utc-${key}`, formatUtcOffset(place.offset));
     setText(`clock-window-${key}`, `当地办公 ${workRange}`);
     setText(`difference-${key}`, key === "beijing"
@@ -2017,69 +1889,17 @@ function updateHandsOnly() {
   }
 }
 
-/* ============ 速览与状态 ============ */
+/* ============ 当班状态 ============ */
 
-function buildPlaceHint(place, state, nextWithHq, now) {
-  const overridePrefix = state.workdayOverride ? "调休上班；" : "";
-  if (place.key === "beijing") {
-    if (state.code === "weekend") return "本部周末休息";
-    if (state.code === "holiday") return `本部休息日：${state.text}`;
-    if (state.code === "work") return `${overridePrefix}本部在岗`;
-    if (state.code === "lunch") return `${overridePrefix}本部午休中，${formatClock(place.lunchEnd)} 后恢复联络`;
-    if (state.code === "before") return `${overridePrefix}本部尚未上班，${formatClock(place.workStart)} 后开始`;
-    return `${overridePrefix}本部已下班`;
-  }
-
-  const hqState = getDutyStateAt(PLACES.beijing, now);
-  const nextText = formatNextShort(nextWithHq, now);
-  const nextLabel = `下一次与本部共同窗口：${nextText}`;
-
-  if (state.code === "weekend") return `周末休息；${nextLabel}`;
-  if (state.code === "holiday") return `${state.text}；${nextLabel}`;
-  if (state.code === "lunch") {
-    if (hqState.className === "on") {
-      const beijingLunchEnd = place.lunchEnd + (8 - place.offset) * 60;
-      return `${overridePrefix}午休中，${formatClock(place.lunchEnd)}（北京时间 ${formatClock(beijingLunchEnd)}）后可联络`;
-    }
-    if (hqState.className === "break") return `${overridePrefix}双方午休中；${nextLabel}`;
-    return `${overridePrefix}午休中；${nextLabel}`;
-  }
-  if (state.code === "work") {
-    if (hqState.className === "on") return `${overridePrefix}双方同时在岗，可直接联络`;
-    if (hqState.className === "break") return `${overridePrefix}本部午休中，北京时间 ${formatClock(PLACES.beijing.lunchEnd)} 后可联络`;
-    if (hqState.code === "holiday") return `${overridePrefix}本部休息日：${hqState.text}；${nextLabel}`;
-    if (hqState.code === "weekend") return `${overridePrefix}本部周末休息；${nextLabel}`;
-    return `${overridePrefix}本部已下班；${nextLabel}`;
-  }
-  if (state.code === "before") return `${overridePrefix}未上班；${nextLabel}`;
-  return `${overridePrefix}已下班；${nextLabel}`;
-}
-
-function updateStatusPanel(now = new Date()) {
+function updateDutyBadges(now = new Date()) {
   refreshOffsets(now);
-  const keys = visibleKeys();
-  const states = {};
-  for (const key of ORDER) states[key] = getDutyStateAt(PLACES[key], now);
-  const timeline = buildStateTimeline(ORDER.map(key => PLACES[key]), now);
-
   for (const key of ORDER) {
-    const place = PLACES[key];
-    const state = states[key];
-    const nextWithHq = findWindow(timeline, sample =>
-      sample.beijing.className === "on" && sample[key].className === "on"
-    );
-    const timeElement = document.getElementById(`status-time-${key}`);
     const dutyElement = document.getElementById(`duty-${key}`);
-    const hintElement = document.getElementById(`hint-${key}`);
-    if (!timeElement || !dutyElement || !hintElement) continue;
-
-    const parts = state.parts;
-    timeElement.innerHTML = `${pad2(parts.hour)}:${pad2(parts.minute)}<small>当地时间</small>`;
+    if (!dutyElement) continue;
+    const state = getDutyStateAt(PLACES[key], now);
     dutyElement.textContent = state.text;
     dutyElement.className = `duty-badge ${state.className}`;
-    hintElement.textContent = buildPlaceHint(place, state, nextWithHq, now);
   }
-
   renderPlaceMeta();
 }
 
@@ -2503,17 +2323,12 @@ function updateVisibility() {
   const count = 1 + Number(showKazakhstan) + Number(showRussia);
   const kazakhstanClock = document.querySelector(".clock-card.kazakhstan");
   const russiaClock = document.querySelector(".clock-card.russia");
-  const kazakhstanStatus = document.querySelector(".status-card.kazakhstan");
-  const russiaStatus = document.querySelector(".status-card.russia");
   if (kazakhstanClock) kazakhstanClock.hidden = !showKazakhstan;
   if (russiaClock) russiaClock.hidden = !showRussia;
-  if (kazakhstanStatus) kazakhstanStatus.hidden = !showKazakhstan;
-  if (russiaStatus) russiaStatus.hidden = !showRussia;
-  document.getElementById("status-board").style.setProperty("--visible-zones", count);
   document.getElementById("clock-grid").style.setProperty("--visible-clocks", count);
   const now = new Date();
   updateAllClocks(now);
-  updateStatusPanel(now);
+  updateDutyBadges(now);
   renderWorkSchedule(now);
   renderCalendars(now);
 }
@@ -2522,17 +2337,17 @@ function updateVisibility() {
 
 let clockTimer = null;
 let skyTimer = null;
-let statusTimer = null;
+let dutyTimer = null;
 let globeTimer = null;
 
 function stopTimers() {
   clearInterval(clockTimer);
   clearInterval(skyTimer);
-  clearInterval(statusTimer);
+  clearInterval(dutyTimer);
   clearInterval(globeTimer);
   clockTimer = null;
   skyTimer = null;
-  statusTimer = null;
+  dutyTimer = null;
   globeTimer = null;
 }
 
@@ -2544,9 +2359,9 @@ function startTimers() {
     for (const key of ORDER) if (isZoneVisible(key)) updateSky(key, PLACES[key], now);
     renderGlobe(now);
   }, 30000);
-  statusTimer = setInterval(() => {
+  dutyTimer = setInterval(() => {
     const now = new Date();
-    updateStatusPanel(now);
+    updateDutyBadges(now);
     renderWorkSchedule(now);
     renderCalendars(now);
   }, 30000);
@@ -2557,7 +2372,7 @@ function refreshEverything() {
   const now = new Date();
   refreshOffsets(now);
   updateAllClocks(now);
-  updateStatusPanel(now);
+  updateDutyBadges(now);
   renderWorkSchedule(now);
   renderCalendars(now);
   renderGlobe(now);
