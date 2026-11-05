@@ -64,6 +64,35 @@ async function snapshot(page) {
       bodyScrollWidth: document.documentElement.scrollWidth,
       innerWidth: window.innerWidth,
       globeSideWidth: Math.round((document.querySelector('.globe-side')?.getBoundingClientRect().width ?? 0) * 10) / 10,
+      panelWidths: {
+        globe: Math.round((document.querySelector('.globe-panel')?.getBoundingClientRect().width ?? 0) * 10) / 10,
+        calendar: Math.round((document.querySelector('.calendar-panel')?.getBoundingClientRect().width ?? 0) * 10) / 10
+      },
+      calendars: [...document.querySelectorAll('.calendar-card')].map(card => ({
+        key: card.dataset.calendarKey,
+        city: card.querySelector('.calendar-city')?.textContent.trim() ?? null,
+        month: card.querySelector('.calendar-month')?.textContent.trim() ?? null,
+        days: card.querySelectorAll('.calendar-day:not(.is-empty)').length,
+        weekends: [...card.querySelectorAll('.calendar-day.is-weekend')].map(element => Number(element.querySelector('.calendar-day-number')?.textContent)),
+        holidays: [...card.querySelectorAll('.calendar-day.is-holiday')].map(element => Number(element.querySelector('.calendar-day-number')?.textContent)),
+        overrides: [...card.querySelectorAll('.calendar-day.is-workday-override')].map(element => Number(element.querySelector('.calendar-day-number')?.textContent)),
+        today: Number(card.querySelector('.calendar-day.is-today .calendar-day-number')?.textContent ?? NaN),
+        events: card.querySelector('.calendar-events')?.textContent.trim() ?? null,
+        hidden: card.hidden
+      })),
+      calendar: (() => {
+        const scroller = document.querySelector('#calendar-scroller');
+        const hint = document.querySelector('#calendar-mobile-hint');
+        return {
+          clientWidth: scroller?.clientWidth ?? null,
+          scrollWidth: scroller?.scrollWidth ?? null,
+          tabindex: scroller?.getAttribute('tabindex') ?? null,
+          role: scroller?.getAttribute('role') ?? null,
+          ariaLabel: scroller?.getAttribute('aria-label') ?? null,
+          hintHidden: hint?.hidden ?? null,
+          hintVisible: hint ? getComputedStyle(hint).display !== 'none' : false
+        };
+      })(),
       schedule: {
         clientWidth: scroller?.clientWidth ?? null,
         scrollWidth: scroller?.scrollWidth ?? null,
@@ -203,6 +232,7 @@ test('timezone filters update the conclusion, cards, and common window', { timeo
     const twoPlaces = await snapshot(run.page);
     assert.equal(await run.page.locator('.clock-card.kazakhstan').isHidden(), true);
     assert.equal(await run.page.locator('.status-card.kazakhstan').isHidden(), true);
+    assert.equal(twoPlaces.calendars.find(card => card.key === 'kazakhstan').hidden, true);
     assert.equal(twoPlaces.title, '两地均在岗，可直接联络');
     assert.deepEqual(twoPlaces.commonBars.map(bar => bar.text), ['14–17']);
 
@@ -223,6 +253,12 @@ test('390px layout keeps the globe and scrollable timeline usable', { timeout: 3
     const state = await snapshot(run.page);
     assert.ok(state.bodyScrollWidth <= state.innerWidth, `${state.bodyScrollWidth} > ${state.innerWidth}`);
     assert.ok(state.globeSideWidth > 200, `globe side width ${state.globeSideWidth}`);
+    assert.equal(state.calendars.length, 3);
+    assert.ok(state.calendar.scrollWidth > state.calendar.clientWidth);
+    assert.equal(state.calendar.tabindex, '0');
+    assert.equal(state.calendar.role, 'region');
+    assert.ok(state.calendar.ariaLabel?.includes('日历'));
+    assert.equal(state.calendar.hintHidden, false);
     assert.ok(state.schedule.scrollWidth > state.schedule.clientWidth);
     assert.equal(state.schedule.tabindex, '0');
     assert.equal(state.schedule.role, 'region');
@@ -255,6 +291,67 @@ test('timezone conversion and three-way intersections are derived correctly', { 
     assertHealthy(run.pageErrors, run.consoleErrors);
   } finally {
     await run.context.close();
+  }
+});
+
+test('top module splits evenly and renders three local month calendars', { timeout: 30000 }, async () => {
+  const run = await openAt('2026-11-09T14:30:00+08:00');
+  try {
+    const state = await snapshot(run.page);
+    assert.ok(Math.abs(state.panelWidths.globe - state.panelWidths.calendar) < 1.5, JSON.stringify(state.panelWidths));
+    assert.deepEqual(state.calendars.map(card => card.city), ['北京', '阿拉木图', '莫斯科']);
+    assert.deepEqual(state.calendars.map(card => card.month), ['2026年11月', '2026年11月', '2026年11月']);
+    assert.deepEqual(state.calendars.map(card => card.days), [30, 30, 30]);
+    assert.deepEqual(state.calendars.map(card => card.weekends.length), [9, 9, 9]);
+    assert.deepEqual(state.calendars.map(card => card.today), [9, 9, 9]);
+    assert.deepEqual(state.calendars.map(card => card.holidays), [[], [], [4]]);
+    assert.ok(state.calendars[2].events.includes('民族团结日'));
+    assert.equal(state.calendar.hintHidden, true);
+    assertHealthy(run.pageErrors, run.consoleErrors);
+  } finally {
+    await run.context.close();
+  }
+});
+
+test('each calendar follows its own local date at a month boundary', { timeout: 30000 }, async () => {
+  const run = await openAt('2026-12-01T02:00:00+08:00');
+  try {
+    const state = await snapshot(run.page);
+    assert.deepEqual(state.calendars.map(card => card.month), ['2026年12月', '2026年11月', '2026年11月']);
+    assert.deepEqual(state.calendars.map(card => card.days), [31, 30, 30]);
+    assert.deepEqual(state.calendars.map(card => card.today), [1, 30, 30]);
+    assertHealthy(run.pageErrors, run.consoleErrors);
+  } finally {
+    await run.context.close();
+  }
+});
+
+test('holidays and makeup workdays drive duty state and next shared window', { timeout: 30000 }, async () => {
+  const holidayRun = await openAt('2026-10-01T14:30:00+08:00');
+  try {
+    const state = await snapshot(holidayRun.page);
+    assert.deepEqual(state.badges, ['国庆节', '办公中', '办公中']);
+    assert.deepEqual(state.calendars[0].holidays, [1, 2, 3, 4, 5, 6, 7]);
+    assert.deepEqual(state.calendars[0].overrides, [10]);
+    assert.ok(state.calendars[0].events.includes('国庆节'));
+    assert.ok(state.calendars[0].events.includes('调休上班'));
+    assert.ok(state.next.includes('10月8日'), state.next);
+    assert.ok(state.next.includes('14:00–15:00'), state.next);
+    assertHealthy(holidayRun.pageErrors, holidayRun.consoleErrors);
+  } finally {
+    await holidayRun.context.close();
+  }
+
+  const overrideRun = await openAt('2026-09-20T14:30:00+08:00');
+  try {
+    const state = await snapshot(overrideRun.page);
+    assert.deepEqual(state.badges, ['办公中', '周末休息', '周末休息']);
+    assert.deepEqual(state.calendars[0].overrides, [20]);
+    assert.ok(state.calendars[0].events.includes('调休上班'));
+    assert.equal(state.next, '明天 14:00–15:00（北京时间）');
+    assertHealthy(overrideRun.pageErrors, overrideRun.consoleErrors);
+  } finally {
+    await overrideRun.context.close();
   }
 });
 

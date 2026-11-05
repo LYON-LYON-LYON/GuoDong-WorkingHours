@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="国动集团本部、哈萨克斯坦阿拉木图与俄罗斯莫斯科的跨时区工作时间对照、当前联络状态与共同在岗窗口。">
+  <meta name="description" content="国动集团本部、哈萨克斯坦阿拉木图与俄罗斯莫斯科的跨时区工作时间、联络状态、共同在岗窗口与三国本月日历。">
   <meta name="theme-color" content="#152238">
   <title>国动 世界时钟 Guodong World Clock</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23152238'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23fff' stroke-width='4'/%3E%3Cpath d='M32 18v14l9 6' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -107,7 +107,8 @@
 
     .intro {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
       gap: 18px;
       margin-bottom: 18px;
     }
@@ -115,62 +116,206 @@
     .globe-panel {
       display: flex;
       align-items: center;
-      gap: 26px;
-      padding: 18px 26px;
+      gap: 18px;
+      min-width: 0;
+      padding: 18px;
       border: 1px solid var(--line);
       border-radius: 20px;
       background: linear-gradient(135deg, #f7fafd 0%, #eef4fb 100%);
       box-shadow: 0 6px 22px rgba(28, 46, 74, 0.05);
     }
 
-    .globe-wrap { flex: 0 0 auto; width: 248px; height: 248px; }
+    .globe-wrap { flex: 0 0 auto; width: 200px; height: 200px; }
     .globe { width: 100%; height: 100%; display: block; }
-    .globe-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+    .globe-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 
     .globe-title {
       color: #22374f;
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 650;
       letter-spacing: -0.015em;
     }
 
-    .globe-sub { color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .globe-sub { color: var(--muted); font-size: 12px; line-height: 1.55; }
     .globe-sub b { color: #2f4f79; font-weight: 650; }
 
     .globe-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      gap: 7px;
     }
 
     .globe-stat {
-      padding: 10px 12px;
+      min-width: 0;
+      padding: 8px 9px;
       border: 1px solid var(--line);
-      border-radius: 11px;
+      border-radius: 9px;
       background: #fff;
     }
 
-    .globe-stat-name { color: #3d5878; font-size: 12px; font-weight: 650; }
-    .globe-stat-state { margin-top: 4px; font-size: 12px; font-weight: 650; }
+    .globe-stat-name { color: #3d5878; font-size: 11.5px; font-weight: 650; }
+    .globe-stat-state { margin-top: 3px; font-size: 11.5px; font-weight: 650; }
     .globe-stat-state.day { color: #875700; }
     .globe-stat-state.night { color: #526b91; }
-    .globe-stat-time { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .globe-stat-time { margin-top: 3px; color: var(--muted); font-size: 10.5px; line-height: 1.4; }
 
     .globe-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 16px;
+      gap: 6px 12px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
     }
 
-    .globe-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .globe-legend span { display: inline-flex; align-items: center; gap: 5px; }
     .lg-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
     .lg-dot.day { background: #ffd166; }
     .lg-dot.night { background: #5b6f93; }
     .lg-dot.mark { background: #e8eef7; box-shadow: inset 0 0 0 2px #8aa0c2; }
 
-    .intro-tags { display: flex; flex-wrap: wrap; gap: 10px 14px; }
+    /* 三国本月日历 */
+    .calendar-panel {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 17px 17px 13px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(145deg, #ffffff 0%, #f7fafd 100%);
+      box-shadow: 0 6px 22px rgba(28, 46, 74, 0.05);
+    }
+
+    .calendar-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .calendar-kicker { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; }
+    .calendar-title { margin: 3px 0 0; font-size: 18px; line-height: 1.2; letter-spacing: -0.015em; }
+    .calendar-sub { margin: 3px 0 0; color: var(--muted); font-size: 11.5px; line-height: 1.45; }
+
+    .calendar-data-tag {
+      flex: 0 0 auto;
+      padding: 3px 7px;
+      border: 1px solid #dbe5f2;
+      border-radius: 99px;
+      color: #3d5878;
+      background: #eef4fb;
+      font-size: 10px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .calendar-scroller { min-width: 0; }
+    .calendar-scroller:focus-visible { outline: 2px solid #34527a; outline-offset: 3px; border-radius: 6px; }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--visible-calendars, 3), minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .calendar-card {
+      min-width: 0;
+      padding: 10px 9px 9px;
+      border: 1px solid #e1e8f0;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .calendar-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 7px;
+    }
+
+    .calendar-country { color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: 0.09em; }
+    .calendar-city { margin: 1px 0 0; font-size: 13px; line-height: 1.2; letter-spacing: -0.01em; }
+    .calendar-month { color: #3d5878; font-size: 9.5px; font-weight: 650; white-space: nowrap; }
+
+    .calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .calendar-weekdays { margin-bottom: 2px; color: #8190a4; font-size: 9px; text-align: center; }
+    .calendar-weekdays span { padding: 2px 0; }
+    .calendar-weekdays .weekend { color: #7a4606; }
+
+    .calendar-days { list-style: none; margin: 0; padding: 0; row-gap: 2px; }
+    .calendar-day {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 21px;
+      border-radius: 6px;
+      color: #344054;
+      font-size: 10.5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calendar-day.is-empty { visibility: hidden; }
+    .calendar-day.is-weekend { background: #f1f4f8; color: #4d5866; }
+    .calendar-day.is-holiday { background: #fff0d5; color: #7a4606; font-weight: 700; }
+    .calendar-day.is-holiday::after,
+    .calendar-day.is-workday-override::after {
+      content: "";
+      position: absolute;
+      bottom: 2px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+    }
+    .calendar-day.is-holiday::after { background: #d98a12; }
+    .calendar-day.is-workday-override { background: #e8f0ff; color: #1d4ec4; font-weight: 700; }
+    .calendar-day.is-workday-override::after { background: #2457d6; }
+
+    .calendar-day-number { display: inline-grid; place-items: center; min-width: 17px; min-height: 17px; }
+    .calendar-day.is-today .calendar-day-number {
+      border-radius: 50%;
+      color: #fff;
+      background: var(--ink);
+      font-weight: 700;
+    }
+    .calendar-day.is-today.is-holiday .calendar-day-number { background: #8a4f00; }
+    .calendar-day.is-today.is-workday-override .calendar-day-number { background: #2457d6; }
+
+    .calendar-events {
+      min-height: 30px;
+      margin-top: 7px;
+      padding-top: 6px;
+      border-top: 1px dashed #e7edf4;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .calendar-event { color: #5b4a2f; font-size: 9.5px; line-height: 1.35; }
+    .calendar-event b { color: #875700; font-weight: 700; }
+    .calendar-event.override { color: #2f4f79; }
+    .calendar-event.override b { color: #2457d6; }
+    .calendar-empty { color: #69778a; font-size: 9.5px; line-height: 1.35; }
+
+    .calendar-mobile-hint { display: none; margin-top: 8px; color: var(--muted); font-size: 10.5px; text-align: center; }
+
+    .calendar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 10.5px;
+    }
+    .calendar-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .calendar-key { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+    .calendar-key.weekend { background: #eef2f7; box-shadow: inset 0 0 0 1px #dce3ec; }
+    .calendar-key.holiday { background: #ffe4b8; box-shadow: inset 0 0 0 1px #e6b86a; }
+    .calendar-key.override { background: #e8f0ff; box-shadow: inset 0 0 0 1px #adc5f5; }
+    .calendar-key.today { border-radius: 50%; background: var(--ink); }
+
+    .intro-tags { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 14px; }
     .intro-tag {
       display: inline-flex;
       align-items: baseline;
@@ -672,6 +817,10 @@
       background: var(--beijing);
     }
 
+    @media (max-width: 1080px) {
+      .intro { grid-template-columns: minmax(0, 1fr); }
+    }
+
     @media (max-width: 900px) {
       main { padding-top: 30px; }
       .clock-grid { grid-template-columns: 1fr; }
@@ -707,6 +856,18 @@
       .globe-stat-state { grid-column: 2; grid-row: 1; margin-top: 0; }
       .globe-stat-time { grid-column: 1 / -1; }
       .globe-stat-alt { display: none; }
+
+      .calendar-panel { padding: 16px 14px 12px; }
+      .calendar-title { font-size: 17px; }
+      .calendar-scroller {
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+      .calendar-grid { display: flex; gap: 8px; }
+      .calendar-card { flex: 0 0 min(78vw, 280px); padding: 10px 11px; scroll-snap-align: start; }
+      .calendar-mobile-hint { display: block; }
 
       .reach-panel { padding: 15px 16px; }
       .reach-title { font-size: 20px; }
@@ -753,8 +914,9 @@
       .clock-card, .work-card { box-shadow: none; break-inside: avoid; }
       .sky-scene { width: 175px; }
       .digital-time { font-size: 26px; }
-      .schedule-scroll { overflow: visible; }
+      .schedule-scroll, .calendar-scroller { overflow: visible; }
       .schedule-inner { min-width: 0; }
+      .calendar-mobile-hint { display: none; }
     }
     .g-point text {
       fill: #dbe7f8;
@@ -786,7 +948,7 @@
     </div>
   </header>
   <main>
-    <section class="intro" aria-label="全球昼夜示意">
+    <section class="intro" aria-label="全球昼夜与三国日历">
       <div class="globe-panel">
         <div class="globe-wrap">
           <svg class="globe" id="globe" viewBox="0 0 260 260" role="img" aria-label="地球自转与太阳方位示意图">
@@ -822,6 +984,26 @@
           </div>
         </div>
       </div>
+      <aside class="calendar-panel" aria-labelledby="calendar-title">
+        <div class="calendar-head">
+          <div>
+            <div class="calendar-kicker">LOCAL CALENDARS</div>
+            <h2 class="calendar-title" id="calendar-title">三国本月日历</h2>
+            <p class="calendar-sub">当地时间；周末与法定节假日已纳入联络判断</p>
+          </div>
+          <span class="calendar-data-tag" id="calendar-data-tag">2026 数据</span>
+        </div>
+        <div class="calendar-scroller" id="calendar-scroller" tabindex="0" role="region" aria-label="三国本月日历，可左右滑动查看">
+          <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+        <div class="calendar-mobile-hint" id="calendar-mobile-hint">左右滑动查看各国日历 →</div>
+        <div class="calendar-legend" aria-label="日历图例">
+          <span><i class="calendar-key weekend"></i>周末</span>
+          <span><i class="calendar-key holiday"></i>法定节假日</span>
+          <span><i class="calendar-key override"></i>调休上班</span>
+          <span><i class="calendar-key today"></i>今天</span>
+        </div>
+      </aside>
       <div class="intro-tags">
         <span class="intro-tag"><b>国动集团本部</b> 北京 <i id="intro-meta-beijing">东八区 · 09:00–17:30</i></span>
         <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i id="intro-meta-kazakhstan">东五区 · 09:00–18:00</i></span>
@@ -967,7 +1149,7 @@
           <h2 id="work-title">跨时区上班时间</h2>
           <p id="work-schedule-desc">国动集团本部 09:00–17:30 ｜ 俄罗斯国动 09:00–17:30 ｜ 哈萨克斯坦国动 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
         </div>
-        <span class="workday-tag">周末自动休息</span>
+        <span class="workday-tag">周末与节假日休息</span>
       </div>
 
       <div class="schedule" id="schedule" aria-label="三地工作时间北京时间轴">
@@ -1009,11 +1191,77 @@ const BEIJING_TZ = "Asia/Shanghai";
 const ORDER = ["beijing", "kazakhstan", "russia"];
 const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 const STEP_MS = 5 * 60 * 1000;
+const STATUS_HORIZON_DAYS = 14;
+const CALENDAR_DATA_YEAR = 2026;
 const REDUCE_MOTION = Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+const HOLIDAY_RANGES = {
+  beijing: [
+    ["2026-01-01", "2026-01-03", "元旦"],
+    ["2026-02-15", "2026-02-23", "春节"],
+    ["2026-04-04", "2026-04-06", "清明节"],
+    ["2026-05-01", "2026-05-05", "劳动节"],
+    ["2026-06-19", "2026-06-21", "端午节"],
+    ["2026-09-25", "2026-09-27", "中秋节"],
+    ["2026-10-01", "2026-10-07", "国庆节"]
+  ],
+  kazakhstan: [
+    ["2026-01-01", "2026-01-02", "新年"],
+    ["2026-01-07", "2026-01-07", "东正教圣诞节"],
+    ["2026-03-08", "2026-03-08", "国际妇女节"],
+    ["2026-03-09", "2026-03-09", "国际妇女节（补休）"],
+    ["2026-03-21", "2026-03-23", "纳吾鲁孜节"],
+    ["2026-03-24", "2026-03-25", "纳吾鲁孜节（补休）"],
+    ["2026-05-01", "2026-05-01", "人民团结日"],
+    ["2026-05-07", "2026-05-07", "祖国保卫者日"],
+    ["2026-05-09", "2026-05-09", "胜利日"],
+    ["2026-05-11", "2026-05-11", "胜利日（补休）"],
+    ["2026-05-27", "2026-05-27", "古尔邦节"],
+    ["2026-07-06", "2026-07-06", "首都日"],
+    ["2026-10-25", "2026-10-25", "共和国日"],
+    ["2026-10-26", "2026-10-26", "共和国日（补休）"],
+    ["2026-12-16", "2026-12-16", "独立日"]
+  ],
+  russia: [
+    ["2026-01-01", "2026-01-06", "新年假期"],
+    ["2026-01-07", "2026-01-07", "东正教圣诞节"],
+    ["2026-01-08", "2026-01-08", "新年假期"],
+    ["2026-01-09", "2026-01-09", "新年假期（调休）"],
+    ["2026-02-23", "2026-02-23", "祖国保卫者日"],
+    ["2026-03-08", "2026-03-08", "国际妇女节"],
+    ["2026-03-09", "2026-03-09", "国际妇女节（补休）"],
+    ["2026-05-01", "2026-05-01", "劳动节"],
+    ["2026-05-09", "2026-05-09", "胜利日"],
+    ["2026-05-11", "2026-05-11", "胜利日（补休）"],
+    ["2026-06-12", "2026-06-12", "俄罗斯日"],
+    ["2026-11-04", "2026-11-04", "民族团结日"],
+    ["2026-12-31", "2026-12-31", "新年假期（调休）"]
+  ]
+};
+
+const WORKDAY_OVERRIDES = {
+  beijing: ["2026-01-04", "2026-02-14", "2026-02-28", "2026-05-09", "2026-09-20", "2026-10-10"],
+  kazakhstan: [],
+  russia: []
+};
+
+function expandHolidayRanges(ranges) {
+  const result = new Map();
+  for (const [start, end, name] of ranges) {
+    const cursor = new Date(`${start}T00:00:00Z`);
+    const last = new Date(`${end}T00:00:00Z`);
+    while (cursor <= last) {
+      result.set(cursor.toISOString().slice(0, 10), name);
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
+    }
+  }
+  return result;
+}
 
 const PLACES = {
   beijing: {
     key: "beijing",
+    countryLabel: "CN · 中国",
     name: "北京",
     shortName: "北京",
     displayName: "国动集团本部·北京",
@@ -1027,12 +1275,14 @@ const PLACES = {
     lunchStart: 12 * 60,
     lunchEnd: 13 * 60,
     workdays: [1, 2, 3, 4, 5],
-    holidays: new Set(),
+    holidays: expandHolidayRanges(HOLIDAY_RANGES.beijing),
+    workdayOverrides: new Set(WORKDAY_OVERRIDES.beijing),
     className: "hq-bar",
     accent: "#c23b32"
   },
   kazakhstan: {
     key: "kazakhstan",
+    countryLabel: "KZ · 哈萨克斯坦",
     name: "阿拉木图",
     shortName: "阿拉木图",
     displayName: "哈萨克斯坦·阿拉木图",
@@ -1046,12 +1296,14 @@ const PLACES = {
     lunchStart: 12 * 60,
     lunchEnd: 13 * 60,
     workdays: [1, 2, 3, 4, 5],
-    holidays: new Set(),
+    holidays: expandHolidayRanges(HOLIDAY_RANGES.kazakhstan),
+    workdayOverrides: new Set(WORKDAY_OVERRIDES.kazakhstan),
     className: "kz-bar",
     accent: "#06706b"
   },
   russia: {
     key: "russia",
+    countryLabel: "RU · 俄罗斯",
     name: "莫斯科",
     shortName: "莫斯科",
     displayName: "俄罗斯·莫斯科",
@@ -1065,7 +1317,8 @@ const PLACES = {
     lunchStart: 12 * 60,
     lunchEnd: 13 * 60,
     workdays: [1, 2, 3, 4, 5],
-    holidays: new Set(),
+    holidays: expandHolidayRanges(HOLIDAY_RANGES.russia),
+    workdayOverrides: new Set(WORKDAY_OVERRIDES.russia),
     className: "ru-bar",
     accent: "#3f5fce"
   }
@@ -1147,27 +1400,44 @@ function dayNumber(parts) {
   return Math.floor(Date.UTC(parts.year, parts.month - 1, parts.day) / 86400000);
 }
 
+function getCalendarDayInfo(place, parts) {
+  const key = dateKey(parts);
+  return {
+    key,
+    holiday: place.holidays.get(key) || null,
+    workdayOverride: place.workdayOverrides.has(key),
+    weekend: !place.workdays.includes(parts.weekday)
+  };
+}
+
+function isWorkingDay(place, parts) {
+  const info = getCalendarDayInfo(place, parts);
+  return info.workdayOverride || (!info.holiday && !info.weekend);
+}
+
 function getDutyStateAt(place, date) {
   const parts = getZonedParts(date, place.timeZone);
-  if (!place.workdays.includes(parts.weekday)) {
-    return { text: "周末休息", className: "off", code: "weekend", parts };
+  const calendar = getCalendarDayInfo(place, parts);
+  if (!isWorkingDay(place, parts)) {
+    if (calendar.holiday) {
+      return { text: calendar.holiday, className: "off", code: "holiday", parts, workdayOverride: false };
+    }
+    return { text: "周末休息", className: "off", code: "weekend", parts, workdayOverride: false };
   }
-  if (place.holidays.has(dateKey(parts))) {
-    return { text: "休息日", className: "off", code: "holiday", parts };
-  }
+  const extra = { parts, workdayOverride: calendar.workdayOverride };
   if (parts.minutes < place.workStart) {
-    return { text: "未上班", className: "off", code: "before", parts };
+    return { text: "未上班", className: "off", code: "before", ...extra };
   }
   if (parts.minutes < place.lunchStart) {
-    return { text: "办公中", className: "on", code: "work", parts };
+    return { text: "办公中", className: "on", code: "work", ...extra };
   }
   if (parts.minutes < place.lunchEnd) {
-    return { text: "午休中", className: "break", code: "lunch", parts };
+    return { text: "午休中", className: "break", code: "lunch", ...extra };
   }
   if (parts.minutes < place.workEnd) {
-    return { text: "办公中", className: "on", code: "work", parts };
+    return { text: "办公中", className: "on", code: "work", ...extra };
   }
-  return { text: "已下班", className: "off", code: "after", parts };
+  return { text: "已下班", className: "off", code: "after", ...extra };
 }
 
 function workWindowsLocal(place) {
@@ -1206,7 +1476,7 @@ function floorToStep(date, step = STEP_MS) {
   return new Date(Math.floor(date.getTime() / step) * step);
 }
 
-function buildStateTimeline(places, from, days = 3) {
+function buildStateTimeline(places, from, days = STATUS_HORIZON_DAYS) {
   const start = floorToStep(from);
   const count = Math.ceil(days * 86400000 / STEP_MS);
   const timeline = [];
@@ -1258,7 +1528,7 @@ function formatDayLabel(date, now) {
 }
 
 function formatBeijingWindow(window, now) {
-  if (!window) return "未来 3 天暂无共同窗口";
+  if (!window) return `未来 ${STATUS_HORIZON_DAYS} 天暂无共同窗口`;
   const start = clockAt(window.start, BEIJING_TZ);
   const end = clockAt(window.end, BEIJING_TZ);
   return `${formatDayLabel(window.start, now)} ${start}–${end}（北京时间）`;
@@ -1270,7 +1540,7 @@ function formatLocalRange(place, window) {
 }
 
 function formatNextShort(window, now) {
-  if (!window) return "未来 3 天暂无共同窗口";
+  if (!window) return `未来 ${STATUS_HORIZON_DAYS} 天暂无共同窗口`;
   return `${formatDayLabel(window.start, now)} ${clockAt(window.start, BEIJING_TZ)}–${clockAt(window.end, BEIJING_TZ)}（北京时间）`;
 }
 
@@ -1832,35 +2102,36 @@ function updateHandsOnly() {
 /* ============ 速览与状态 ============ */
 
 function buildPlaceHint(place, state, nextWithHq, now) {
+  const overridePrefix = state.workdayOverride ? "调休上班；" : "";
   if (place.key === "beijing") {
     if (state.code === "weekend") return "本部周末休息";
-    if (state.code === "holiday") return "本部休息日";
-    if (state.code === "work") return "本部在岗";
-    if (state.code === "lunch") return `本部午休中，${formatClock(place.lunchEnd)} 后恢复联络`;
-    if (state.code === "before") return `本部尚未上班，${formatClock(place.workStart)} 后开始`;
-    return "本部已下班";
+    if (state.code === "holiday") return `本部休息日：${state.text}`;
+    if (state.code === "work") return `${overridePrefix}本部在岗`;
+    if (state.code === "lunch") return `${overridePrefix}本部午休中，${formatClock(place.lunchEnd)} 后恢复联络`;
+    if (state.code === "before") return `${overridePrefix}本部尚未上班，${formatClock(place.workStart)} 后开始`;
+    return `${overridePrefix}本部已下班`;
   }
 
   const hqState = getDutyStateAt(PLACES.beijing, now);
   const nextText = formatNextShort(nextWithHq, now);
 
   if (state.code === "weekend") return `周末休息；下一次共同窗口：${nextText}`;
-  if (state.code === "holiday") return `休息日；下一次共同窗口：${nextText}`;
+  if (state.code === "holiday") return `${state.text}；下一次共同窗口：${nextText}`;
   if (state.code === "lunch") {
     if (hqState.className === "on") {
       const beijingLunchEnd = place.lunchEnd + (8 - place.offset) * 60;
-      return `午休中，${formatClock(place.lunchEnd)}（北京时间 ${formatClock(beijingLunchEnd)}）后可联络`;
+      return `${overridePrefix}午休中，${formatClock(place.lunchEnd)}（北京时间 ${formatClock(beijingLunchEnd)}）后可联络`;
     }
-    if (hqState.className === "break") return `双方午休中；下一次共同窗口：${nextText}`;
-    return `午休中；下一次共同窗口：${nextText}`;
+    if (hqState.className === "break") return `${overridePrefix}双方午休中；下一次共同窗口：${nextText}`;
+    return `${overridePrefix}午休中；下一次共同窗口：${nextText}`;
   }
   if (state.code === "work") {
-    if (hqState.className === "on") return "双方同时在岗，可直接联络";
-    if (hqState.className === "break") return `本部午休中，北京时间 ${formatClock(PLACES.beijing.lunchEnd)} 后可联络`;
-    return `本部已下班；下一次共同窗口：${nextText}`;
+    if (hqState.className === "on") return `${overridePrefix}双方同时在岗，可直接联络`;
+    if (hqState.className === "break") return `${overridePrefix}本部午休中，北京时间 ${formatClock(PLACES.beijing.lunchEnd)} 后可联络`;
+    return `${overridePrefix}本部已下班；下一次共同窗口：${nextText}`;
   }
-  if (state.code === "before") return `未上班；下一次共同窗口：${nextText}`;
-  return `已下班；下一次共同窗口：${nextText}`;
+  if (state.code === "before") return `${overridePrefix}未上班；下一次共同窗口：${nextText}`;
+  return `${overridePrefix}已下班；下一次共同窗口：${nextText}`;
 }
 
 function updateReachPanel(states, nextAll, now, keys = visibleKeys()) {
@@ -1881,6 +2152,8 @@ function updateReachPanel(states, nextAll, now, keys = visibleKeys()) {
         : "所选地区";
   const allOn = keys.length > 0 && keys.every(key => states[key].className === "on");
   const allWeekend = keys.length > 0 && keys.every(key => states[key].code === "weekend");
+  const allHoliday = keys.length > 0 && keys.every(key => states[key].code === "holiday");
+  const allRest = keys.length > 0 && keys.every(key => ["weekend", "holiday"].includes(states[key].code));
   const anyBreak = keys.some(key => states[key].className === "break");
   const anyOn = keys.some(key => states[key].className === "on");
   const beijingState = states.beijing;
@@ -1895,6 +2168,8 @@ function updateReachPanel(states, nextAll, now, keys = visibleKeys()) {
   if (!keys.length) heading = "当前未显示时区";
   else if (allOn) heading = keys.length === 1 ? `${scope}在岗，可联络` : `${scope}均在岗，可直接联络`;
   else if (allWeekend) heading = `${scope}周末休息`;
+  else if (allHoliday) heading = `${scope}法定节假日休息`;
+  else if (allRest) heading = `${scope}休息日`;
   else if (hqBreak) heading = "本部午休，暂不宜全员联络";
   else if (hqAfter && anyOn) heading = "本部已下班，暂不宜全员联络";
   else if (anyBreak) heading = "有人午休，暂不宜全员联络";
@@ -1924,8 +2199,8 @@ function updateReachPanel(states, nextAll, now, keys = visibleKeys()) {
     nextLocal.textContent = nonBeijing.map(key => `${PLACES[key].shortName} ${formatLocalRange(PLACES[key], nextAll)}`).join(" · ");
   } else {
     nextLabel.textContent = `下一个${windowName}`;
-    nextStrong.textContent = "未来 3 天暂无";
-    nextLocal.textContent = "请检查周末/节假日设置";
+    nextStrong.textContent = `未来 ${STATUS_HORIZON_DAYS} 天暂无`;
+    nextLocal.textContent = "可检查节假日或显示范围";
   }
 }
 
@@ -1934,7 +2209,7 @@ function updateStatusPanel(now = new Date()) {
   const keys = visibleKeys();
   const states = {};
   for (const key of ORDER) states[key] = getDutyStateAt(PLACES[key], now);
-  const timeline = buildStateTimeline(ORDER.map(key => PLACES[key]), now, 3);
+  const timeline = buildStateTimeline(ORDER.map(key => PLACES[key]), now);
   const nextAll = findWindow(timeline, sample =>
     keys.length > 0 && keys.every(key => sample[key].className === "on")
   );
@@ -2063,8 +2338,8 @@ function renderWorkSchedule(now = new Date()) {
     detail.textContent = currentState.code === "weekend"
       ? "周末休息"
       : currentState.code === "holiday"
-        ? "休息日"
-        : `当地 ${workWindowsLocal(place).map(window => `${formatClock(window.start)}–${formatClock(window.end)}`).join(" / ")}`;
+        ? `${currentState.text}休息`
+        : `${currentState.workdayOverride ? "调休上班 · " : ""}当地 ${workWindowsLocal(place).map(window => `${formatClock(window.start)}–${formatClock(window.end)}`).join(" / ")}`;
     label.appendChild(name);
     label.appendChild(detail);
 
@@ -2132,6 +2407,185 @@ function renderWorkSchedule(now = new Date()) {
   }
 }
 
+/* ============ 三国本月日历 ============ */
+
+function getMonthHolidayGroups(place, year, month) {
+  const prefix = `${year}-${String(month).padStart(2, "0")}-`;
+  const entries = [...place.holidays.entries()]
+    .filter(([key]) => key.startsWith(prefix))
+    .sort(([left], [right]) => left.localeCompare(right));
+  const groups = [];
+  for (const [key, name] of entries) {
+    const day = Number(key.slice(-2));
+    const last = groups[groups.length - 1];
+    if (last && last.name === name && day === last.end + 1) {
+      last.end = day;
+    } else {
+      groups.push({ start: day, end: day, name });
+    }
+  }
+  return groups;
+}
+
+function getMonthOverrides(place, year, month) {
+  const prefix = `${year}-${String(month).padStart(2, "0")}-`;
+  return [...place.workdayOverrides]
+    .filter(key => key.startsWith(prefix))
+    .map(key => Number(key.slice(-2)))
+    .sort((left, right) => left - right);
+}
+
+function buildCalendarEvent(label, name, override = false) {
+  const event = document.createElement("span");
+  event.className = override ? "calendar-event override" : "calendar-event";
+  const date = document.createElement("b");
+  date.textContent = label;
+  event.appendChild(date);
+  event.appendChild(document.createTextNode(` ${name}`));
+  return event;
+}
+
+function buildCalendarCard(place, today) {
+  const year = today.year;
+  const month = today.month;
+  const monthLabel = `${year}年${month}月`;
+  const card = document.createElement("article");
+  card.className = `calendar-card ${place.key}`;
+  card.dataset.calendarKey = place.key;
+  const headingId = `calendar-card-title-${place.key}`;
+  card.setAttribute("aria-labelledby", headingId);
+
+  const head = document.createElement("div");
+  head.className = "calendar-card-head";
+  const headText = document.createElement("div");
+  const country = document.createElement("div");
+  country.className = "calendar-country";
+  country.textContent = place.countryLabel;
+  const city = document.createElement("h3");
+  city.className = "calendar-city";
+  city.id = headingId;
+  city.textContent = place.name;
+  const monthText = document.createElement("span");
+  monthText.className = "calendar-month";
+  monthText.textContent = monthLabel;
+  headText.append(country, city);
+  head.append(headText, monthText);
+
+  const weekdays = document.createElement("div");
+  weekdays.className = "calendar-weekdays";
+  weekdays.setAttribute("aria-hidden", "true");
+  ["一", "二", "三", "四", "五", "六", "日"].forEach((label, index) => {
+    const weekday = document.createElement("span");
+    if (index >= 5) weekday.className = "weekend";
+    weekday.textContent = label;
+    weekdays.appendChild(weekday);
+  });
+
+  const days = document.createElement("ol");
+  days.className = "calendar-days";
+  days.setAttribute("aria-label", `${place.name} ${monthLabel}日历`);
+  const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+  const leading = (firstWeekday + 6) % 7;
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+
+  for (let index = 0; index < leading; index += 1) {
+    const empty = document.createElement("li");
+    empty.className = "calendar-day is-empty";
+    empty.setAttribute("aria-hidden", "true");
+    days.appendChild(empty);
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+    const parts = { year, month, day, weekday };
+    const info = getCalendarDayInfo(place, parts);
+    const isToday = today.day === day;
+    const cell = document.createElement("li");
+    const classes = ["calendar-day"];
+    if (info.weekend) classes.push("is-weekend");
+    if (info.workdayOverride) classes.push("is-workday-override");
+    if (info.holiday) classes.push("is-holiday");
+    if (isToday) classes.push("is-today");
+    cell.className = classes.join(" ");
+    if (isToday) cell.setAttribute("aria-current", "date");
+
+    const number = document.createElement("span");
+    number.className = "calendar-day-number";
+    number.textContent = String(day);
+    cell.appendChild(number);
+
+    const labels = [`${month}月${day}日 ${WEEKDAYS[weekday]}`];
+    if (isToday) labels.push("今天");
+    if (info.workdayOverride) labels.push("调休上班");
+    if (info.holiday) labels.push(`法定节假日：${info.holiday}`);
+    else if (info.weekend) labels.push("周末");
+    const accessible = labels.join("，");
+    cell.setAttribute("aria-label", accessible);
+    cell.title = accessible;
+    days.appendChild(cell);
+  }
+
+  const totalCells = leading + daysInMonth;
+  const trailing = (7 - (totalCells % 7)) % 7;
+  for (let index = 0; index < trailing; index += 1) {
+    const empty = document.createElement("li");
+    empty.className = "calendar-day is-empty";
+    empty.setAttribute("aria-hidden", "true");
+    days.appendChild(empty);
+  }
+
+  const events = document.createElement("div");
+  events.className = "calendar-events";
+  const eventItems = [];
+  for (const group of getMonthHolidayGroups(place, year, month)) {
+    const label = group.start === group.end ? `${group.start}日` : `${group.start}–${group.end}日`;
+    eventItems.push(buildCalendarEvent(label, group.name));
+  }
+  for (const day of getMonthOverrides(place, year, month)) {
+    eventItems.push(buildCalendarEvent(`${day}日`, "调休上班", true));
+  }
+  if (eventItems.length === 0) {
+    const empty = document.createElement("span");
+    empty.className = "calendar-empty";
+    empty.textContent = "本月无法定节假日";
+    events.appendChild(empty);
+  } else {
+    eventItems.slice(0, 3).forEach(item => events.appendChild(item));
+    if (eventItems.length > 3) {
+      const more = document.createElement("span");
+      more.className = "calendar-empty";
+      more.textContent = `另有 ${eventItems.length - 3} 项`;
+      events.appendChild(more);
+    }
+  }
+
+  card.append(head, weekdays, days, events);
+  return card;
+}
+
+function renderCalendars(now = new Date()) {
+  const grid = document.getElementById("calendar-grid");
+  const scroller = document.getElementById("calendar-scroller");
+  if (!grid || !scroller) return;
+  const keys = visibleKeys();
+  grid.style.setProperty("--visible-calendars", keys.length);
+  grid.replaceChildren();
+  for (const key of ORDER) {
+    const place = PLACES[key];
+    const card = buildCalendarCard(place, getZonedParts(now, place.timeZone));
+    card.hidden = !isZoneVisible(key);
+    grid.appendChild(card);
+  }
+
+  const dataTag = document.getElementById("calendar-data-tag");
+  if (dataTag) dataTag.textContent = `${CALENDAR_DATA_YEAR} 数据`;
+  const canScroll = scroller.scrollWidth > scroller.clientWidth + 1;
+  const scope = keys.length === 3 ? "三国" : keys.length === 2 ? "两国" : "所选国家";
+  scroller.setAttribute("aria-label", `${scope}本月日历${canScroll ? "，可左右滑动查看" : ""}`);
+  const hint = document.getElementById("calendar-mobile-hint");
+  if (hint) hint.hidden = !canScroll;
+}
+
 function updateVisibility() {
   const showKazakhstan = isZoneVisible("kazakhstan");
   const showRussia = isZoneVisible("russia");
@@ -2146,9 +2600,11 @@ function updateVisibility() {
   if (russiaStatus) russiaStatus.hidden = !showRussia;
   document.getElementById("status-board").style.setProperty("--visible-zones", count);
   document.getElementById("clock-grid").style.setProperty("--visible-clocks", count);
-  updateAllClocks(new Date());
-  updateStatusPanel(new Date());
-  renderWorkSchedule(new Date());
+  const now = new Date();
+  updateAllClocks(now);
+  updateStatusPanel(now);
+  renderWorkSchedule(now);
+  renderCalendars(now);
 }
 
 /* ============ 启动与刷新 ============ */
@@ -2181,6 +2637,7 @@ function startTimers() {
     const now = new Date();
     updateStatusPanel(now);
     renderWorkSchedule(now);
+    renderCalendars(now);
   }, 30000);
   globeTimer = setInterval(() => renderGlobe(new Date()), 5000);
 }
@@ -2191,6 +2648,7 @@ function refreshEverything() {
   updateAllClocks(now);
   updateStatusPanel(now);
   renderWorkSchedule(now);
+  renderCalendars(now);
   renderGlobe(now);
 }
 
