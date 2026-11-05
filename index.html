@@ -115,19 +115,21 @@
 
     .globe-panel {
       display: flex;
-      align-items: center;
-      gap: 18px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
       min-width: 0;
-      padding: 18px;
+      padding: 20px 18px 18px;
       border: 1px solid var(--line);
       border-radius: 20px;
       background: linear-gradient(135deg, #f7fafd 0%, #eef4fb 100%);
       box-shadow: 0 6px 22px rgba(28, 46, 74, 0.05);
     }
 
-    .globe-wrap { flex: 0 0 auto; width: 200px; height: 200px; }
+    .globe-wrap { width: min(270px, 100%); height: auto; aspect-ratio: 1; margin: 0 auto; }
     .globe { width: 100%; height: 100%; display: block; }
-    .globe-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+    .globe-side { width: 100%; min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+    .globe-side > div:first-child { text-align: center; }
 
     .globe-title {
       color: #22374f;
@@ -162,6 +164,7 @@
     .globe-legend {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 6px 12px;
       color: var(--muted);
       font-size: 11px;
@@ -171,7 +174,8 @@
     .lg-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
     .lg-dot.day { background: #ffd166; }
     .lg-dot.night { background: #5b6f93; }
-    .lg-dot.mark { background: #e8eef7; box-shadow: inset 0 0 0 2px #8aa0c2; }
+    .lg-dot.sun { width: 11px; height: 11px; background: #ffd166; box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.18); }
+    .lg-dot.mark { background: #ffffff; box-shadow: 0 0 0 1.5px #0d1c33; }
 
     /* 三国合并月历 */
     .calendar-panel {
@@ -335,55 +339,6 @@
     }
     .intro-tag b { color: #2f4f79; font-weight: 650; }
     .intro-tag i { font-style: normal; color: #5f6b7a; font-size: 12px; font-variant-numeric: tabular-nums; }
-
-    .reach-panel {
-      display: flex;
-      align-items: stretch;
-      justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 12px;
-      padding: 17px 22px;
-      border: 1px solid #d8e2ef;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #ffffff 0%, #f4f8fd 100%);
-      box-shadow: 0 6px 20px rgba(28, 46, 74, 0.045);
-    }
-
-    .reach-main { display: flex; align-items: flex-start; gap: 13px; min-width: 0; }
-
-    .reach-dot {
-      width: 12px;
-      height: 12px;
-      flex: 0 0 auto;
-      margin-top: 7px;
-      border-radius: 50%;
-      background: #16a278;
-      box-shadow: 0 0 0 5px rgba(22, 162, 120, 0.12);
-    }
-
-    .reach-panel[data-tone="break"] .reach-dot { background: #d98a12; box-shadow: 0 0 0 5px rgba(217, 138, 18, 0.13); }
-    .reach-panel[data-tone="off"] .reach-dot { background: #8a96a6; box-shadow: 0 0 0 5px rgba(138, 150, 166, 0.12); }
-
-    .reach-kicker { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; }
-    .reach-title { margin: 3px 0 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.02em; }
-    .reach-detail { margin: 5px 0 0; color: #435671; font-size: 13px; line-height: 1.5; }
-
-    .reach-next {
-      flex: 0 0 auto;
-      min-width: 280px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 2px;
-      padding-left: 22px;
-      border-left: 1px solid var(--line);
-      text-align: right;
-    }
-
-    .reach-next > span { color: var(--muted); font-size: 11px; }
-    .reach-next strong { color: #22374f; font-size: 16px; line-height: 1.35; }
-    .reach-next small { color: var(--muted); font-size: 11px; line-height: 1.45; }
 
     /* 三地速览卡 */
     .status-board {
@@ -836,8 +791,6 @@
       .clock-date { align-self: start; text-align: left; }
       .status-board { grid-template-columns: 1fr; }
       .status-hint { min-height: 0; }
-      .reach-panel { flex-direction: column; gap: 14px; }
-      .reach-next { min-width: 0; padding: 12px 0 0; border-left: 0; border-top: 1px solid var(--line); align-items: flex-start; text-align: left; }
       .schedule-axis, .schedule-body, .schedule-common-row { grid-template-columns: 168px minmax(0, 1fr); }
     }
 
@@ -853,7 +806,7 @@
       main { padding-top: 24px; }
 
       .globe-panel { flex-direction: column; align-items: stretch; gap: 16px; padding: 18px; }
-      .globe-wrap { width: min(220px, 100%); height: auto; aspect-ratio: 1; margin: 0 auto; }
+      .globe-wrap { width: min(250px, 100%); }
       .globe-side { width: 100%; }
       .globe-stats { grid-template-columns: 1fr; }
       .globe-stat { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 12px; }
@@ -872,10 +825,6 @@
       .calendar-mark { width: 11px; height: 10px; font-size: 7px; }
       .calendar-note { grid-template-columns: 56px minmax(0, 1fr); gap: 5px; font-size: 9.5px; }
       .calendar-notes-sub { display: none; }
-
-      .reach-panel { padding: 15px 16px; }
-      .reach-title { font-size: 20px; }
-      .reach-next strong { font-size: 15px; }
 
       .status-card { padding: 12px 13px; }
       .status-clock { font-size: 20px; }
@@ -981,9 +930,10 @@
           </div>
           <div class="globe-stats" id="globe-stats"></div>
           <div class="globe-legend">
+            <span><i class="lg-dot sun"></i>太阳直射点</span>
+            <span><i class="lg-dot mark"></i>办公地</span>
             <span><i class="lg-dot day"></i>白昼</span>
             <span><i class="lg-dot night"></i>夜间</span>
-            <span><i class="lg-dot mark"></i>办公地</span>
           </div>
         </div>
       </div>
@@ -1011,22 +961,6 @@
         <span class="intro-tag"><b>国动集团本部</b> 北京 <i id="intro-meta-beijing">东八区 · 09:00–17:30</i></span>
         <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i id="intro-meta-kazakhstan">东五区 · 09:00–18:00</i></span>
         <span class="intro-tag"><b>俄罗斯</b> 莫斯科 <i id="intro-meta-russia">东三区 · 09:00–17:30</i></span>
-      </div>
-    </section>
-
-    <section class="reach-panel" id="reach-panel" data-tone="off" aria-labelledby="reach-title">
-      <div class="reach-main">
-        <span class="reach-dot" aria-hidden="true"></span>
-        <div>
-          <div class="reach-kicker">现在能否联络</div>
-          <h2 class="reach-title" id="reach-title" aria-live="polite" aria-atomic="true">计算中</h2>
-          <p class="reach-detail" id="reach-detail">正在读取三地当地时间</p>
-        </div>
-      </div>
-      <div class="reach-next">
-        <span id="reach-next-label">下一个三地共同窗口</span>
-        <strong id="reach-next">计算中</strong>
-        <small id="reach-next-local"></small>
       </div>
     </section>
 
@@ -1530,18 +1464,6 @@ function formatDayLabel(date, now) {
   return `${target.month}月${target.day}日`;
 }
 
-function formatBeijingWindow(window, now) {
-  if (!window) return `未来 ${STATUS_HORIZON_DAYS} 天暂无共同窗口`;
-  const start = clockAt(window.start, BEIJING_TZ);
-  const end = clockAt(window.end, BEIJING_TZ);
-  return `${formatDayLabel(window.start, now)} ${start}–${end}（北京时间）`;
-}
-
-function formatLocalRange(place, window) {
-  if (!window) return "";
-  return `${clockAt(window.start, place.timeZone)}–${clockAt(window.end, place.timeZone)}`;
-}
-
 function formatNextShort(window, now) {
   if (!window) return `未来 ${STATUS_HORIZON_DAYS} 天暂无共同窗口`;
   return `${formatDayLabel(window.start, now)} ${clockAt(window.start, BEIJING_TZ)}–${clockAt(window.end, BEIJING_TZ)}（北京时间）`;
@@ -1877,30 +1799,23 @@ function renderGlobe(now) {
 
   const sunPoint = project(sun.declination, sunLon, lon0);
   sunGroup.innerHTML = sunPoint.visible
-    ? `<circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="13" fill="#ffd166" opacity="0.22"/>
-       <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="7" fill="#ffd166"/>
-       <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="3" fill="#fff8e1"/>`
+    ? `<circle class="sun-halo" cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="16" fill="#ffd166" opacity="0.22"/>
+       <circle class="sun-core" cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="9" fill="#ffd166"/>
+       <circle class="sun-glint" cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="3.5" fill="#fff8e1"/>`
     : "";
-
-  const labelOffsets = {
-    beijing: [9, 4],
-    kazakhstan: [-8, -5],
-    russia: [9, 13]
-  };
 
   markerGroup.innerHTML = ORDER.map(key => {
     const place = PLACES[key];
     const point = project(place.lat, place.lon, lon0);
     if (!point.visible) return "";
-    const sunHere = getSunPosition(now, place.lat, place.lon);
-    const color = sunHere.altitude > -0.833 ? "#ffd166" : "#93a9cc";
-    const flip = point.x > GLOBE_CX + 46;
-    const offset = labelOffsets[key] || [9, 4];
-    const textX = flip ? -Math.abs(offset[0]) : Math.abs(offset[0]);
+    const code = place.countryLabel.split("·")[0].trim();
+    const flip = point.x > GLOBE_CX + 70;
+    const textX = flip ? -8 : 8;
     const anchor = flip ? "end" : "start";
     return `<g class="g-point" transform="translate(${point.x.toFixed(1)},${point.y.toFixed(1)})">
-      <circle r="5" fill="${color}" stroke="#0d1c33" stroke-width="1.6"/>
-      <text x="${textX}" y="${offset[1]}" text-anchor="${anchor}">${place.name}</text>
+      <title>${place.name}</title>
+      <circle class="g-point-dot" r="4.5" fill="#ffffff" stroke="#0d1c33" stroke-width="1.5"/>
+      <text x="${textX}" y="3.2" text-anchor="${anchor}">${code}</text>
     </g>`;
   }).join("");
 
@@ -1909,7 +1824,7 @@ function renderGlobe(now) {
   if (sub) {
     sub.innerHTML =
       `太阳直射点位于 <b>${formatLon(sunLon)}</b>，` +
-      `当前昼半球与夜半球由晨昏线分隔，黄色光斑即太阳直射位置。`;
+      `当前昼半球与夜半球由晨昏线分隔；黄色圆点为太阳直射位置，白色圆点为三地办公地。`;
   }
 
   if (statsBox) {
@@ -2117,94 +2032,27 @@ function buildPlaceHint(place, state, nextWithHq, now) {
 
   const hqState = getDutyStateAt(PLACES.beijing, now);
   const nextText = formatNextShort(nextWithHq, now);
+  const nextLabel = `下一次与本部共同窗口：${nextText}`;
 
-  if (state.code === "weekend") return `周末休息；下一次共同窗口：${nextText}`;
-  if (state.code === "holiday") return `${state.text}；下一次共同窗口：${nextText}`;
+  if (state.code === "weekend") return `周末休息；${nextLabel}`;
+  if (state.code === "holiday") return `${state.text}；${nextLabel}`;
   if (state.code === "lunch") {
     if (hqState.className === "on") {
       const beijingLunchEnd = place.lunchEnd + (8 - place.offset) * 60;
       return `${overridePrefix}午休中，${formatClock(place.lunchEnd)}（北京时间 ${formatClock(beijingLunchEnd)}）后可联络`;
     }
-    if (hqState.className === "break") return `${overridePrefix}双方午休中；下一次共同窗口：${nextText}`;
-    return `${overridePrefix}午休中；下一次共同窗口：${nextText}`;
+    if (hqState.className === "break") return `${overridePrefix}双方午休中；${nextLabel}`;
+    return `${overridePrefix}午休中；${nextLabel}`;
   }
   if (state.code === "work") {
     if (hqState.className === "on") return `${overridePrefix}双方同时在岗，可直接联络`;
     if (hqState.className === "break") return `${overridePrefix}本部午休中，北京时间 ${formatClock(PLACES.beijing.lunchEnd)} 后可联络`;
-    return `${overridePrefix}本部已下班；下一次共同窗口：${nextText}`;
+    if (hqState.code === "holiday") return `${overridePrefix}本部休息日：${hqState.text}；${nextLabel}`;
+    if (hqState.code === "weekend") return `${overridePrefix}本部周末休息；${nextLabel}`;
+    return `${overridePrefix}本部已下班；${nextLabel}`;
   }
-  if (state.code === "before") return `${overridePrefix}未上班；下一次共同窗口：${nextText}`;
-  return `${overridePrefix}已下班；下一次共同窗口：${nextText}`;
-}
-
-function updateReachPanel(states, nextAll, now, keys = visibleKeys()) {
-  const panel = document.getElementById("reach-panel");
-  const title = document.getElementById("reach-title");
-  const detail = document.getElementById("reach-detail");
-  const nextLabel = document.getElementById("reach-next-label");
-  const nextStrong = document.getElementById("reach-next");
-  const nextLocal = document.getElementById("reach-next-local");
-  if (!panel || !title || !detail || !nextLabel || !nextStrong || !nextLocal) return;
-
-  const scope = keys.length === 3
-    ? "三地"
-    : keys.length === 2
-      ? "两地"
-      : keys.length === 1
-        ? PLACES[keys[0]].shortName
-        : "所选地区";
-  const allOn = keys.length > 0 && keys.every(key => states[key].className === "on");
-  const allWeekend = keys.length > 0 && keys.every(key => states[key].code === "weekend");
-  const allHoliday = keys.length > 0 && keys.every(key => states[key].code === "holiday");
-  const allRest = keys.length > 0 && keys.every(key => ["weekend", "holiday"].includes(states[key].code));
-  const anyBreak = keys.some(key => states[key].className === "break");
-  const anyOn = keys.some(key => states[key].className === "on");
-  const beijingState = states.beijing;
-  const hqVisible = keys.includes("beijing");
-  const hqBreak = hqVisible && beijingState.code === "lunch";
-  const hqAfter = hqVisible && beijingState.code === "after";
-  const hqBefore = hqVisible && beijingState.code === "before";
-  const localTimes = keys.map(key => `${PLACES[key].shortName} ${formatClock(states[key].parts.minutes)}`).join(" · ");
-  const stateLine = keys.map(key => `${PLACES[key].shortName} ${states[key].text}`).join(" · ");
-
-  let heading = "当前非办公时间";
-  if (!keys.length) heading = "当前未显示时区";
-  else if (allOn) heading = keys.length === 1 ? `${scope}在岗，可联络` : `${scope}均在岗，可直接联络`;
-  else if (allWeekend) heading = `${scope}周末休息`;
-  else if (allHoliday) heading = `${scope}法定节假日休息`;
-  else if (allRest) heading = `${scope}休息日`;
-  else if (hqBreak) heading = "本部午休，暂不宜全员联络";
-  else if (hqAfter && anyOn) heading = "本部已下班，暂不宜全员联络";
-  else if (anyBreak) heading = "有人午休，暂不宜全员联络";
-  else if (anyOn) heading = "部分在岗，暂不宜全员联络";
-  else if (hqBefore) heading = "本部尚未上班，暂不宜联络";
-
-  if (title.textContent !== heading) title.textContent = heading;
-  detail.textContent = keys.length ? (allOn ? localTimes : stateLine) : "请在上方选择要显示的地区";
-  panel.dataset.tone = allOn ? "on" : anyBreak ? "break" : "off";
-
-  const nonBeijing = keys.filter(key => key !== "beijing");
-  const windowName = scope === "三地" || scope === "两地" ? `${scope}共同窗口` : "共同窗口";
-  if (!keys.length) {
-    nextLabel.textContent = "下一个共同窗口";
-    nextStrong.textContent = "暂无";
-    nextLocal.textContent = "请选择要显示的地区";
-  } else if (allOn && nextAll) {
-    nextLabel.textContent = "当前共同窗口";
-    nextStrong.textContent = `至 ${clockAt(nextAll.end, BEIJING_TZ)}`;
-    nextLocal.textContent = nonBeijing.map(key => {
-      const place = PLACES[key];
-      return `${place.shortName} ${formatClock(states[key].parts.minutes)}–${clockAt(nextAll.end, place.timeZone)}`;
-    }).join(" · ");
-  } else if (nextAll) {
-    nextLabel.textContent = `下一个${windowName}`;
-    nextStrong.textContent = formatBeijingWindow(nextAll, now);
-    nextLocal.textContent = nonBeijing.map(key => `${PLACES[key].shortName} ${formatLocalRange(PLACES[key], nextAll)}`).join(" · ");
-  } else {
-    nextLabel.textContent = `下一个${windowName}`;
-    nextStrong.textContent = `未来 ${STATUS_HORIZON_DAYS} 天暂无`;
-    nextLocal.textContent = "可检查节假日或显示范围";
-  }
+  if (state.code === "before") return `${overridePrefix}未上班；${nextLabel}`;
+  return `${overridePrefix}已下班；${nextLabel}`;
 }
 
 function updateStatusPanel(now = new Date()) {
@@ -2213,10 +2061,6 @@ function updateStatusPanel(now = new Date()) {
   const states = {};
   for (const key of ORDER) states[key] = getDutyStateAt(PLACES[key], now);
   const timeline = buildStateTimeline(ORDER.map(key => PLACES[key]), now);
-  const nextAll = findWindow(timeline, sample =>
-    keys.length > 0 && keys.every(key => sample[key].className === "on")
-  );
-  updateReachPanel(states, nextAll, now, keys);
 
   for (const key of ORDER) {
     const place = PLACES[key];
