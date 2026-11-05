@@ -53,21 +53,22 @@
       gap: 20px;
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
 
     .brand-mark {
-      width: 38px;
-      height: 38px;
+      width: 52px;
+      height: 52px;
       display: grid;
       place-items: center;
-      border-radius: 12px;
+      border-radius: 16px;
       background: var(--ink);
       color: #fff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16);
     }
 
-    .brand-mark svg { width: 23px; height: 23px; }
-    .brand-title { font-weight: 700; letter-spacing: 0.02em; }
-    .brand-subtitle { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .brand-mark svg { width: 32px; height: 32px; }
+    .brand-title { font-size: 30px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
+    .brand-subtitle { margin-top: 3px; color: var(--muted); font-size: 12px; letter-spacing: 0.1em; }
 
     .live-badge {
       display: inline-flex;
@@ -94,11 +95,91 @@
     main { padding: 48px 0 42px; }
 
     .intro {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
       margin-bottom: 26px;
+    }
+
+    /* 地球仪面板：展示当前太阳方位与三地昼夜分布 */
+    .globe-panel {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      padding: 18px 26px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(135deg, #f7fafd 0%, #eef4fb 100%);
+      box-shadow: 0 6px 22px rgba(28, 46, 74, 0.05);
+    }
+
+    .globe-wrap { flex: 0 0 auto; width: 248px; height: 248px; }
+
+    .globe { width: 100%; height: 100%; display: block; }
+
+    .globe-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+
+    .globe-title {
+      color: #22374f;
+      font-size: 19px;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+    }
+
+    .globe-sub { color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .globe-sub b { color: #2f4f79; font-weight: 650; }
+
+    /* 三地昼夜状态小卡 */
+    .globe-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .globe-stat {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .globe-stat-name { color: #3d5878; font-size: 12px; font-weight: 650; }
+    .globe-stat-state { margin-top: 5px; font-size: 12px; font-weight: 650; }
+    .globe-stat-state.day { color: #a06b06; }
+    .globe-stat-state.night { color: #4d5866; }
+    .globe-stat-time { margin-top: 3px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+    .globe-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: #4a5f7d;
+      font-size: 12px;
+    }
+
+    .globe-legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+    .lg-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .lg-dot.day { background: #ffcf6b; box-shadow: 0 0 8px rgba(255, 207, 107, 0.8); }
+    .lg-dot.night { background: #1c2b45; border: 1px solid #46587a; }
+    .lg-dot.mark { background: #4a7ef0; box-shadow: 0 0 8px rgba(74, 126, 240, 0.8); }
+
+    /* 地球上的地标 */
+    .g-point circle { fill: #4a7ef0; stroke: #fff; stroke-width: 1.8; }
+    .g-point text {
+      fill: #eaf1fb;
+      font-size: 11px;
+      font-weight: 650;
+      paint-order: stroke;
+      stroke: rgba(6, 14, 28, 0.9);
+      stroke-width: 3px;
+      stroke-linejoin: round;
     }
 
     /* 联络速览：三地时差与当前办公状态 */
@@ -628,14 +709,46 @@
   </header>
 
   <main>
-    <section class="intro" aria-labelledby="page-title">
-      <div>
-        <h1 id="page-title">联络前，<br>先看对方几点上班</h1>
-        <div class="intro-tags">
-          <span class="intro-tag"><b>国动集团本部</b> 北京 <i>东八区 · 09:00–17:30</i></span>
-          <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i>东五区 · 09:00–18:00</i></span>
-          <span class="intro-tag"><b>俄罗斯</b> 莫斯科 <i>东三区 · 09:00–17:30</i></span>
+    <section class="intro" aria-label="全球昼夜示意">
+      <div class="globe-panel">
+        <div class="globe-wrap">
+          <svg class="globe" id="globe" viewBox="0 0 260 260" role="img" aria-label="地球自转与太阳方位示意图">
+            <defs>
+              <radialGradient id="globe-shade" cx="35%" cy="32%" r="72%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.30"/>
+                <stop offset="55%" stop-color="#ffffff" stop-opacity="0.02"/>
+                <stop offset="100%" stop-color="#000814" stop-opacity="0.42"/>
+              </radialGradient>
+              <clipPath id="globe-clip"><circle cx="130" cy="130" r="112"/></clipPath>
+            </defs>
+            <circle cx="130" cy="130" r="112" fill="#0d1c33"/>
+            <g clip-path="url(#globe-clip)">
+              <g id="globe-map"></g>
+              <circle cx="130" cy="130" r="112" fill="url(#globe-shade)"/>
+              <path id="globe-night" fill="#040913" opacity="0.58"/>
+            </g>
+            <circle cx="130" cy="130" r="112" fill="none" stroke="#1e3a5f" stroke-width="1.5"/>
+            <g id="globe-markers"></g>
+            <g id="globe-sun"></g>
+          </svg>
         </div>
+        <div class="globe-side">
+          <div>
+            <div class="globe-title">当前太阳方位</div>
+            <div class="globe-sub" id="globe-sub">按 UTC 时刻与观测点经纬度实时推算</div>
+          </div>
+          <div class="globe-stats" id="globe-stats"></div>
+          <div class="globe-legend">
+            <span><i class="lg-dot day"></i>白昼</span>
+            <span><i class="lg-dot night"></i>夜间</span>
+            <span><i class="lg-dot mark"></i>办公地</span>
+          </div>
+        </div>
+      </div>
+      <div class="intro-tags">
+        <span class="intro-tag"><b>国动集团本部</b> 北京 <i>东八区 · 09:00–17:30</i></span>
+        <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i>东五区 · 09:00–18:00</i></span>
+        <span class="intro-tag"><b>俄罗斯</b> 莫斯科 <i>东三区 · 09:00–17:30</i></span>
       </div>
     </section>
 
@@ -783,6 +896,216 @@
     const timeFormatters = new Map();
     const dateFormatters = new Map();
     const svgNS = "http://www.w3.org/2000/svg";
+
+    /* ============ 地球仪：太阳方位与昼夜分布 ============
+     * 采用正交投影（观察者位于赤道上空）：
+     *   经度 λ → 盘面 x = R·sin(λ - λ0)，λ0 为观察者所在经度
+     *   纬度 φ → 盘面 y = -R·sin(φ)
+     * 地球绕地轴自转，格林尼治子午线相对太阳的角位置由 UTC 时刻决定，
+     * 因此晨昏线与太阳方位完全由 UTC + 观测点经纬度推出。
+     */
+    const GLOBE_R = 112;
+    const GLOBE_CX = 130;
+    const GLOBE_CY = 130;
+
+    // 极简大陆轮廓（经纬度多边形，用于示意，非精确地图）
+    const GLOBE_LANDMASS = [
+      // [名称, 经度, 纬度, 半径]
+      ["北京", 116.41, 39.90, 3.4],
+      ["阿拉木图", 76.85, 43.22, 3.4],
+      ["莫斯科", 37.62, 55.76, 3.4]
+    ];
+
+    // 简化的大陆块（用于绘制球面纹理，坐标为 [经度, 纬度]）
+    const GLOBE_LANDS = [
+      // 北美
+      [[-168, 65], [-150, 71], [-130, 70], [-115, 73], [-95, 73], [-80, 68], [-64, 60], [-56, 52], [-66, 45], [-75, 40], [-81, 31], [-80, 25], [-90, 29], [-97, 26], [-105, 22], [-97, 16], [-88, 16], [-83, 9], [-78, 9], [-83, 15], [-90, 18], [-97, 21], [-105, 20], [-110, 24], [-114, 30], [-121, 35], [-124, 42], [-124, 48], [-132, 55], [-140, 60], [-152, 58], [-165, 60], [-168, 65]],
+      // 南美
+      [[-81, 8], [-72, 12], [-62, 10], [-52, 5], [-50, 0], [-44, -2], [-35, -6], [-38, -13], [-39, -18], [-48, -25], [-54, -34], [-57, -38], [-62, -40], [-65, -45], [-68, -52], [-74, -52], [-75, -45], [-73, -37], [-71, -30], [-70, -20], [-76, -14], [-81, -6], [-80, 2], [-81, 8]],
+      // 非洲
+      [[-17, 15], [-16, 22], [-10, 27], [-5, 32], [10, 34], [20, 32], [32, 31], [35, 24], [39, 15], [43, 12], [51, 12], [48, 5], [41, -2], [40, -10], [35, -19], [32, -26], [26, -34], [18, -34], [12, -18], [9, -1], [9, 4], [-8, 5], [-13, 9], [-17, 15]],
+      // 欧洲
+      [[-10, 36], [-9, 43], [-2, 43], [-5, 48], [0, 51], [4, 52], [8, 54], [10, 57], [18, 55], [21, 56], [24, 60], [30, 61], [28, 66], [22, 70], [30, 70], [40, 66], [40, 60], [38, 55], [30, 50], [28, 45], [20, 42], [16, 40], [13, 38], [10, 40], [4, 40], [-2, 37], [-10, 36]],
+      // 亚洲
+      [[40, 66], [60, 70], [75, 73], [100, 76], [115, 73], [130, 71], [145, 70], [160, 69], [170, 67], [178, 65], [170, 60], [162, 58], [155, 57], [142, 54], [135, 48], [130, 43], [127, 40], [122, 39], [122, 31], [120, 25], [110, 21], [108, 15], [105, 10], [100, 6], [98, 12], [95, 16], [92, 21], [88, 22], [80, 15], [77, 8], [73, 15], [70, 22], [68, 24], [62, 25], [57, 25], [52, 30], [45, 38], [43, 45], [40, 52], [38, 60], [40, 66]],
+      // 澳大利亚
+      [[114, -22], [122, -18], [130, -12], [137, -12], [142, -11], [146, -19], [153, -25], [151, -34], [146, -39], [140, -38], [132, -32], [125, -33], [118, -35], [114, -22]],
+      // 格陵兰
+      [[-45, 60], [-20, 70], [-22, 78], [-40, 83], [-60, 82], [-55, 70], [-45, 60]],
+      // 南极
+      [[-180, -70], [-140, -73], [-100, -73], [-60, -70], [-20, -70], [20, -70], [60, -68], [100, -66], [140, -68], [180, -70], [180, -90], [-180, -90], [-180, -70]],
+      // 日本
+      [[130, 31], [132, 34], [136, 35], [140, 36], [141, 40], [141, 45], [144, 44], [140, 38], [136, 37], [132, 35], [130, 31]]
+    ];
+
+    // 正交投影：经纬度 → 盘面坐标
+    function project(lat, lon, lon0) {
+      const delta = (lon - lon0) * RAD;
+      return {
+        x: GLOBE_CX + GLOBE_R * Math.sin(delta) * Math.cos(lat * RAD),
+        y: GLOBE_CY - GLOBE_R * Math.sin(lat * RAD),
+        visible: Math.cos(delta) > 0
+      };
+    }
+
+    // 太阳直射点的地理经度（度）：
+    // 该经度处太阳时角为 0，即 LST = RA，故 lon = RA - GMST
+    function getSunLongitude(jd) {
+      const { rightAscension } = solarElements(jd);
+      return mod360(rightAscension - getGmst(jd));
+    }
+
+    // 绘制地球仪
+    function renderGlobe(now) {
+      const svg = document.getElementById("globe");
+      if (!svg) return;
+      const jd = toJulianDay(now);
+      const sunLon = getSunLongitude(jd);
+      // 观察者经度：以三地所在的中心经度为基准，并叠加地球自转带来的缓慢漂移，
+      // 使地球看起来在缓缓转动，同时三地始终落在可见半球内
+      const russia0 = getRussiaZone();
+      const centerLon =
+        (ZONES.beijing.lon + ZONES.kazakhstan.lon + russia0.lon) / 3; // ≈ 77°E
+      // 自转漂移：每分钟约 0.25°，视觉上缓慢滚动
+      const drift = (now.getTime() / 60000) * 0.25;
+      const lon0 = mod360(centerLon + drift);
+
+      const mapGroup = document.getElementById("globe-map");
+      const markerGroup = document.getElementById("globe-markers");
+      const sunGroup = document.getElementById("globe-sun");
+      const nightMask = document.getElementById("globe-night");
+      if (!mapGroup || !markerGroup || !sunGroup || !nightMask) return;
+
+      // --- 陆地轮廓 ---
+      const parts = [];
+      GLOBE_LANDS.forEach(poly => {
+        const pts = poly.map(([lon, lat]) => {
+          const p = project(lat, lon, lon0);
+          return p;
+        });
+        // 只绘制可见且连续的部分
+        let run = [];
+        const flush = () => {
+          if (run.length > 2) parts.push(run.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "));
+          run = [];
+        };
+        pts.forEach(p => {
+          if (p.visible) run.push(p);
+          else flush();
+        });
+        flush();
+      });
+      mapGroup.innerHTML = parts
+        .map(d => `<polygon points="${d}" fill="#22406b" stroke="#2d5488" stroke-width="0.8"/>`)
+        .join("");
+
+      // --- 晨昏线：逐纬度采样求解晨昏点，精确勾勒夜区边界 ---
+      // 对每个纬度 φ，求太阳高度角为 0 的经度：
+      //   cos(H) = -tan(φ)·tan(δ)，H 为时角；由此得晨线与昏线两个经度
+      const nightPath = document.getElementById("globe-night");
+      if (nightPath) {
+        const declRad = solarElements(jd).declination * RAD;
+        const ra = solarElements(jd).rightAscension;
+        const gmst = getGmst(jd);
+        const dawns = [];
+        const dusks = [];
+        // 采样完整纬线；不可见半球的点投影落在球面之外，
+        // 会被 clipPath 自动裁切，从而得到连续的晨昏曲线
+        for (let lat = -89; lat <= 89; lat += 3) {
+          const cosH = -Math.tan(lat * RAD) * Math.tan(declRad);
+          if (cosH < -1 || cosH > 1) continue;
+          const H = Math.acos(cosH) * DEG;
+          // 时角 = GMST + lon - RA = ±H  →  lon = ±H + RA - GMST
+          const dawn = project(lat, mod360(-H + ra - gmst), lon0);
+          const dusk = project(lat, mod360(H + ra - gmst), lon0);
+          dawns.push(dawn);
+          dusks.push(dusk);
+        }
+        // 夜区边界 = 昏线（自北向南）+ 晨线（自南向北）
+        const seq = [...dusks.sort((a, b) => a.y - b.y), ...dawns.sort((a, b) => b.y - a.y)];
+        if (seq.length > 3) {
+          // 用平滑曲线连接，避免折线在极区出现尖锐缺口
+          let d = `M ${seq[0].x.toFixed(1)} ${seq[0].y.toFixed(1)}`;
+          for (let i = 1; i < seq.length; i++) {
+            const prev = seq[i - 1];
+            const cur = seq[i];
+            const mx = (prev.x + cur.x) / 2;
+            const my = (prev.y + cur.y) / 2;
+            d += ` Q ${prev.x.toFixed(1)} ${prev.y.toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
+          }
+          // 末端回到起点，闭合夜区多边形
+          d += ` Q ${seq[seq.length - 1].x.toFixed(1)} ${seq[seq.length - 1].y.toFixed(1)} ${seq[0].x.toFixed(1)} ${seq[0].y.toFixed(1)} Z`;
+          nightPath.setAttribute("d", d);
+        } else {
+          nightPath.setAttribute("d", "");
+        }
+      }
+
+      // --- 太阳标记：位于太阳直射点经度上 ---
+      const sunLat = 0;
+      const sunPoint = project(sunLat, sunLon, lon0);
+      const sunVisible = sunPoint.visible;
+      sunGroup.innerHTML = sunVisible
+        ? `<circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="13" fill="#ffd166" opacity="0.22"/>
+           <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="7" fill="#ffd166"/>
+           <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="3" fill="#fff8e1"/>`
+        : "";
+
+      // --- 三地标记 ---
+      const russia = getRussiaZone();
+      const places = [
+        { name: "北京", lat: ZONES.beijing.lat, lon: ZONES.beijing.lon, offset: ZONES.beijing.offset },
+        { name: "阿拉木图", lat: ZONES.kazakhstan.lat, lon: ZONES.kazakhstan.lon, offset: ZONES.kazakhstan.offset },
+        { name: "莫斯科", lat: russia.lat, lon: russia.lon, offset: russia.offset }
+      ];
+      markerGroup.innerHTML = places
+        .map(place => {
+          const p = project(place.lat, place.lon, lon0);
+          if (!p.visible) return "";
+          const sun = getSunPosition(now, place.lat, place.lon);
+          const isDay = sun.altitude > -0.833;
+          const color = isDay ? "#ffd166" : "#93a9cc";
+          // 靠右边缘时把标签翻到左侧，避免出界
+          const flip = p.x > GLOBE_CX + 46;
+          const tx = flip ? -8 : 9;
+          const anchor = flip ? "end" : "start";
+          return `<g class="g-point" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})">
+            <circle r="5" fill="${color}" stroke="#0d1c33" stroke-width="1.6"/>
+            <text x="${tx}" y="3.6" text-anchor="${anchor}">${place.name}</text>
+          </g>`;
+        })
+        .join("");
+
+      // --- 说明文字与三地状态卡 ---
+      const sub = document.getElementById("globe-sub");
+      const statsBox = document.getElementById("globe-stats");
+      const placeInfo = places.map(p => {
+        const s = getSunPosition(now, p.lat, p.lon);
+        const isDay = s.altitude > -0.833;
+        const local = new Date(now.getTime() + p.offset * 3600000);
+        const hh = String(local.getUTCHours()).padStart(2, "0");
+        const mm = String(local.getUTCMinutes()).padStart(2, "0");
+        return { ...p, isDay, altitude: s.altitude, time: `${hh}:${mm}` };
+      });
+
+      if (sub) {
+        const sunLocal = mod360(sunLon);
+        sub.innerHTML =
+          `太阳直射点位于 <b>${sunLocal.toFixed(1)}°E</b>，` +
+          `当前地球上昼半球与夜半球由晨昏线分隔，` +
+          `右侧黄色光斑即太阳直射位置。`;
+      }
+
+      if (statsBox) {
+        statsBox.innerHTML = placeInfo
+          .map(p => `<div class="globe-stat">
+            <div class="globe-stat-name">${p.name}</div>
+            <div class="globe-stat-state ${p.isDay ? "day" : "night"}">${p.isDay ? "白昼" : "夜间"}</div>
+            <div class="globe-stat-time">当地 ${p.time} · 太阳高度 ${p.altitude.toFixed(0)}°</div>
+          </div>`)
+          .join("");
+      }
+    }
 
     /* ============ 天象引擎 ============
      * 采用 Meeus / NOAA 天文算法，仅依赖 UTC 时刻与观测点经纬度，
@@ -1493,6 +1816,7 @@
       updateSky("beijing", ZONES.beijing, now);
       if (isZoneVisible("kazakhstan")) updateSky("kazakhstan", ZONES.kazakhstan, now);
       if (isZoneVisible("russia")) updateSky("russia", russia, now);
+      renderGlobe(now);
     }
 
     // 速览板每分钟刷新一次即可
@@ -1503,15 +1827,19 @@
     updateRussiaLabels();
     updateVisibility();
     updateStatusBoard(new Date());
+    renderGlobe(new Date());
     setInterval(updateClocksOnly, 100);
     setInterval(updateSkyOnly, 30000);
     setInterval(updateStatusOnly, 30000);
+    // 地球仪单独 5 秒一帧，滚动更连贯
+    setInterval(() => renderGlobe(new Date()), 5000);
 
     // 页面从后台恢复时立即重算，避免长时间挂起导致的天象滞后
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
         updateAllClocks();
         updateStatusBoard(new Date());
+        renderGlobe(new Date());
         renderWorkSchedule();
       }
     });
