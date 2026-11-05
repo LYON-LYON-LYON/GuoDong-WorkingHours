@@ -3,23 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="北京时间、哈萨克斯坦时间与俄罗斯时间实时钟表，以及三地跨时区上班时间对照">
+  <meta name="description" content="国动集团本部、哈萨克斯坦阿拉木图与俄罗斯莫斯科的跨时区工作时间对照、当前联络状态与共同在岗窗口。">
+  <meta name="theme-color" content="#152238">
   <title>国动 世界时钟 Guodong World Clock</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23152238'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23fff' stroke-width='4'/%3E%3Cpath d='M32 18v14l9 6' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
     :root {
       --bg: #f3f6fa;
       --surface: #ffffff;
       --ink: #152238;
-      --muted: #667085;
+      --muted: #5f6b7a;
       --line: #e4eaf1;
       --blue: #2457d6;
-      --beijing: #d94b42;
-      --kazakhstan: #078a83;
-      --russia: #4263d5;
+      --beijing: #c23b32;
+      --kazakhstan: #06706b;
+      --russia: #3f5fce;
+      --on: #0b5c46;
+      --on-bg: #cdeee1;
+      --break: #7a4606;
+      --break-bg: #fce9c8;
+      --off: #4d5866;
+      --off-bg: #dfe4ea;
       --shadow: 0 12px 34px rgba(28, 46, 74, 0.07);
     }
 
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -33,6 +42,7 @@
 
     button, input, select { font: inherit; }
     button, select { cursor: pointer; }
+    [hidden] { display: none !important; }
 
     .topbar {
       border-bottom: 1px solid rgba(220, 228, 238, 0.9);
@@ -53,11 +63,12 @@
       gap: 20px;
     }
 
-    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
 
     .brand-mark {
       width: 52px;
       height: 52px;
+      flex: 0 0 auto;
       display: grid;
       place-items: center;
       border-radius: 16px;
@@ -67,7 +78,7 @@
     }
 
     .brand-mark svg { width: 32px; height: 32px; }
-    .brand-title { font-size: 30px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
+    .brand-title { margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
     .brand-subtitle { margin-top: 3px; color: var(--muted); font-size: 12px; letter-spacing: 0.1em; }
 
     .live-badge {
@@ -92,16 +103,15 @@
       50% { box-shadow: 0 0 0 8px rgba(22, 162, 120, 0.03); }
     }
 
-    main { padding: 48px 0 42px; }
+    main { padding: 40px 0 42px; }
 
     .intro {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
       gap: 18px;
-      margin-bottom: 26px;
+      margin-bottom: 18px;
     }
 
-    /* 地球仪面板：展示当前太阳方位与三地昼夜分布 */
     .globe-panel {
       display: flex;
       align-items: center;
@@ -114,10 +124,8 @@
     }
 
     .globe-wrap { flex: 0 0 auto; width: 248px; height: 248px; }
-
     .globe { width: 100%; height: 100%; display: block; }
-
-    .globe-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+    .globe-side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 
     .globe-title {
       color: #22374f;
@@ -129,7 +137,6 @@
     .globe-sub { color: var(--muted); font-size: 13px; line-height: 1.65; }
     .globe-sub b { color: #2f4f79; font-weight: 650; }
 
-    /* 三地昼夜状态小卡 */
     .globe-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -137,64 +144,109 @@
     }
 
     .globe-stat {
-      padding: 11px 13px;
+      padding: 10px 12px;
       border: 1px solid var(--line);
       border-radius: 11px;
       background: #fff;
     }
 
     .globe-stat-name { color: #3d5878; font-size: 12px; font-weight: 650; }
-    .globe-stat-state { margin-top: 5px; font-size: 12px; font-weight: 650; }
-    .globe-stat-state.day { color: #a06b06; }
-    .globe-stat-state.night { color: #4d5866; }
-    .globe-stat-time { margin-top: 3px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+    .globe-stat-state { margin-top: 4px; font-size: 12px; font-weight: 650; }
+    .globe-stat-state.day { color: #875700; }
+    .globe-stat-state.night { color: #526b91; }
+    .globe-stat-time { margin-top: 4px; color: var(--muted); font-size: 11px; line-height: 1.45; }
 
     .globe-legend {
       display: flex;
       flex-wrap: wrap;
       gap: 8px 16px;
-      color: #4a5f7d;
+      color: var(--muted);
       font-size: 12px;
     }
 
     .globe-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .lg-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+    .lg-dot.day { background: #ffd166; }
+    .lg-dot.night { background: #5b6f93; }
+    .lg-dot.mark { background: #e8eef7; box-shadow: inset 0 0 0 2px #8aa0c2; }
 
-    .lg-dot {
-      width: 10px;
-      height: 10px;
+    .intro-tags { display: flex; flex-wrap: wrap; gap: 10px 14px; }
+    .intro-tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 7px 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .intro-tag b { color: #2f4f79; font-weight: 650; }
+    .intro-tag i { font-style: normal; color: #5f6b7a; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+    .reach-panel {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 12px;
+      padding: 17px 22px;
+      border: 1px solid #d8e2ef;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #ffffff 0%, #f4f8fd 100%);
+      box-shadow: 0 6px 20px rgba(28, 46, 74, 0.045);
+    }
+
+    .reach-main { display: flex; align-items: flex-start; gap: 13px; min-width: 0; }
+
+    .reach-dot {
+      width: 12px;
+      height: 12px;
+      flex: 0 0 auto;
+      margin-top: 7px;
       border-radius: 50%;
-      display: inline-block;
+      background: #16a278;
+      box-shadow: 0 0 0 5px rgba(22, 162, 120, 0.12);
     }
 
-    .lg-dot.day { background: #ffcf6b; box-shadow: 0 0 8px rgba(255, 207, 107, 0.8); }
-    .lg-dot.night { background: #1c2b45; border: 1px solid #46587a; }
-    .lg-dot.mark { background: #4a7ef0; box-shadow: 0 0 8px rgba(74, 126, 240, 0.8); }
+    .reach-panel[data-tone="break"] .reach-dot { background: #d98a12; box-shadow: 0 0 0 5px rgba(217, 138, 18, 0.13); }
+    .reach-panel[data-tone="off"] .reach-dot { background: #8a96a6; box-shadow: 0 0 0 5px rgba(138, 150, 166, 0.12); }
 
-    /* 地球上的地标 */
-    .g-point circle { fill: #4a7ef0; stroke: #fff; stroke-width: 1.8; }
-    .g-point text {
-      fill: #eaf1fb;
-      font-size: 11px;
-      font-weight: 650;
-      paint-order: stroke;
-      stroke: rgba(6, 14, 28, 0.9);
-      stroke-width: 3px;
-      stroke-linejoin: round;
+    .reach-kicker { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; }
+    .reach-title { margin: 3px 0 0; font-size: 22px; line-height: 1.25; letter-spacing: -0.02em; }
+    .reach-detail { margin: 5px 0 0; color: #435671; font-size: 13px; line-height: 1.5; }
+
+    .reach-next {
+      flex: 0 0 auto;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 2px;
+      padding-left: 22px;
+      border-left: 1px solid var(--line);
+      text-align: right;
     }
 
-    /* 联络速览：三地时差与当前办公状态 */
+    .reach-next > span { color: var(--muted); font-size: 11px; }
+    .reach-next strong { color: #22374f; font-size: 16px; line-height: 1.35; }
+    .reach-next small { color: var(--muted); font-size: 11px; line-height: 1.45; }
+
+    /* 三地速览卡 */
     .status-board {
       display: grid;
       grid-template-columns: repeat(var(--visible-zones, 3), minmax(0, 1fr));
       gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
 
     .status-card {
-      position: relative;
       display: flex;
-      align-items: center;
-      gap: 14px;
+      align-items: flex-start;
+      gap: 12px;
       padding: 13px 15px;
       border: 1px solid var(--line);
       border-left: 4px solid var(--card-accent, var(--blue));
@@ -207,109 +259,44 @@
     .status-card.kazakhstan { --card-accent: var(--kazakhstan); }
     .status-card.russia { --card-accent: var(--russia); }
 
-    .status-text { min-width: 0; flex: 1; }
+    .status-text { flex: 1; min-width: 0; }
     .status-name { font-size: 13px; font-weight: 650; line-height: 1.35; }
     .status-meta { margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.4; }
     .status-meta b { color: #3d5878; font-weight: 650; }
+    .status-hint { min-height: 2.8em; margin-top: 5px; color: #4d5866; font-size: 11.5px; line-height: 1.45; }
 
+    .status-right { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
     .status-clock {
-      flex: 0 0 auto;
       text-align: right;
       font-size: 22px;
       font-weight: 650;
-      line-height: 1.15;
+      line-height: 1.1;
       letter-spacing: -0.01em;
       font-variant-numeric: tabular-nums;
     }
-
     .status-clock small { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; font-weight: 400; }
-
-    /* 办公状态徽标：置于钟表下方 */
-    .clock-duty {
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
-    }
 
     .duty-badge {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 5px 13px;
+      gap: 5px;
+      padding: 3px 9px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 650;
       white-space: nowrap;
     }
-
-    .duty-badge::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    .duty-badge.on { color: #0b5c46; background: #cdeee1; }
-    .duty-badge.break { color: #7a4606; background: #fce9c8; }
-    .duty-badge.off { color: #4d5866; background: #dfe4ea; }
-
-    @media (max-width: 900px) {
-      .status-board { grid-template-columns: 1fr; }
-    }
-
-    .eyebrow {
-      margin-bottom: 10px;
-      color: var(--blue);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(38px, 6.4vw, 76px);
-      line-height: 1.08;
-      letter-spacing: -0.045em;
-      font-weight: 700;
-      color: #16273f;
-      text-wrap: balance;
-    }
-
-    .intro-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 14px;
-      margin-top: 20px;
-    }
-
-    .intro-tag {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      padding: 7px 14px;
-      border: 1px solid var(--line);
-      border-radius: 11px;
-      background: var(--surface);
-      font-size: 13px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .intro-tag b { color: #2f4f79; font-weight: 650; }
-    .intro-tag i { font-style: normal; color: #8490a2; font-size: 12px; font-variant-numeric: tabular-nums; }
-
-    .intro p { margin: 12px 0 0; color: var(--muted); line-height: 1.7; }
-
-    [hidden] { display: none !important; }
+    .duty-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .duty-badge.on { color: var(--on); background: var(--on-bg); }
+    .duty-badge.break { color: var(--break); background: var(--break-bg); }
+    .duty-badge.off { color: var(--off); background: var(--off-bg); }
 
     .filter-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      margin: -6px 0 18px;
+      margin: 0 0 18px;
       padding: 11px 14px 11px 17px;
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -318,6 +305,7 @@
 
     .filter-group { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
     .filter-label { margin-right: 3px; color: var(--muted); font-size: 12px; font-weight: 650; }
+    .filter-note { color: var(--muted); font-size: 12px; white-space: nowrap; }
 
     .switch-option {
       position: relative;
@@ -343,7 +331,6 @@
       background: #bdc7d3;
       transition: background 0.2s ease;
     }
-
     .switch-track::after {
       content: "";
       position: absolute;
@@ -356,12 +343,10 @@
       box-shadow: 0 1px 3px rgba(21, 34, 56, 0.22);
       transition: transform 0.2s ease;
     }
-
     .switch-option input:checked + .switch-track { background: var(--blue); }
     .switch-option input:checked + .switch-track::after { transform: translateX(13px); }
     .switch-option input:focus-visible + .switch-track { outline: 3px solid rgba(36, 87, 214, 0.18); outline-offset: 2px; }
     .switch-option.is-fixed { cursor: default; opacity: 0.68; }
-    .filter-note { color: var(--muted); font-size: 12px; white-space: nowrap; }
 
     .clock-grid {
       display: grid;
@@ -394,7 +379,6 @@
     .clock-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
     .country-code { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; }
     .clock-head h2 { margin: 5px 0 0; font-size: 18px; }
-
     .utc-tag {
       padding: 6px 9px;
       border-radius: 8px;
@@ -405,7 +389,6 @@
       white-space: nowrap;
     }
 
-    /* 天空场景：由 JS 写入 --sky-* 变量驱动，太阳/月亮位置由 --orb-x/--orb-y 定位 */
     .sky-scene {
       --sky-zenith: #15244a;
       --sky-mid: #2c3f66;
@@ -425,8 +408,7 @@
       margin: 15px auto 8px;
       padding: 10px 10px 7px;
       border-radius: 20px;
-      background:
-        linear-gradient(180deg, var(--sky-zenith) 0%, var(--sky-mid) 46%, var(--sky-horizon) 82%, var(--sky-ground) 100%);
+      background: linear-gradient(180deg, var(--sky-zenith) 0%, var(--sky-mid) 46%, var(--sky-horizon) 82%, var(--sky-ground) 100%);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
       transition: background 1.2s linear;
     }
@@ -448,8 +430,6 @@
       transition: opacity 1.2s linear;
     }
 
-    /* 日轮 / 月亮共用一个轨道元素，由 JS 切换其形态与位置
-     * 置于表盘之下、地面之上，保证时钟读数始终清晰 */
     .sky-orb {
       position: absolute;
       z-index: 0;
@@ -466,15 +446,12 @@
       transition: left 1.2s linear, top 1.2s linear, opacity 1.2s linear, background 1.2s linear;
     }
 
-    /* 月亮形态：带月相遮罩的冷白圆盘 */
     .sky-orb.is-moon {
       opacity: var(--moon-opacity);
       background: #eef1f6;
       box-shadow: 0 0 22px rgba(210, 225, 255, 0.34);
-      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 100%, transparent 100%);
     }
 
-    /* 月相：用一个偏移的暗色圆遮罩模拟明暗界线，--moon-lit 为被照亮比例 */
     .sky-orb.is-moon::before {
       content: "";
       position: absolute;
@@ -484,6 +461,10 @@
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
       opacity: 0.94;
       clip-path: inset(0 0 0 var(--moon-lit, 50%));
+    }
+
+    .sky-orb.is-moon.is-waxing::before {
+      clip-path: inset(0 var(--moon-lit, 50%) 0 0);
     }
 
     .sky-orb.is-moon::after {
@@ -498,7 +479,6 @@
       box-shadow: 15px 13px 0 3px rgba(151, 153, 154, 0.1);
     }
 
-    /* 地面：随天空变暗 */
     .sky-ground {
       position: absolute;
       z-index: -1;
@@ -525,7 +505,6 @@
       letter-spacing: 0.04em;
       transition: color 1.2s linear, background 1.2s linear;
     }
-
     .sky-status.is-light { color: #23455b; background: rgba(255, 255, 255, 0.35); }
 
     .clock-face {
@@ -550,14 +529,15 @@
     }
 
     .clock-date { margin-top: 7px; color: var(--muted); text-align: center; font-size: 12px; }
+    .clock-window { margin-top: 6px; color: var(--muted); text-align: center; font-size: 12px; }
 
     .difference {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      margin-top: 18px;
-      padding-top: 16px;
+      margin-top: 16px;
+      padding-top: 14px;
       border-top: 1px solid var(--line);
       color: var(--accent);
       font-size: 13px;
@@ -566,7 +546,7 @@
 
     .info-strip {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 12px;
       margin: 20px 0 34px;
       padding: 14px 18px;
@@ -608,21 +588,35 @@
       padding: 24px 26px 0;
     }
     .work-head h2 { margin: 0; font-size: 20px; }
-    .work-head p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .work-head p { margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
     .workday-tag { padding: 6px 10px; border-radius: 8px; color: #35506f; background: #eef3f8; font-size: 12px; white-space: nowrap; }
 
-    .schedule { margin: 24px 28px 28px; padding: 22px 24px 20px; border: 1px solid var(--line); border-radius: 18px; background: #f8fafc; }
+    .schedule {
+      margin: 22px 28px 28px;
+      padding: 20px 24px 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f8fafc;
+    }
+
     .schedule-head { display: flex; align-items: center; justify-content: space-between; gap: 15px; color: var(--muted); font-size: 12px; }
     .schedule-head strong { color: #344054; font-size: 14px; }
-    .legend-dot { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; background: rgba(36, 87, 214, 0.32); }
     .schedule-legend { display: inline-flex; flex-wrap: wrap; gap: 6px 16px; justify-content: flex-end; }
-    .schedule-legend > span { white-space: nowrap; }
-    .legend-dot.lunch { background: #edc788; }    .schedule-axis, .schedule-body { display: grid; grid-template-columns: 200px minmax(0, 1fr); }
-    .schedule-axis { margin-top: 20px; }
-    .axis-labels { position: relative; height: 16px; color: #8490a2; font-size: 11px; font-variant-numeric: tabular-nums; }
+    .schedule-legend > span { display: inline-flex; align-items: center; white-space: nowrap; }
+    .legend-dot { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; background: #34527a; }
+    .legend-dot.lunch { background: #edc788; }
+    .legend-dot.common { background: #1f8a70; }
+    .legend-dot.now { width: 3px; height: 12px; border-radius: 2px; background: var(--beijing); }
+
+    .schedule-scroll { overflow: visible; }
+    .schedule-scroll:focus-visible { outline: 2px solid #34527a; outline-offset: 3px; border-radius: 6px; }
+    .schedule-inner { min-width: 0; }
+    .schedule-axis, .schedule-body, .schedule-common-row { display: grid; grid-template-columns: 200px minmax(0, 1fr); }
+    .schedule-axis { margin-top: 18px; }
+    .axis-labels { position: relative; height: 16px; color: #5f6b7a; font-size: 11px; font-variant-numeric: tabular-nums; }
     .axis-labels span { position: absolute; top: 0; transform: translateX(-50%); }
-    .schedule-body { margin-top: 9px; }
-    .schedule-label { height: 64px; display: flex; flex-direction: column; justify-content: center; font-size: 13px; font-weight: 650; }
+    .schedule-body { margin-top: 8px; }
+    .schedule-label { height: 64px; display: flex; flex-direction: column; justify-content: center; padding-right: 12px; font-size: 13px; font-weight: 650; }
     .schedule-label small { margin-top: 4px; color: var(--muted); font-size: 11px; font-weight: 400; line-height: 1.4; }
     .schedule-track {
       position: relative;
@@ -631,51 +625,151 @@
       background-image: linear-gradient(to right, #e6ebf1 1px, transparent 1px);
       background-size: calc(100% / 6) 100%;
     }
-    .schedule-row { position: relative; height: 64px; display: flex; align-items: center; }
-    .work-bar { position: absolute; z-index: 2; height: 38px; display: flex; align-items: center; padding: 0 12px; border-radius: 9px; color: #fff; font-size: 12px; font-weight: 650; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+    .work-bar {
+      position: absolute;
+      z-index: 2;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 9px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+      overflow: hidden;
+      font-variant-numeric: tabular-nums;
+    }
     .hq-bar { background: #34527a; }
-    .kz-bar { background: #078a83; }
-    .ru-bar { background: #4263d5; }
-    .lunch-band { position: absolute; z-index: 3; top: 13px; height: 38px; border: 1px solid #e6b46a; border-radius: 8px; background: repeating-linear-gradient(135deg, #fff3df 0 6px, #f7dfb9 6px 12px); }
+    .kz-bar { background: var(--kazakhstan); }
+    .ru-bar { background: var(--russia); }
+    .lunch-band {
+      position: absolute;
+      z-index: 3;
+      top: 13px;
+      height: 38px;
+      border: 1px solid #e6b46a;
+      border-radius: 8px;
+      background: repeating-linear-gradient(135deg, #fff3df 0 6px, #f7dfb9 6px 12px);
+    }
+
+    .schedule-common-row { margin-top: 10px; }
+    .common-label { height: 38px; color: #1f6b57; }
+    .common-label small { margin-top: 2px; }
+    .common-track { height: 38px; }
+    .common-bar {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      border-radius: 9px;
+      color: #fff;
+      background: #14795f;
+      font-size: 11px;
+      font-weight: 650;
+      white-space: nowrap;
+      overflow: hidden;
+      font-variant-numeric: tabular-nums;
+    }
+    .common-empty { position: absolute; inset: 0; display: flex; align-items: center; color: var(--muted); font-size: 12px; }
+    .schedule-mobile-hint { display: none; margin-top: 8px; color: var(--muted); font-size: 11px; }
+
+    .now-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 5;
+      width: 2px;
+      background: var(--beijing);
+      pointer-events: none;
+    }
+    .now-line::before {
+      content: "";
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--beijing);
+    }
 
     @media (max-width: 900px) {
-      main { padding-top: 34px; }
-      .intro { align-items: flex-start; }
+      main { padding-top: 30px; }
       .clock-grid { grid-template-columns: 1fr; }
       .clock-card { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
-      .clock-head, .difference { grid-column: 1 / -1; }
+      .clock-head, .difference, .clock-window { grid-column: 1 / -1; }
       .sky-scene { grid-column: 1; grid-row: 2 / 5; width: min(230px, 100%); }
       .digital-time { align-self: end; text-align: left; }
       .clock-date { align-self: start; text-align: left; }
-      .schedule-axis, .schedule-body { grid-template-columns: 168px minmax(0, 1fr); }
+      .status-board { grid-template-columns: 1fr; }
+      .status-hint { min-height: 0; }
+      .reach-panel { flex-direction: column; gap: 14px; }
+      .reach-next { min-width: 0; padding: 12px 0 0; border-left: 0; border-top: 1px solid var(--line); align-items: flex-start; text-align: left; }
+      .schedule-axis, .schedule-body, .schedule-common-row { grid-template-columns: 168px minmax(0, 1fr); }
     }
 
     @media (max-width: 620px) {
       .topbar-inner, main { width: min(100% - 24px, 1180px); }
+      .topbar-inner { min-height: 60px; }
+      .brand { gap: 10px; }
+      .brand-mark { width: 44px; height: 44px; border-radius: 13px; }
+      .brand-mark svg { width: 27px; height: 27px; }
+      .brand-title { font-size: 24px; }
       .brand-subtitle { display: none; }
-      .live-badge { font-size: 12px; }
-      main { padding-top: 28px; }
-      .intro { flex-direction: column; }
+      .live-badge { font-size: 11px; }
+      main { padding-top: 24px; }
+
+      .globe-panel { flex-direction: column; align-items: stretch; gap: 16px; padding: 18px; }
+      .globe-wrap { width: min(220px, 100%); height: auto; aspect-ratio: 1; margin: 0 auto; }
+      .globe-side { width: 100%; }
+      .globe-stats { grid-template-columns: 1fr; }
+      .globe-stat { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 12px; }
+      .globe-stat-name { grid-column: 1; }
+      .globe-stat-state { grid-column: 2; grid-row: 1; margin-top: 0; }
+      .globe-stat-time { grid-column: 1 / -1; }
+      .globe-stat-alt { display: none; }
+
+      .reach-panel { padding: 15px 16px; }
+      .reach-title { font-size: 20px; }
+      .reach-next strong { font-size: 15px; }
+
+      .status-card { padding: 12px 13px; }
+      .status-clock { font-size: 20px; }
+
       .filter-bar { align-items: flex-start; flex-direction: column; gap: 8px; }
-      .filter-note { padding-left: 2px; white-space: normal; }
+      .filter-note { white-space: normal; }
+
       .clock-card { display: block; padding: 22px; }
       .sky-scene { width: min(240px, 100%); }
-      .digital-time, .clock-date { text-align: center; }
+      .digital-time, .clock-date, .clock-window { text-align: center; }
+
       .work-head { padding: 20px 20px 0; }
       .workday-tag { display: none; }
-      .schedule { margin: 20px; padding: 17px 13px; }
+      .schedule { margin: 18px 16px 20px; padding: 16px 12px; }
       .schedule-head { align-items: flex-start; flex-direction: column; gap: 7px; }
-      .schedule-axis, .schedule-body { grid-template-columns: 110px minmax(0, 1fr); }
+      .schedule-scroll { overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+      .schedule-inner { min-width: 720px; }
+      .schedule-mobile-hint { display: block; }
+      .schedule-axis, .schedule-body, .schedule-common-row { grid-template-columns: 120px minmax(0, 1fr); }
       .schedule-label { height: 58px; font-size: 11px; }
       .schedule-label small { font-size: 9px; }
       .schedule-track { height: 58px; }
-      .schedule-row { height: 58px; }
+      .common-label, .common-track, .common-bar { height: 34px; }
+      .common-bar { padding: 0 2px; font-size: 10px; }
       .work-bar { height: 34px; padding: 0 6px; font-size: 10px; }
       .lunch-band { top: 12px; height: 34px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
       .live-dot { animation: none; }
+      .sky-scene, .sky-orb, .sky-stars, .sky-status, .switch-track { transition: none !important; }
     }
 
     @media print {
@@ -686,6 +780,17 @@
       .clock-card, .work-card { box-shadow: none; break-inside: avoid; }
       .sky-scene { width: 175px; }
       .digital-time { font-size: 26px; }
+      .schedule-scroll { overflow: visible; }
+      .schedule-inner { min-width: 0; }
+    }
+    .g-point text {
+      fill: #dbe7f8;
+      font-size: 10px;
+      font-weight: 600;
+      paint-order: stroke;
+      stroke: #0d1c33;
+      stroke-width: 2.5px;
+      stroke-linejoin: round;
     }
   </style>
 </head>
@@ -700,14 +805,13 @@
           </svg>
         </div>
         <div>
-      <div class="brand-title">国动 世界时钟</div>
-      <div class="brand-subtitle">GUODONG WORLD CLOCK</div>
+          <h1 class="brand-title">国动 世界时钟</h1>
+          <div class="brand-subtitle">GUODONG WORLD CLOCK</div>
         </div>
       </div>
       <div class="live-badge"><span class="live-dot"></span>实时同步 · 24 小时制</div>
     </div>
   </header>
-
   <main>
     <section class="intro" aria-label="全球昼夜示意">
       <div class="globe-panel">
@@ -746,35 +850,63 @@
         </div>
       </div>
       <div class="intro-tags">
-        <span class="intro-tag"><b>国动集团本部</b> 北京 <i>东八区 · 09:00–17:30</i></span>
-        <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i>东五区 · 09:00–18:00</i></span>
-        <span class="intro-tag"><b>俄罗斯</b> 莫斯科 <i>东三区 · 09:00–17:30</i></span>
+        <span class="intro-tag"><b>国动集团本部</b> 北京 <i id="intro-meta-beijing">东八区 · 09:00–17:30</i></span>
+        <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i id="intro-meta-kazakhstan">东五区 · 09:00–18:00</i></span>
+        <span class="intro-tag"><b>俄罗斯</b> 莫斯科 <i id="intro-meta-russia">东三区 · 09:00–17:30</i></span>
       </div>
     </section>
 
-    <section class="status-board" id="status-board" aria-label="三地联络速览">
+    <section class="reach-panel" id="reach-panel" data-tone="off" aria-labelledby="reach-title">
+      <div class="reach-main">
+        <span class="reach-dot" aria-hidden="true"></span>
+        <div>
+          <div class="reach-kicker">现在能否联络</div>
+          <h2 class="reach-title" id="reach-title" aria-live="polite" aria-atomic="true">计算中</h2>
+          <p class="reach-detail" id="reach-detail">正在读取三地当地时间</p>
+        </div>
+      </div>
+      <div class="reach-next">
+        <span id="reach-next-label">下一个三地共同窗口</span>
+        <strong id="reach-next">计算中</strong>
+        <small id="reach-next-local"></small>
+      </div>
+    </section>
+
+    <section class="status-board" id="status-board" aria-label="联络速览">
       <article class="status-card beijing">
         <div class="status-text">
-          <div class="status-name">国动集团本部·北京</div>
-          <div class="status-meta">东八区 · <b id="status-diff-beijing">基准</b></div>
+          <div class="status-name" id="status-name-beijing">国动集团本部·北京</div>
+          <div class="status-meta"><span id="status-zone-beijing">东八区</span> · <b id="status-diff-beijing">基准</b></div>
+          <div class="status-hint" id="hint-beijing">计算中</div>
         </div>
-        <div class="status-clock" id="status-time-beijing">--:--<small>当地</small></div>
+        <div class="status-right">
+          <div class="status-clock" id="status-time-beijing">--:--<small>当地时间</small></div>
+          <span class="duty-badge off" id="duty-beijing">计算中</span>
+        </div>
       </article>
 
       <article class="status-card kazakhstan">
         <div class="status-text">
-          <div class="status-name">哈萨克斯坦·阿拉木图</div>
-          <div class="status-meta">东五区 · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
+          <div class="status-name" id="status-name-kazakhstan">哈萨克斯坦·阿拉木图</div>
+          <div class="status-meta"><span id="status-zone-kazakhstan">东五区</span> · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
+          <div class="status-hint" id="hint-kazakhstan">计算中</div>
         </div>
-        <div class="status-clock" id="status-time-kazakhstan">--:--<small>当地</small></div>
+        <div class="status-right">
+          <div class="status-clock" id="status-time-kazakhstan">--:--<small>当地时间</small></div>
+          <span class="duty-badge off" id="duty-kazakhstan">计算中</span>
+        </div>
       </article>
 
       <article class="status-card russia">
         <div class="status-text">
           <div class="status-name" id="status-name-russia">俄罗斯·莫斯科</div>
-          <div class="status-meta" id="status-zone-russia">东三区 · 较北京 <b>晚 5 小时</b></div>
+          <div class="status-meta"><span id="status-zone-russia">东三区</span> · 较北京 <b id="status-diff-russia">晚 5 小时</b></div>
+          <div class="status-hint" id="hint-russia">计算中</div>
         </div>
-        <div class="status-clock" id="status-time-russia">--:--<small>当地</small></div>
+        <div class="status-right">
+          <div class="status-clock" id="status-time-russia">--:--<small>当地时间</small></div>
+          <span class="duty-badge off" id="duty-russia">计算中</span>
+        </div>
       </article>
     </section>
 
@@ -804,7 +936,7 @@
       <article class="clock-card beijing">
         <div class="clock-head">
           <div><div class="country-code">CN · CHINA</div><h2>北京时间</h2></div>
-          <span class="utc-tag">UTC+8</span>
+          <span class="utc-tag" id="utc-beijing">UTC+8</span>
         </div>
         <div class="sky-scene" id="sky-beijing">
           <div class="sky-stars" aria-hidden="true"></div>
@@ -815,14 +947,14 @@
         </div>
         <div class="digital-time" id="digital-beijing">--:--:--</div>
         <div class="clock-date" id="date-beijing">正在读取时间</div>
-        <div class="difference">东八区 · 本土基准时区</div>
-        <div class="clock-duty"><span class="duty-badge" id="duty-beijing">计算中</span></div>
+        <div class="clock-window" id="clock-window-beijing">当地办公 09:00–17:30</div>
+        <div class="difference" id="difference-beijing">东八区 · 本土基准时区</div>
       </article>
 
       <article class="clock-card kazakhstan">
         <div class="clock-head">
           <div><div class="country-code">KZ · KAZAKHSTAN</div><h2>哈萨克斯坦时间</h2></div>
-          <span class="utc-tag">UTC+5</span>
+          <span class="utc-tag" id="utc-kazakhstan">UTC+5</span>
         </div>
         <div class="sky-scene" id="sky-kazakhstan">
           <div class="sky-stars" aria-hidden="true"></div>
@@ -833,14 +965,14 @@
         </div>
         <div class="digital-time" id="digital-kazakhstan">--:--:--</div>
         <div class="clock-date" id="date-kazakhstan">正在读取时间</div>
-        <div class="difference">东五区 · 较北京晚 3 小时</div>
-        <div class="clock-duty"><span class="duty-badge" id="duty-kazakhstan">计算中</span></div>
+        <div class="clock-window" id="clock-window-kazakhstan">当地办公 09:00–18:00</div>
+        <div class="difference" id="difference-kazakhstan">东五区 · 较北京晚 3 小时</div>
       </article>
 
       <article class="clock-card russia">
         <div class="clock-head">
           <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯·莫斯科时间</h2></div>
-          <span class="utc-tag" id="russia-offset">UTC+3</span>
+          <span class="utc-tag" id="utc-russia">UTC+3</span>
         </div>
         <div class="sky-scene" id="sky-russia">
           <div class="sky-stars" aria-hidden="true"></div>
@@ -851,14 +983,14 @@
         </div>
         <div class="digital-time" id="digital-russia">--:--:--</div>
         <div class="clock-date" id="date-russia">正在读取时间</div>
-        <div class="difference" id="russia-difference">东三区 · 较北京晚 5 小时</div>
-        <div class="clock-duty"><span class="duty-badge" id="duty-russia">计算中</span></div>
+        <div class="clock-window" id="clock-window-russia">当地办公 09:00–17:30</div>
+        <div class="difference" id="difference-russia">东三区 · 较北京晚 5 小时</div>
       </article>
     </section>
 
     <div class="info-strip">
       <span class="info-icon" aria-hidden="true">i</span>
-      <span id="time-summary">所显示时区均不实行夏令时，全年采用统一时区。</span>
+      <span id="time-summary">所显示时区均不实行夏令时；周末自动标记为休息，法定节假日暂未内置。</span>
     </div>
 
     <section class="work-card" aria-labelledby="work-title">
@@ -867,991 +999,1260 @@
           <h2 id="work-title">跨时区上班时间</h2>
           <p id="work-schedule-desc">国动集团本部 09:00–17:30 ｜ 俄罗斯国动 09:00–17:30 ｜ 哈萨克斯坦国动 09:00–18:00 ｜ 各地当地 12:00–13:00 午休</p>
         </div>
-        <span class="workday-tag">工作日 · 已扣除午休</span>
+        <span class="workday-tag">周末自动休息</span>
       </div>
 
-      <div class="schedule" aria-label="三地工作时间北京时间轴">
+      <div class="schedule" id="schedule" aria-label="三地工作时间北京时间轴">
         <div class="schedule-head">
-          <strong>各地当前天象与工作时段</strong>
+          <strong id="schedule-title">三地工作时段与共同窗口（北京时间）</strong>
           <span class="schedule-legend">
-            <span><span class="legend-dot lunch" aria-hidden="true"></span>当地午休</span>
+            <span><i class="legend-dot"></i>在岗</span>
+            <span><i class="legend-dot lunch"></i>午休</span>
+            <span><i class="legend-dot common"></i>共同在岗</span>
+            <span><i class="legend-dot now"></i>当前</span>
           </span>
         </div>
-        <div class="schedule-axis" aria-hidden="true">
-          <span></span>
-          <div class="axis-labels" id="axis-labels"></div>
+        <div class="schedule-scroll" tabindex="0" role="region" aria-label="三地工作时间轴，可左右滑动查看完整内容">
+          <div class="schedule-inner">
+            <div class="schedule-axis" aria-hidden="true">
+              <span></span>
+              <div class="axis-labels" id="axis-labels"></div>
+            </div>
+            <div class="schedule-common-row">
+              <div class="schedule-label common-label"><span id="common-label">三地共同在岗</span><small>北京时间</small></div>
+              <div class="schedule-track common-track" id="common-track"></div>
+            </div>
+            <div class="schedule-body" id="schedule-body"></div>
+          </div>
         </div>
-        <div class="schedule-body" id="schedule-body"></div>
+        <div class="schedule-mobile-hint">左右滑动查看完整时间轴 →</div>
       </div>
     </section>
-
   </main>
 
   <script>
-    const ZONES = {
-      beijing: { timeZone: "Asia/Shanghai", offset: 8, lat: 39.9042, lon: 116.4074, label: "北京" },
-      kazakhstan: { timeZone: "Asia/Almaty", offset: 5, lat: 43.2220, lon: 76.8512, label: "阿拉木图" }
-    };
+"use strict";
 
-    const timeFormatters = new Map();
-    const dateFormatters = new Map();
-    const svgNS = "http://www.w3.org/2000/svg";
+const svgNS = "http://www.w3.org/2000/svg";
+const RAD = Math.PI / 180;
+const DEG = 180 / Math.PI;
+const J2000 = 2451545.0;
+const BEIJING_TZ = "Asia/Shanghai";
+const ORDER = ["beijing", "kazakhstan", "russia"];
+const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+const STEP_MS = 5 * 60 * 1000;
+const REDUCE_MOTION = Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
-    /* ============ 地球仪：太阳方位与昼夜分布 ============
-     * 采用正交投影（观察者位于赤道上空）：
-     *   经度 λ → 盘面 x = R·sin(λ - λ0)，λ0 为观察者所在经度
-     *   纬度 φ → 盘面 y = -R·sin(φ)
-     * 地球绕地轴自转，格林尼治子午线相对太阳的角位置由 UTC 时刻决定，
-     * 因此晨昏线与太阳方位完全由 UTC + 观测点经纬度推出。
-     */
-    const GLOBE_R = 112;
-    const GLOBE_CX = 130;
-    const GLOBE_CY = 130;
+const PLACES = {
+  beijing: {
+    key: "beijing",
+    name: "北京",
+    shortName: "北京",
+    displayName: "国动集团本部·北京",
+    timeZone: "Asia/Shanghai",
+    zoneLabel: "东八区",
+    offset: 8,
+    lat: 39.9042,
+    lon: 116.4074,
+    workStart: 9 * 60,
+    workEnd: 17 * 60 + 30,
+    lunchStart: 12 * 60,
+    lunchEnd: 13 * 60,
+    workdays: [1, 2, 3, 4, 5],
+    holidays: new Set(),
+    className: "hq-bar",
+    accent: "#c23b32"
+  },
+  kazakhstan: {
+    key: "kazakhstan",
+    name: "阿拉木图",
+    shortName: "阿拉木图",
+    displayName: "哈萨克斯坦·阿拉木图",
+    timeZone: "Asia/Almaty",
+    zoneLabel: "东五区",
+    offset: 5,
+    lat: 43.2220,
+    lon: 76.8512,
+    workStart: 9 * 60,
+    workEnd: 18 * 60,
+    lunchStart: 12 * 60,
+    lunchEnd: 13 * 60,
+    workdays: [1, 2, 3, 4, 5],
+    holidays: new Set(),
+    className: "kz-bar",
+    accent: "#06706b"
+  },
+  russia: {
+    key: "russia",
+    name: "莫斯科",
+    shortName: "莫斯科",
+    displayName: "俄罗斯·莫斯科",
+    timeZone: "Europe/Moscow",
+    zoneLabel: "东三区",
+    offset: 3,
+    lat: 55.7558,
+    lon: 37.6173,
+    workStart: 9 * 60,
+    workEnd: 17 * 60 + 30,
+    lunchStart: 12 * 60,
+    lunchEnd: 13 * 60,
+    workdays: [1, 2, 3, 4, 5],
+    holidays: new Set(),
+    className: "ru-bar",
+    accent: "#3f5fce"
+  }
+};
 
-    // 极简大陆轮廓（经纬度多边形，用于示意，非精确地图）
-    const GLOBE_LANDMASS = [
-      // [名称, 经度, 纬度, 半径]
-      ["北京", 116.41, 39.90, 3.4],
-      ["阿拉木图", 76.85, 43.22, 3.4],
-      ["莫斯科", 37.62, 55.76, 3.4]
-    ];
+const partsFormatters = new Map();
+const dateFormatters = new Map();
 
-    // 简化的大陆块（用于绘制球面纹理，坐标为 [经度, 纬度]）
-    const GLOBE_LANDS = [
-      // 北美
-      [[-168, 65], [-150, 71], [-130, 70], [-115, 73], [-95, 73], [-80, 68], [-64, 60], [-56, 52], [-66, 45], [-75, 40], [-81, 31], [-80, 25], [-90, 29], [-97, 26], [-105, 22], [-97, 16], [-88, 16], [-83, 9], [-78, 9], [-83, 15], [-90, 18], [-97, 21], [-105, 20], [-110, 24], [-114, 30], [-121, 35], [-124, 42], [-124, 48], [-132, 55], [-140, 60], [-152, 58], [-165, 60], [-168, 65]],
-      // 南美
-      [[-81, 8], [-72, 12], [-62, 10], [-52, 5], [-50, 0], [-44, -2], [-35, -6], [-38, -13], [-39, -18], [-48, -25], [-54, -34], [-57, -38], [-62, -40], [-65, -45], [-68, -52], [-74, -52], [-75, -45], [-73, -37], [-71, -30], [-70, -20], [-76, -14], [-81, -6], [-80, 2], [-81, 8]],
-      // 非洲
-      [[-17, 15], [-16, 22], [-10, 27], [-5, 32], [10, 34], [20, 32], [32, 31], [35, 24], [39, 15], [43, 12], [51, 12], [48, 5], [41, -2], [40, -10], [35, -19], [32, -26], [26, -34], [18, -34], [12, -18], [9, -1], [9, 4], [-8, 5], [-13, 9], [-17, 15]],
-      // 欧洲
-      [[-10, 36], [-9, 43], [-2, 43], [-5, 48], [0, 51], [4, 52], [8, 54], [10, 57], [18, 55], [21, 56], [24, 60], [30, 61], [28, 66], [22, 70], [30, 70], [40, 66], [40, 60], [38, 55], [30, 50], [28, 45], [20, 42], [16, 40], [13, 38], [10, 40], [4, 40], [-2, 37], [-10, 36]],
-      // 亚洲
-      [[40, 66], [60, 70], [75, 73], [100, 76], [115, 73], [130, 71], [145, 70], [160, 69], [170, 67], [178, 65], [170, 60], [162, 58], [155, 57], [142, 54], [135, 48], [130, 43], [127, 40], [122, 39], [122, 31], [120, 25], [110, 21], [108, 15], [105, 10], [100, 6], [98, 12], [95, 16], [92, 21], [88, 22], [80, 15], [77, 8], [73, 15], [70, 22], [68, 24], [62, 25], [57, 25], [52, 30], [45, 38], [43, 45], [40, 52], [38, 60], [40, 66]],
-      // 澳大利亚
-      [[114, -22], [122, -18], [130, -12], [137, -12], [142, -11], [146, -19], [153, -25], [151, -34], [146, -39], [140, -38], [132, -32], [125, -33], [118, -35], [114, -22]],
-      // 格陵兰
-      [[-45, 60], [-20, 70], [-22, 78], [-40, 83], [-60, 82], [-55, 70], [-45, 60]],
-      // 南极
-      [[-180, -70], [-140, -73], [-100, -73], [-60, -70], [-20, -70], [20, -70], [60, -68], [100, -66], [140, -68], [180, -70], [180, -90], [-180, -90], [-180, -70]],
-      // 日本
-      [[130, 31], [132, 34], [136, 35], [140, 36], [141, 40], [141, 45], [144, 44], [140, 38], [136, 37], [132, 35], [130, 31]]
-    ];
+function getPartsFormatter(timeZone) {
+  if (!partsFormatters.has(timeZone)) {
+    partsFormatters.set(timeZone, new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23"
+    }));
+  }
+  return partsFormatters.get(timeZone);
+}
 
-    // 正交投影：经纬度 → 盘面坐标
-    function project(lat, lon, lon0) {
-      const delta = (lon - lon0) * RAD;
+function getZonedParts(date, timeZone) {
+  const values = {};
+  for (const part of getPartsFormatter(timeZone).formatToParts(date)) {
+    if (part.type !== "literal") values[part.type] = part.value;
+  }
+  const year = Number(values.year);
+  const month = Number(values.month);
+  const day = Number(values.day);
+  const hour = Number(values.hour) % 24;
+  const minute = Number(values.minute);
+  const second = Number(values.second);
+  return {
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    minutes: hour * 60 + minute + second / 60,
+    weekday: new Date(Date.UTC(year, month - 1, day)).getUTCDay()
+  };
+}
+
+function getOffsetMinutes(date, timeZone) {
+  const parts = getZonedParts(date, timeZone);
+  const asUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+  return Math.round((asUtc - date.getTime()) / 60000);
+}
+
+function refreshOffsets(now = new Date()) {
+  for (const key of ORDER) {
+    const offsetMinutes = getOffsetMinutes(now, PLACES[key].timeZone);
+    if (Number.isFinite(offsetMinutes)) PLACES[key].offset = offsetMinutes / 60;
+  }
+}
+
+function getDateFormatter(timeZone) {
+  if (!dateFormatters.has(timeZone)) {
+    dateFormatters.set(timeZone, new Intl.DateTimeFormat("zh-CN", {
+      timeZone,
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      weekday: "long"
+    }));
+  }
+  return dateFormatters.get(timeZone);
+}
+
+function dateKey(parts) {
+  return `${parts.year}-${String(parts.month).padStart(2, "0")}-${String(parts.day).padStart(2, "0")}`;
+}
+
+function dayNumber(parts) {
+  return Math.floor(Date.UTC(parts.year, parts.month - 1, parts.day) / 86400000);
+}
+
+function getDutyStateAt(place, date) {
+  const parts = getZonedParts(date, place.timeZone);
+  if (!place.workdays.includes(parts.weekday)) {
+    return { text: "周末休息", className: "off", code: "weekend", parts };
+  }
+  if (place.holidays.has(dateKey(parts))) {
+    return { text: "休息日", className: "off", code: "holiday", parts };
+  }
+  if (parts.minutes < place.workStart) {
+    return { text: "未上班", className: "off", code: "before", parts };
+  }
+  if (parts.minutes < place.lunchStart) {
+    return { text: "办公中", className: "on", code: "work", parts };
+  }
+  if (parts.minutes < place.lunchEnd) {
+    return { text: "午休中", className: "break", code: "lunch", parts };
+  }
+  if (parts.minutes < place.workEnd) {
+    return { text: "办公中", className: "on", code: "work", parts };
+  }
+  return { text: "已下班", className: "off", code: "after", parts };
+}
+
+function workWindowsLocal(place) {
+  return [
+    { start: place.workStart, end: place.lunchStart },
+    { start: place.lunchEnd, end: place.workEnd }
+  ].filter(window => window.end > window.start);
+}
+
+function toBeijingWindow(place, window) {
+  const shift = (8 - place.offset) * 60;
+  return { start: window.start + shift, end: window.end + shift };
+}
+
+function intersectWindows(a, b) {
+  const result = [];
+  for (const left of a) {
+    for (const right of b) {
+      const start = Math.max(left.start, right.start);
+      const end = Math.min(left.end, right.end);
+      if (end > start) result.push({ start, end });
+    }
+  }
+  return result.sort((x, y) => x.start - y.start);
+}
+
+function threeWayWindows() {
+  let windows = workWindowsLocal(PLACES.beijing);
+  for (const key of ["kazakhstan", "russia"]) {
+    windows = intersectWindows(windows, workWindowsLocal(PLACES[key]).map(window => toBeijingWindow(PLACES[key], window)));
+  }
+  return windows;
+}
+
+function floorToStep(date, step = STEP_MS) {
+  return new Date(Math.floor(date.getTime() / step) * step);
+}
+
+function buildStateTimeline(places, from, days = 3) {
+  const start = floorToStep(from);
+  const count = Math.ceil(days * 86400000 / STEP_MS);
+  const timeline = [];
+  for (let index = 0; index < count; index += 1) {
+    const time = new Date(start.getTime() + index * STEP_MS);
+    const states = {};
+    for (const place of places) states[place.key] = getDutyStateAt(place, time);
+    timeline.push({ time, states });
+  }
+  return timeline;
+}
+
+function findWindow(timeline, predicate) {
+  let start = null;
+  for (const sample of timeline) {
+    const matched = predicate(sample.states);
+    if (matched && start === null) start = sample.time;
+    if (!matched && start !== null) return { start, end: sample.time };
+  }
+  if (start !== null) {
+    const last = timeline[timeline.length - 1];
+    return { start, end: new Date(last.time.getTime() + STEP_MS) };
+  }
+  return null;
+}
+
+function pad2(value) {
+  return String(value).padStart(2, "0");
+}
+
+function formatClock(minutes) {
+  if (minutes === 1440) return "24:00";
+  const wrapped = ((Math.round(minutes) % 1440) + 1440) % 1440;
+  return `${pad2(Math.floor(wrapped / 60))}:${pad2(wrapped % 60)}`;
+}
+
+function clockAt(date, timeZone) {
+  return formatClock(getZonedParts(date, timeZone).minutes);
+}
+
+function formatDayLabel(date, now) {
+  const target = getZonedParts(date, BEIJING_TZ);
+  const today = getZonedParts(now, BEIJING_TZ);
+  const diff = dayNumber(target) - dayNumber(today);
+  if (diff === 0) return "今天";
+  if (diff === 1) return "明天";
+  if (diff > 1 && diff < 7) return WEEKDAYS[target.weekday];
+  return `${target.month}月${target.day}日`;
+}
+
+function formatBeijingWindow(window, now) {
+  if (!window) return "未来 3 天暂无共同窗口";
+  const start = clockAt(window.start, BEIJING_TZ);
+  const end = clockAt(window.end, BEIJING_TZ);
+  return `${formatDayLabel(window.start, now)} ${start}–${end}（北京时间）`;
+}
+
+function formatLocalRange(place, window) {
+  if (!window) return "";
+  return `${clockAt(window.start, place.timeZone)}–${clockAt(window.end, place.timeZone)}`;
+}
+
+function formatNextShort(window, now) {
+  if (!window) return "未来 3 天暂无共同窗口";
+  return `${formatDayLabel(window.start, now)} ${clockAt(window.start, BEIJING_TZ)}–${clockAt(window.end, BEIJING_TZ)}（北京时间）`;
+}
+
+function formatDifference(offset) {
+  const difference = 8 - offset;
+  if (difference === 0) return "基准";
+  return difference > 0 ? `晚 ${difference} 小时` : `早 ${Math.abs(difference)} 小时`;
+}
+
+function formatUtcOffset(offset) {
+  const sign = offset >= 0 ? "+" : "−";
+  const absolute = Math.abs(offset);
+  const value = Number.isInteger(absolute) ? String(absolute) : absolute.toFixed(1).replace(/\.0$/, "");
+  return `UTC${sign}${value}`;
+}
+
+function formatWorkRange(place) {
+  return `${formatClock(place.workStart)}–${formatClock(place.workEnd)}`;
+}
+
+function renderPlaceMeta() {
+  const setText = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  };
+
+  for (const key of ORDER) {
+    const place = PLACES[key];
+    const zone = place.zoneLabel || formatUtcOffset(place.offset);
+    const workRange = formatWorkRange(place);
+    setText(`intro-meta-${key}`, `${zone} · ${workRange}`);
+    setText(`status-name-${key}`, place.displayName);
+    setText(`status-zone-${key}`, zone);
+    setText(`status-diff-${key}`, key === "beijing" ? "基准" : formatDifference(place.offset));
+    setText(`utc-${key}`, formatUtcOffset(place.offset));
+    setText(`clock-window-${key}`, `当地办公 ${workRange}`);
+    setText(`difference-${key}`, key === "beijing"
+      ? `${zone} · 本土基准时区`
+      : `${zone} · 较北京${formatDifference(place.offset)}`);
+  }
+  setText("russia-title", `${PLACES.russia.displayName}时间`);
+}
+
+function formatLon(lon) {
+  const normalized = ((lon % 360) + 360) % 360;
+  return normalized <= 180
+    ? `${normalized.toFixed(1)}°E`
+    : `${(360 - normalized).toFixed(1)}°W`;
+}
+
+/* ============ 天象计算 ============ */
+
+function mod360(value) {
+  return ((value % 360) + 360) % 360;
+}
+
+function toJulianDay(date) {
+  return date.getTime() / 86400000 + 2440587.5;
+}
+
+function getGmst(jd) {
+  const d = jd - J2000;
+  return mod360(280.46061837 + 360.98564736629 * d);
+}
+
+function solarElements(jd) {
+  const d = jd - J2000;
+  const T = d / 36525;
+  const L0 = mod360(280.46646 + T * (36000.76983 + T * 0.0003032));
+  const M = 357.52911 + T * (35999.05029 - 0.0001537 * T);
+  const C =
+    Math.sin(M * RAD) * (1.914602 - T * (0.004817 + 0.000014 * T)) +
+    Math.sin(2 * M * RAD) * (0.019993 - 0.000101 * T) +
+    Math.sin(3 * M * RAD) * 0.000289;
+  const trueLong = L0 + C;
+  const omega = 125.04 - 1934.136 * T;
+  const appLong = trueLong - 0.00569 - 0.00478 * Math.sin(omega * RAD);
+  const eps0 = 23 + (26 + (21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60) / 60;
+  const eps = eps0 + 0.00256 * Math.cos(omega * RAD);
+  const declination = Math.asin(Math.sin(eps * RAD) * Math.sin(appLong * RAD)) * DEG;
+  const rightAscension = mod360(
+    Math.atan2(Math.cos(eps * RAD) * Math.sin(appLong * RAD), Math.cos(appLong * RAD)) * DEG
+  );
+  return { declination, rightAscension, appLong, eps };
+}
+
+function lunarElements(jd) {
+  const d = jd - J2000;
+  const Lp = mod360(218.316 + 13.176396 * d);
+  const D = mod360(297.850 + 12.190749 * d);
+  const M = mod360(357.529 + 0.98560028 * d);
+  const Mp = mod360(134.963 + 13.064993 * d);
+  const F = mod360(93.272 + 13.176350 * d);
+  const lon = mod360(
+    Lp +
+    6.289 * Math.sin(Mp * RAD) +
+    1.274 * Math.sin((2 * D - Mp) * RAD) +
+    0.658 * Math.sin(2 * D * RAD) +
+    0.214 * Math.sin(2 * Mp * RAD) -
+    0.186 * Math.sin(M * RAD) -
+    0.059 * Math.sin((2 * D - 2 * Mp) * RAD) -
+    0.057 * Math.sin((2 * D - M - Mp) * RAD) +
+    0.053 * Math.sin((2 * D + Mp) * RAD) +
+    0.046 * Math.sin((2 * D - M) * RAD) +
+    0.041 * Math.sin((Mp - M) * RAD) -
+    0.035 * Math.sin(D * RAD) -
+    0.031 * Math.sin((M + Mp) * RAD)
+  );
+  const lat =
+    5.128 * Math.sin(F * RAD) +
+    0.281 * Math.sin((Mp + F) * RAD) -
+    0.278 * Math.sin((F - Mp) * RAD) -
+    0.173 * Math.sin((F - 2 * D) * RAD);
+  return { lon, lat };
+}
+
+function altitudeAzimuth(jd, lat, lon, declination, rightAscension) {
+  const lst = mod360(getGmst(jd) + lon);
+  let hourAngle = lst - rightAscension;
+  if (hourAngle > 180) hourAngle -= 360;
+  if (hourAngle < -180) hourAngle += 360;
+  const latRad = lat * RAD;
+  const declRad = declination * RAD;
+  const haRad = hourAngle * RAD;
+  const sinAlt =
+    Math.sin(latRad) * Math.sin(declRad) + Math.cos(latRad) * Math.cos(declRad) * Math.cos(haRad);
+  const altitude = Math.asin(Math.max(-1, Math.min(1, sinAlt))) * DEG;
+  const cosAz =
+    (Math.sin(declRad) - Math.sin(latRad) * sinAlt) /
+    (Math.cos(latRad) * Math.cos(altitude * RAD) || 1e-6);
+  let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAz))) * DEG;
+  if (Math.sin(haRad) > 0) azimuth = 360 - azimuth;
+  return { altitude, azimuth, hourAngle };
+}
+
+function getSunPosition(date, lat, lon) {
+  const jd = toJulianDay(date);
+  const sun = solarElements(jd);
+  return altitudeAzimuth(jd, lat, lon, sun.declination, sun.rightAscension);
+}
+
+function getMoonPosition(date, lat, lon) {
+  const jd = toJulianDay(date);
+  const moon = lunarElements(jd);
+  const sun = solarElements(jd);
+  const epsRad = sun.eps * RAD;
+  const lonRad = moon.lon * RAD;
+  const latRad = moon.lat * RAD;
+  const rightAscension = mod360(
+    Math.atan2(
+      Math.sin(lonRad) * Math.cos(epsRad) - Math.tan(latRad) * Math.sin(epsRad),
+      Math.cos(lonRad)
+    ) * DEG
+  );
+  const declination = Math.asin(
+    Math.sin(latRad) * Math.cos(epsRad) + Math.cos(latRad) * Math.sin(epsRad) * Math.sin(lonRad)
+  ) * DEG;
+  const position = altitudeAzimuth(jd, lat, lon, declination, rightAscension);
+  const elongation = mod360(moon.lon - sun.appLong);
+  const illuminated = (1 - Math.cos(elongation * RAD)) / 2;
+  return { ...position, elongation, illuminated, waxing: elongation < 180 };
+}
+
+const SUN_THRESHOLDS = { daylight: 6, twilight: -6 };
+const SKY_PALETTE = [
+  { alt: -18, zenith: [4, 7, 24], mid: [9, 15, 38], horizon: [20, 30, 58], ground: [6, 10, 22], star: 1, sun: 0 },
+  { alt: -8, zenith: [10, 17, 44], mid: [26, 36, 74], horizon: [58, 64, 104], ground: [16, 21, 40], star: 0.88, sun: 0 },
+  { alt: -4, zenith: [34, 48, 96], mid: [92, 80, 126], horizon: [196, 120, 108], ground: [38, 32, 50], star: 0.3, sun: 0.15 },
+  { alt: -0.5, zenith: [70, 90, 148], mid: [176, 116, 128], horizon: [246, 172, 116], ground: [58, 44, 56], star: 0.06, sun: 0.7 },
+  { alt: 3, zenith: [86, 130, 190], mid: [188, 172, 168], horizon: [250, 206, 150], ground: [74, 68, 66], star: 0, sun: 1 },
+  { alt: 12, zenith: [62, 134, 206], mid: [136, 194, 228], horizon: [214, 236, 242], ground: [92, 106, 104], star: 0, sun: 1 },
+  { alt: 45, zenith: [38, 110, 198], mid: [110, 178, 224], horizon: [206, 232, 242], ground: [104, 118, 116], star: 0, sun: 1 }
+];
+
+function getSkyPhaseByAltitude(altitude) {
+  if (altitude > SUN_THRESHOLDS.daylight) return { name: "白天", key: "day" };
+  if (altitude > SUN_THRESHOLDS.twilight) return { name: "晨昏", key: "twilight" };
+  if (altitude > -18) return { name: "暮色", key: "dusk" };
+  return { name: "黑夜", key: "night" };
+}
+
+function getPolarState(date, lat) {
+  const sun = solarElements(toJulianDay(date));
+  const altNoon = 90 - Math.abs(lat - sun.declination);
+  const altMidnight = Math.abs(lat + sun.declination) - 90;
+  if (altNoon > 0 && altMidnight > 0) return "polar-day";
+  if (altNoon < 0 && altMidnight < 0) return "polar-night";
+  return null;
+}
+
+function mixColor(a, b, t) {
+  const to = value => Math.round(Math.max(0, Math.min(255, value))).toString(16).padStart(2, "0");
+  return `#${to(a[0] + (b[0] - a[0]) * t)}${to(a[1] + (b[1] - a[1]) * t)}${to(a[2] + (b[2] - a[2]) * t)}`;
+}
+
+function toPalette(stop) {
+  return {
+    zenith: mixColor(stop.zenith, stop.zenith, 0),
+    mid: mixColor(stop.mid, stop.mid, 0),
+    horizon: mixColor(stop.horizon, stop.horizon, 0),
+    ground: mixColor(stop.ground, stop.ground, 0),
+    star: stop.star,
+    sun: stop.sun
+  };
+}
+
+function samplePalette(altitude) {
+  const stops = SKY_PALETTE;
+  const safe = Number.isFinite(altitude) ? altitude : 0;
+  if (safe <= stops[0].alt) return toPalette(stops[0]);
+  if (safe >= stops[stops.length - 1].alt) return toPalette(stops[stops.length - 1]);
+  for (let index = 0; index < stops.length - 1; index += 1) {
+    const lower = stops[index];
+    const upper = stops[index + 1];
+    if (safe >= lower.alt && safe <= upper.alt) {
+      const t = (safe - lower.alt) / (upper.alt - lower.alt);
       return {
-        x: GLOBE_CX + GLOBE_R * Math.sin(delta) * Math.cos(lat * RAD),
-        y: GLOBE_CY - GLOBE_R * Math.sin(lat * RAD),
-        visible: Math.cos(delta) > 0
+        zenith: mixColor(lower.zenith, upper.zenith, t),
+        mid: mixColor(lower.mid, upper.mid, t),
+        horizon: mixColor(lower.horizon, upper.horizon, t),
+        ground: mixColor(lower.ground, upper.ground, t),
+        star: lower.star + (upper.star - lower.star) * t,
+        sun: lower.sun + (upper.sun - lower.sun) * t
       };
     }
+  }
+  return toPalette(stops[stops.length - 1]);
+}
 
-    // 太阳直射点的地理经度（度）：
-    // 该经度处太阳时角为 0，即 LST = RA，故 lon = RA - GMST
-    function getSunLongitude(jd) {
-      const { rightAscension } = solarElements(jd);
-      return mod360(rightAscension - getGmst(jd));
-    }
+function makeSVGElement(tag, attributes) {
+  const element = document.createElementNS(svgNS, tag);
+  for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, value);
+  return element;
+}
 
-    // 绘制地球仪
-    function renderGlobe(now) {
-      const svg = document.getElementById("globe");
-      if (!svg) return;
-      const jd = toJulianDay(now);
-      const sunLon = getSunLongitude(jd);
-      // 观察者经度：以三地所在的中心经度为基准，并叠加地球自转带来的缓慢漂移，
-      // 使地球看起来在缓缓转动，同时三地始终落在可见半球内
-      const russia0 = getRussiaZone();
-      const centerLon =
-        (ZONES.beijing.lon + ZONES.kazakhstan.lon + russia0.lon) / 3; // ≈ 77°E
-      // 自转漂移：每分钟约 0.25°，视觉上缓慢滚动
-      const drift = (now.getTime() / 60000) * 0.25;
-      const lon0 = mod360(centerLon + drift);
+/* ============ 地球仪 ============ */
 
-      const mapGroup = document.getElementById("globe-map");
-      const markerGroup = document.getElementById("globe-markers");
-      const sunGroup = document.getElementById("globe-sun");
-      const nightMask = document.getElementById("globe-night");
-      if (!mapGroup || !markerGroup || !sunGroup || !nightMask) return;
+const GLOBE_R = 112;
+const GLOBE_CX = 130;
+const GLOBE_CY = 130;
 
-      // --- 陆地轮廓 ---
-      const parts = [];
-      GLOBE_LANDS.forEach(poly => {
-        const pts = poly.map(([lon, lat]) => {
-          const p = project(lat, lon, lon0);
-          return p;
-        });
-        // 只绘制可见且连续的部分
-        let run = [];
-        const flush = () => {
-          if (run.length > 2) parts.push(run.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "));
-          run = [];
-        };
-        pts.forEach(p => {
-          if (p.visible) run.push(p);
-          else flush();
-        });
-        flush();
-      });
-      mapGroup.innerHTML = parts
-        .map(d => `<polygon points="${d}" fill="#22406b" stroke="#2d5488" stroke-width="0.8"/>`)
-        .join("");
+const GLOBE_LANDS = [
+  [[-168, 65], [-150, 71], [-130, 70], [-115, 73], [-95, 73], [-80, 68], [-64, 60], [-56, 52], [-66, 45], [-75, 40], [-81, 31], [-80, 25], [-90, 29], [-97, 26], [-105, 22], [-97, 16], [-88, 16], [-83, 9], [-78, 9], [-83, 15], [-90, 18], [-97, 21], [-105, 20], [-110, 24], [-114, 30], [-121, 35], [-124, 42], [-124, 48], [-132, 55], [-140, 60], [-152, 58], [-165, 60], [-168, 65]],
+  [[-81, 8], [-72, 12], [-62, 10], [-52, 5], [-50, 0], [-44, -2], [-35, -6], [-38, -13], [-39, -18], [-48, -25], [-54, -34], [-57, -38], [-62, -40], [-65, -45], [-68, -52], [-74, -52], [-75, -45], [-73, -37], [-71, -30], [-70, -20], [-76, -14], [-81, -6], [-80, 2], [-81, 8]],
+  [[-17, 15], [-16, 22], [-10, 27], [-5, 32], [10, 34], [20, 32], [32, 31], [35, 24], [39, 15], [43, 12], [51, 12], [48, 5], [41, -2], [40, -10], [35, -19], [32, -26], [26, -34], [18, -34], [12, -18], [9, -1], [9, 4], [-8, 5], [-13, 9], [-17, 15]],
+  [[-10, 36], [-9, 43], [-2, 43], [-5, 48], [0, 51], [4, 52], [8, 54], [10, 57], [18, 55], [21, 56], [24, 60], [30, 61], [28, 66], [22, 70], [30, 70], [40, 66], [40, 60], [38, 55], [30, 50], [28, 45], [20, 42], [16, 40], [13, 38], [10, 40], [4, 40], [-2, 37], [-10, 36]],
+  [[40, 66], [60, 70], [75, 73], [100, 76], [115, 73], [130, 71], [145, 70], [160, 69], [170, 67], [178, 65], [170, 60], [162, 58], [155, 57], [142, 54], [135, 48], [130, 43], [127, 40], [122, 39], [122, 31], [120, 25], [110, 21], [108, 15], [105, 10], [100, 6], [98, 12], [95, 16], [92, 21], [88, 22], [80, 15], [77, 8], [73, 15], [70, 22], [68, 24], [62, 25], [57, 25], [52, 30], [45, 38], [43, 45], [40, 52], [38, 60], [40, 66]],
+  [[114, -22], [122, -18], [130, -12], [137, -12], [142, -11], [146, -19], [153, -25], [151, -34], [146, -39], [140, -38], [132, -32], [125, -33], [118, -35], [114, -22]],
+  [[-45, 60], [-20, 70], [-22, 78], [-40, 83], [-60, 82], [-55, 70], [-45, 60]],
+  [[-180, -70], [-140, -73], [-100, -73], [-60, -70], [-20, -70], [20, -70], [60, -68], [100, -66], [140, -68], [180, -70], [180, -90], [-180, -90], [-180, -70]],
+  [[130, 31], [132, 34], [136, 35], [140, 36], [141, 40], [141, 45], [144, 44], [140, 38], [136, 37], [132, 35], [130, 31]]
+];
 
-      // --- 晨昏线：逐纬度采样求解晨昏点，精确勾勒夜区边界 ---
-      // 对每个纬度 φ，求太阳高度角为 0 的经度：
-      //   cos(H) = -tan(φ)·tan(δ)，H 为时角；由此得晨线与昏线两个经度
-      const nightPath = document.getElementById("globe-night");
-      if (nightPath) {
-        const declRad = solarElements(jd).declination * RAD;
-        const ra = solarElements(jd).rightAscension;
-        const gmst = getGmst(jd);
-        const dawns = [];
-        const dusks = [];
-        // 采样完整纬线；不可见半球的点投影落在球面之外，
-        // 会被 clipPath 自动裁切，从而得到连续的晨昏曲线
-        for (let lat = -89; lat <= 89; lat += 3) {
-          const cosH = -Math.tan(lat * RAD) * Math.tan(declRad);
-          if (cosH < -1 || cosH > 1) continue;
-          const H = Math.acos(cosH) * DEG;
-          // 时角 = GMST + lon - RA = ±H  →  lon = ±H + RA - GMST
-          const dawn = project(lat, mod360(-H + ra - gmst), lon0);
-          const dusk = project(lat, mod360(H + ra - gmst), lon0);
-          dawns.push(dawn);
-          dusks.push(dusk);
-        }
-        // 夜区边界 = 昏线（自北向南）+ 晨线（自南向北）
-        const seq = [...dusks.sort((a, b) => a.y - b.y), ...dawns.sort((a, b) => b.y - a.y)];
-        if (seq.length > 3) {
-          // 用平滑曲线连接，避免折线在极区出现尖锐缺口
-          let d = `M ${seq[0].x.toFixed(1)} ${seq[0].y.toFixed(1)}`;
-          for (let i = 1; i < seq.length; i++) {
-            const prev = seq[i - 1];
-            const cur = seq[i];
-            const mx = (prev.x + cur.x) / 2;
-            const my = (prev.y + cur.y) / 2;
-            d += ` Q ${prev.x.toFixed(1)} ${prev.y.toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
-          }
-          // 末端回到起点，闭合夜区多边形
-          d += ` Q ${seq[seq.length - 1].x.toFixed(1)} ${seq[seq.length - 1].y.toFixed(1)} ${seq[0].x.toFixed(1)} ${seq[0].y.toFixed(1)} Z`;
-          nightPath.setAttribute("d", d);
-        } else {
-          nightPath.setAttribute("d", "");
-        }
-      }
+function project(lat, lon, lon0) {
+  const delta = (lon - lon0) * RAD;
+  return {
+    x: GLOBE_CX + GLOBE_R * Math.sin(delta) * Math.cos(lat * RAD),
+    y: GLOBE_CY - GLOBE_R * Math.sin(lat * RAD),
+    visible: Math.cos(delta) > 0
+  };
+}
 
-      // --- 太阳标记：位于太阳直射点经度上 ---
-      const sunLat = 0;
-      const sunPoint = project(sunLat, sunLon, lon0);
-      const sunVisible = sunPoint.visible;
-      sunGroup.innerHTML = sunVisible
-        ? `<circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="13" fill="#ffd166" opacity="0.22"/>
-           <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="7" fill="#ffd166"/>
-           <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="3" fill="#fff8e1"/>`
-        : "";
+function getSunLongitude(jd) {
+  const sun = solarElements(jd);
+  return mod360(sun.rightAscension - getGmst(jd));
+}
 
-      // --- 三地标记 ---
-      const russia = getRussiaZone();
-      const places = [
-        { name: "北京", lat: ZONES.beijing.lat, lon: ZONES.beijing.lon, offset: ZONES.beijing.offset },
-        { name: "阿拉木图", lat: ZONES.kazakhstan.lat, lon: ZONES.kazakhstan.lon, offset: ZONES.kazakhstan.offset },
-        { name: "莫斯科", lat: russia.lat, lon: russia.lon, offset: russia.offset }
-      ];
-      markerGroup.innerHTML = places
-        .map(place => {
-          const p = project(place.lat, place.lon, lon0);
-          if (!p.visible) return "";
-          const sun = getSunPosition(now, place.lat, place.lon);
-          const isDay = sun.altitude > -0.833;
-          const color = isDay ? "#ffd166" : "#93a9cc";
-          // 靠右边缘时把标签翻到左侧，避免出界
-          const flip = p.x > GLOBE_CX + 46;
-          const tx = flip ? -8 : 9;
-          const anchor = flip ? "end" : "start";
-          return `<g class="g-point" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})">
-            <circle r="5" fill="${color}" stroke="#0d1c33" stroke-width="1.6"/>
-            <text x="${tx}" y="3.6" text-anchor="${anchor}">${place.name}</text>
-          </g>`;
-        })
-        .join("");
+function renderGlobe(now) {
+  const svg = document.getElementById("globe");
+  if (!svg) return;
 
-      // --- 说明文字与三地状态卡 ---
-      const sub = document.getElementById("globe-sub");
-      const statsBox = document.getElementById("globe-stats");
-      const placeInfo = places.map(p => {
-        const s = getSunPosition(now, p.lat, p.lon);
-        const isDay = s.altitude > -0.833;
-        const local = new Date(now.getTime() + p.offset * 3600000);
-        const hh = String(local.getUTCHours()).padStart(2, "0");
-        const mm = String(local.getUTCMinutes()).padStart(2, "0");
-        return { ...p, isDay, altitude: s.altitude, time: `${hh}:${mm}` };
-      });
+  const jd = toJulianDay(now);
+  const sun = solarElements(jd);
+  const sunLon = getSunLongitude(jd);
+  const centerLon = (PLACES.beijing.lon + PLACES.kazakhstan.lon + PLACES.russia.lon) / 3;
+  const minutesOfDay = ((now.getTime() / 60000) % 1440 + 1440) % 1440;
+  const drift = REDUCE_MOTION ? 0 : 22 * Math.sin((minutesOfDay / 1440) * Math.PI * 2);
+  const lon0 = mod360(centerLon + drift);
 
-      if (sub) {
-        const sunLocal = mod360(sunLon);
-        sub.innerHTML =
-          `太阳直射点位于 <b>${sunLocal.toFixed(1)}°E</b>，` +
-          `当前地球上昼半球与夜半球由晨昏线分隔，` +
-          `右侧黄色光斑即太阳直射位置。`;
-      }
+  const mapGroup = document.getElementById("globe-map");
+  const markerGroup = document.getElementById("globe-markers");
+  const sunGroup = document.getElementById("globe-sun");
+  const nightPath = document.getElementById("globe-night");
+  if (!mapGroup || !markerGroup || !sunGroup || !nightPath) return;
 
-      if (statsBox) {
-        statsBox.innerHTML = placeInfo
-          .map(p => `<div class="globe-stat">
-            <div class="globe-stat-name">${p.name}</div>
-            <div class="globe-stat-state ${p.isDay ? "day" : "night"}">${p.isDay ? "白昼" : "夜间"}</div>
-            <div class="globe-stat-time">当地 ${p.time} · 太阳高度 ${p.altitude.toFixed(0)}°</div>
-          </div>`)
-          .join("");
-      }
-    }
-
-    /* ============ 天象引擎 ============
-     * 采用 Meeus / NOAA 天文算法，仅依赖 UTC 时刻与观测点经纬度，
-     * 与服务器时区、浏览器所在时区完全无关。
-     * 恒星时(GMST) + 赤经计算时角，精度满足民用日出日落需求。
-     */
-
-    const RAD = Math.PI / 180;
-    const DEG = 180 / Math.PI;
-    const J2000 = 2451545.0;
-
-    function mod360(value) {
-      return ((value % 360) + 360) % 360;
-    }
-
-    // 儒略日（UTC）
-    function toJulianDay(date) {
-      return date.getTime() / 86400000 + 2440587.5;
-    }
-
-    // 格林尼治平恒星时（度）
-    function getGmst(jd) {
-      const d = jd - J2000;
-      return mod360(280.46061837 + 360.98564736629 * d);
-    }
-
-    // 太阳：几何黄经、赤纬、轨道要素
-    function solarElements(jd) {
-      const d = jd - J2000;
-      const T = d / 36525;
-      const L0 = mod360(280.46646 + T * (36000.76983 + T * 0.0003032));
-      const M = 357.52911 + T * (35999.05029 - 0.0001537 * T);
-      const e = 0.016708634 - T * (0.000042037 + 0.0000001267 * T);
-      const C =
-        Math.sin(M * RAD) * (1.914602 - T * (0.004817 + 0.000014 * T)) +
-        Math.sin(2 * M * RAD) * (0.019993 - 0.000101 * T) +
-        Math.sin(3 * M * RAD) * 0.000289;
-      const trueLong = L0 + C;
-      const omega = 125.04 - 1934.136 * T;
-      const appLong = trueLong - 0.00569 - 0.00478 * Math.sin(omega * RAD);
-      const eps0 = 23 + (26 + (21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60) / 60;
-      const eps = eps0 + 0.00256 * Math.cos(omega * RAD);
-      const declination = Math.asin(Math.sin(eps * RAD) * Math.sin(appLong * RAD)) * DEG;
-      const rightAscension = mod360(
-        Math.atan2(Math.cos(eps * RAD) * Math.sin(appLong * RAD), Math.cos(appLong * RAD)) * DEG
-      );
-      return { declination, rightAscension, appLong, eps };
-    }
-
-    // 月亮：Meeus 低精度黄道坐标（Meeus《Astronomical Algorithms》第 47 章）
-    function lunarElements(jd) {
-      const d = jd - J2000;
-      const Lp = mod360(218.316 + 13.176396 * d);
-      const D = mod360(297.850 + 12.190749 * d);
-      const M = mod360(357.529 + 0.98560028 * d);
-      const Mp = mod360(134.963 + 13.064993 * d);
-      const F = mod360(93.272 + 13.176350 * d);
-      const lon = mod360(
-        Lp +
-        6.289 * Math.sin(Mp * RAD) +
-        1.274 * Math.sin((2 * D - Mp) * RAD) +
-        0.658 * Math.sin(2 * D * RAD) +
-        0.214 * Math.sin(2 * Mp * RAD) -
-        0.186 * Math.sin(M * RAD) -
-        0.059 * Math.sin((2 * D - 2 * Mp) * RAD) -
-        0.057 * Math.sin((2 * D - M - Mp) * RAD) +
-        0.053 * Math.sin((2 * D + Mp) * RAD) +
-        0.046 * Math.sin((2 * D - M) * RAD) +
-        0.041 * Math.sin((Mp - M) * RAD) -
-        0.035 * Math.sin(D * RAD) -
-        0.031 * Math.sin((M + Mp) * RAD)
-      );
-      const lat =
-        5.128 * Math.sin(F * RAD) +
-        0.281 * Math.sin((Mp + F) * RAD) -
-        0.278 * Math.sin((F - Mp) * RAD) -
-        0.173 * Math.sin((F - 2 * D) * RAD);
-      return { lon, lat };
-    }
-
-    // 由赤纬、赤经与地方恒星时求高度角与方位角
-    function altitudeAzimuth(jd, lat, lon, declination, rightAscension) {
-      const lst = mod360(getGmst(jd) + lon);
-      let hourAngle = lst - rightAscension;
-      if (hourAngle > 180) hourAngle -= 360;
-      if (hourAngle < -180) hourAngle += 360;
-      const latRad = lat * RAD;
-      const declRad = declination * RAD;
-      const haRad = hourAngle * RAD;
-      const sinAlt =
-        Math.sin(latRad) * Math.sin(declRad) + Math.cos(latRad) * Math.cos(declRad) * Math.cos(haRad);
-      const altitude = Math.asin(Math.max(-1, Math.min(1, sinAlt))) * DEG;
-      const cosAz =
-        (Math.sin(declRad) - Math.sin(latRad) * sinAlt) /
-        (Math.cos(latRad) * Math.cos(altitude * RAD) || 1e-6);
-      let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAz))) * DEG;
-      if (Math.sin(haRad) > 0) azimuth = 360 - azimuth;
-      return { altitude, azimuth, hourAngle };
-    }
-
-    // 计算某地此刻的太阳位置（度）
-    function getSunPosition(date, lat, lon) {
-      const jd = toJulianDay(date);
-      const sun = solarElements(jd);
-      return altitudeAzimuth(jd, lat, lon, sun.declination, sun.rightAscension);
-    }
-
-    // 计算某地此刻的月亮位置与月相
-    function getMoonPosition(date, lat, lon) {
-      const jd = toJulianDay(date);
-      const moon = lunarElements(jd);
-      const sun = solarElements(jd);
-      const epsRad = sun.eps * RAD;
-      const lonRad = moon.lon * RAD;
-      const latRad = moon.lat * RAD;
-      const rightAscension = mod360(
-        Math.atan2(
-          Math.sin(lonRad) * Math.cos(epsRad) - Math.tan(latRad) * Math.sin(epsRad),
-          Math.cos(lonRad)
-        ) * DEG
-      );
-      const declination =
-        Math.asin(
-          Math.sin(latRad) * Math.cos(epsRad) + Math.cos(latRad) * Math.sin(epsRad) * Math.sin(lonRad)
-        ) * DEG;
-      const position = altitudeAzimuth(jd, lat, lon, declination, rightAscension);
-      // 日月黄经差即月龄角，据此求被照亮比例
-      const elongation = mod360(moon.lon - sun.appLong);
-      const illuminated = (1 - Math.cos(elongation * RAD)) / 2;
-      return { ...position, illuminated, elongation };
-    }
-
-    // 昼夜状态判定阈值（度）
-    const SUN_THRESHOLDS = {
-      daylight: 6,      // 太阳高度角 > 6° 视为白天
-      twilight: -6,     // -6° ~ 6° 视为晨昏（金色时刻）
-      night: -18        // < -18° 视为天文夜
+  const parts = [];
+  for (const polygon of GLOBE_LANDS) {
+    const points = polygon.map(([lon, lat]) => project(lat, lon, lon0));
+    let run = [];
+    const flush = () => {
+      if (run.length > 2) parts.push(run.map(point => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" "));
+      run = [];
     };
-
-    // 依据太阳高度角判定状态
-    function getSkyPhaseByAltitude(altitude) {
-      if (altitude > SUN_THRESHOLDS.daylight) return { name: "白天", key: "day" };
-      if (altitude > SUN_THRESHOLDS.twilight) return { name: "晨昏", key: "twilight" };
-      if (altitude > SUN_THRESHOLDS.night) return { name: "暮色", key: "dusk" };
-      return { name: "黑夜", key: "night" };
+    for (const point of points) {
+      if (point.visible) run.push(point);
+      else flush();
     }
+    flush();
+  }
+  mapGroup.innerHTML = parts
+    .map(points => `<polygon points="${points}" fill="#22406b" stroke="#2d5488" stroke-width="0.8"/>`)
+    .join("");
 
-    // 极地判定：正午与午夜太阳高度角同时高于/低于地平线
-    // 正午高度角 = 90° - |纬度 - 赤纬|；午夜高度角 = |纬度 + 赤纬| - 90°
-    function getPolarState(date, lat, lon) {
-      const sun = solarElements(toJulianDay(date));
-      const altNoon = 90 - Math.abs(lat - sun.declination);
-      const altMidnight = Math.abs(lat + sun.declination) - 90;
-      if (altNoon > 0 && altMidnight > 0) return "polar-day";
-      if (altNoon < 0 && altMidnight < 0) return "polar-night";
-      return null;
+  const declRad = sun.declination * RAD;
+  const ra = sun.rightAscension;
+  const gmst = getGmst(jd);
+  const dawns = [];
+  const dusks = [];
+  for (let lat = -89; lat <= 89; lat += 3) {
+    const cosH = -Math.tan(lat * RAD) * Math.tan(declRad);
+    if (cosH < -1 || cosH > 1) continue;
+    const H = Math.acos(cosH) * DEG;
+    dawns.push(project(lat, mod360(-H + ra - gmst), lon0));
+    dusks.push(project(lat, mod360(H + ra - gmst), lon0));
+  }
+  const sequence = [...dusks.sort((a, b) => a.y - b.y), ...dawns.sort((a, b) => b.y - a.y)];
+  if (sequence.length > 3) {
+    let path = `M ${sequence[0].x.toFixed(1)} ${sequence[0].y.toFixed(1)}`;
+    for (let index = 1; index < sequence.length; index += 1) {
+      const previous = sequence[index - 1];
+      const current = sequence[index];
+      const midX = (previous.x + current.x) / 2;
+      const midY = (previous.y + current.y) / 2;
+      path += ` Q ${previous.x.toFixed(1)} ${previous.y.toFixed(1)} ${midX.toFixed(1)} ${midY.toFixed(1)}`;
     }
+    path += ` Q ${sequence[sequence.length - 1].x.toFixed(1)} ${sequence[sequence.length - 1].y.toFixed(1)} ${sequence[0].x.toFixed(1)} ${sequence[0].y.toFixed(1)} Z`;
+    nightPath.setAttribute("d", path);
+  } else {
+    nightPath.setAttribute("d", "");
+  }
 
-    // 颜色插值：按太阳高度角在关键色标间线性过渡
-    const SKY_PALETTE = [
-      { alt: -18, zenith: [4, 7, 24], mid: [9, 15, 38], horizon: [20, 30, 58], ground: [6, 10, 22], star: 1, sun: 0 },
-      { alt: -8, zenith: [10, 17, 44], mid: [26, 36, 74], horizon: [58, 64, 104], ground: [16, 21, 40], star: 0.88, sun: 0 },
-      { alt: -4, zenith: [34, 48, 96], mid: [92, 80, 126], horizon: [196, 120, 108], ground: [38, 32, 50], star: 0.3, sun: 0.15 },
-      { alt: -0.5, zenith: [70, 90, 148], mid: [176, 116, 128], horizon: [246, 172, 116], ground: [58, 44, 56], star: 0.06, sun: 0.7 },
-      { alt: 3, zenith: [86, 130, 190], mid: [188, 172, 168], horizon: [250, 206, 150], ground: [74, 68, 66], star: 0, sun: 1 },
-      { alt: 12, zenith: [62, 134, 206], mid: [136, 194, 228], horizon: [214, 236, 242], ground: [92, 106, 104], star: 0, sun: 1 },
-      { alt: 45, zenith: [38, 110, 198], mid: [110, 178, 224], horizon: [206, 232, 242], ground: [104, 118, 116], star: 0, sun: 1 }
-    ];
+  const sunPoint = project(sun.declination, sunLon, lon0);
+  sunGroup.innerHTML = sunPoint.visible
+    ? `<circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="13" fill="#ffd166" opacity="0.22"/>
+       <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="7" fill="#ffd166"/>
+       <circle cx="${sunPoint.x.toFixed(1)}" cy="${sunPoint.y.toFixed(1)}" r="3" fill="#fff8e1"/>`
+    : "";
 
-    function mixColor(a, b, t) {
-      const to = (v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0");
-      return `#${to(a[0] + (b[0] - a[0]) * t)}${to(a[1] + (b[1] - a[1]) * t)}${to(a[2] + (b[2] - a[2]) * t)}`;
+  const labelOffsets = {
+    beijing: [9, 4],
+    kazakhstan: [-8, -5],
+    russia: [9, 13]
+  };
+
+  markerGroup.innerHTML = ORDER.map(key => {
+    const place = PLACES[key];
+    const point = project(place.lat, place.lon, lon0);
+    if (!point.visible) return "";
+    const sunHere = getSunPosition(now, place.lat, place.lon);
+    const color = sunHere.altitude > -0.833 ? "#ffd166" : "#93a9cc";
+    const flip = point.x > GLOBE_CX + 46;
+    const offset = labelOffsets[key] || [9, 4];
+    const textX = flip ? -Math.abs(offset[0]) : Math.abs(offset[0]);
+    const anchor = flip ? "end" : "start";
+    return `<g class="g-point" transform="translate(${point.x.toFixed(1)},${point.y.toFixed(1)})">
+      <circle r="5" fill="${color}" stroke="#0d1c33" stroke-width="1.6"/>
+      <text x="${textX}" y="${offset[1]}" text-anchor="${anchor}">${place.name}</text>
+    </g>`;
+  }).join("");
+
+  const sub = document.getElementById("globe-sub");
+  const statsBox = document.getElementById("globe-stats");
+  if (sub) {
+    sub.innerHTML =
+      `太阳直射点位于 <b>${formatLon(sunLon)}</b>，` +
+      `当前昼半球与夜半球由晨昏线分隔，黄色光斑即太阳直射位置。`;
+  }
+
+  if (statsBox) {
+    statsBox.innerHTML = ORDER.map(key => {
+      const place = PLACES[key];
+      const local = getZonedParts(now, place.timeZone);
+      const sunHere = getSunPosition(now, place.lat, place.lon);
+      const isDay = sunHere.altitude > -0.833;
+      return `<div class="globe-stat">
+        <div class="globe-stat-name">${place.name}</div>
+        <div class="globe-stat-state ${isDay ? "day" : "night"}">${isDay ? "白昼" : "夜间"}</div>
+        <div class="globe-stat-time">当地 ${formatClock(local.minutes)}<span class="globe-stat-alt"> · 太阳高度 ${sunHere.altitude.toFixed(0)}°</span></div>
+      </div>`;
+    }).join("");
+  }
+}
+
+/* ============ 天空场景 ============ */
+
+function azimuthToX(azimuth) {
+  const delta = ((azimuth - 180 + 540) % 360) - 180;
+  return 50 + delta / 180 * 50;
+}
+
+function altitudeToY(altitude) {
+  const clamped = Math.max(-18, Math.min(90, altitude));
+  return 88 - (clamped / 90) * 78;
+}
+
+function updateSky(key, place, now) {
+  const scene = document.getElementById(`sky-${key}`);
+  const orb = document.getElementById(`orb-${key}`);
+  const label = document.getElementById(`sky-label-${key}`);
+  if (!scene || !orb || !label) return;
+
+  const sun = getSunPosition(now, place.lat, place.lon);
+  const moon = getMoonPosition(now, place.lat, place.lon);
+  const polar = getPolarState(now, place.lat);
+  const palette = samplePalette(sun.altitude);
+  let phase = getSkyPhaseByAltitude(sun.altitude);
+  let phaseText = phase.name;
+
+  if (polar === "polar-day") {
+    phase = { name: "极昼", key: "day" };
+    phaseText = "极昼";
+  } else if (polar === "polar-night") {
+    phase = { name: "极夜", key: "night" };
+    phaseText = "极夜";
+  }
+
+  scene.style.setProperty("--sky-zenith", palette.zenith);
+  scene.style.setProperty("--sky-mid", palette.mid);
+  scene.style.setProperty("--sky-horizon", palette.horizon);
+  scene.style.setProperty("--sky-ground", palette.ground);
+  scene.style.setProperty("--star-opacity", palette.star.toFixed(3));
+
+  const isDay = sun.altitude > SUN_THRESHOLDS.daylight;
+  const isTwilight = sun.altitude <= SUN_THRESHOLDS.daylight && sun.altitude > SUN_THRESHOLDS.twilight;
+  const sunUp = sun.altitude > -1;
+
+  if (sunUp) {
+    orb.classList.remove("is-moon", "is-waxing");
+    scene.style.setProperty("--sun-opacity", Math.max(palette.sun, isTwilight ? 0.8 : 1).toFixed(2));
+    scene.style.setProperty("--moon-opacity", "0");
+    scene.style.setProperty("--orb-x", `${azimuthToX(sun.azimuth).toFixed(2)}%`);
+    scene.style.setProperty("--orb-y", `${altitudeToY(sun.altitude).toFixed(2)}%`);
+    const warmth = Math.max(0, 1 - sun.altitude / 18);
+    scene.style.setProperty("--orb-tint", warmth > 0.25 ? "#ffc98a" : "#ffdf8a");
+    scene.style.setProperty("--orb-size", `${(46 + warmth * 10).toFixed(0)}px`);
+  } else {
+    const moonUp = moon.altitude > 0;
+    orb.classList.toggle("is-moon", moonUp);
+    orb.classList.toggle("is-waxing", moonUp && moon.waxing);
+    scene.style.setProperty("--sun-opacity", "0");
+    scene.style.setProperty("--moon-opacity", moonUp ? Math.min(1, palette.star).toFixed(2) : "0");
+    if (moonUp) {
+      scene.style.setProperty("--orb-x", `${azimuthToX(moon.azimuth).toFixed(2)}%`);
+      scene.style.setProperty("--orb-y", `${altitudeToY(moon.altitude).toFixed(2)}%`);
     }
-
-    // 把色标统一转成 CSS 颜色字符串，确保边界分支也能安全写入 CSS 变量
-    function toPalette(stop) {
-      return {
-        zenith: mixColor(stop.zenith, stop.zenith, 0),
-        mid: mixColor(stop.mid, stop.mid, 0),
-        horizon: mixColor(stop.horizon, stop.horizon, 0),
-        ground: mixColor(stop.ground, stop.ground, 0),
-        star: stop.star,
-        sun: stop.sun
-      };
-    }
-
-    function samplePalette(altitude) {
-      const stops = SKY_PALETTE;
-      const safe = Number.isFinite(altitude) ? altitude : 0;
-      if (safe <= stops[0].alt) return toPalette(stops[0]);
-      if (safe >= stops[stops.length - 1].alt) return toPalette(stops[stops.length - 1]);
-      for (let i = 0; i < stops.length - 1; i++) {
-        const lower = stops[i];
-        const upper = stops[i + 1];
-        if (safe >= lower.alt && safe <= upper.alt) {
-          const t = (safe - lower.alt) / (upper.alt - lower.alt);
-          return {
-            zenith: mixColor(lower.zenith, upper.zenith, t),
-            mid: mixColor(lower.mid, upper.mid, t),
-            horizon: mixColor(lower.horizon, upper.horizon, t),
-            ground: mixColor(lower.ground, upper.ground, t),
-            star: lower.star + (upper.star - lower.star) * t,
-            sun: lower.sun + (upper.sun - lower.sun) * t
-          };
-        }
-      }
-      return toPalette(stops[stops.length - 1]);
-    }
-
-
-    function getTimeFormatter(timeZone) {
-      if (!timeFormatters.has(timeZone)) {
-        timeFormatters.set(timeZone, new Intl.DateTimeFormat("zh-CN", {
-          timeZone, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
-        }));
-      }
-      return timeFormatters.get(timeZone);
-    }
-
-    function getDateFormatter(timeZone) {
-      if (!dateFormatters.has(timeZone)) {
-        dateFormatters.set(timeZone, new Intl.DateTimeFormat("zh-CN", {
-          timeZone, year: "numeric", month: "long", day: "numeric", weekday: "long"
-        }));
-      }
-      return dateFormatters.get(timeZone);
-    }
-
-    function partsToObject(parts) {
-      return Object.fromEntries(parts.filter(part => part.type !== "literal").map(part => [part.type, part.value]));
-    }
-
-    function makeSVGElement(tag, attributes) {
-      const element = document.createElementNS(svgNS, tag);
-      Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
-      return element;
-    }
-
-    function buildClock(id, accent) {
-      const svg = document.getElementById(id);
-      svg.appendChild(makeSVGElement("circle", { cx: 120, cy: 120, r: 108, fill: "#ffffff", "fill-opacity": 0.72, stroke: "#ffffff", "stroke-opacity": 0.7, "stroke-width": 1.5 }));
-
-      for (let i = 0; i < 60; i++) {
-        const isHour = i % 5 === 0;
-        svg.appendChild(makeSVGElement("line", {
-          x1: 120, y1: isHour ? 20 : 22, x2: 120, y2: isHour ? 29 : 26,
-          stroke: isHour ? "#6c7888" : "#c8d0da", "stroke-width": isHour ? 2.3 : 1,
-          "stroke-linecap": "round", transform: `rotate(${i * 6} 120 120)`
-        }));
-      }
-
-      [[12, 120, 49], [3, 191, 125], [6, 120, 197], [9, 49, 125]].forEach(([label, x, y]) => {
-        const text = makeSVGElement("text", {
-          x, y, fill: "#526174", "font-size": 14, "font-weight": 600,
-          "font-family": "Segoe UI, Arial, sans-serif", "text-anchor": "middle"
-        });
-        text.textContent = label;
-        svg.appendChild(text);
-      });
-
-      const hands = [
-        { id: "hour", y2: 76, width: 5, color: "#26364b" },
-        { id: "minute", y2: 55, width: 3.5, color: "#26364b" },
-        { id: "second", y2: 45, width: 1.8, color: accent }
-      ];
-
-      hands.forEach(hand => {
-        svg.appendChild(makeSVGElement("line", {
-          id: `${id}-${hand.id}`, x1: 120, y1: hand.id === "second" ? 132 : 128,
-          x2: 120, y2: hand.y2, stroke: hand.color, "stroke-width": hand.width,
-          "stroke-linecap": "round", transform: "rotate(0 120 120)"
-        }));
-      });
-      svg.appendChild(makeSVGElement("circle", { cx: 120, cy: 120, r: 5.5, fill: accent, stroke: "#fff", "stroke-width": 2 }));
-    }
-
-    buildClock("clock-beijing", "#d94b42");
-    buildClock("clock-kazakhstan", "#078a83");
-    buildClock("clock-russia", "#4263d5");
-
-    // 俄罗斯固定为莫斯科（东三区）
-    const RUSSIA_ZONE = {
-      key: "russia",
-      timeZone: "Europe/Moscow",
-      offset: 3,
-      name: "莫斯科",
-      label: "UTC+3",
-      zone: "东三区",
-      lat: 55.7558,
-      lon: 37.6173
-    };
-
-    function getRussiaZone() {
-      return RUSSIA_ZONE;
-    }
-
-    function zoneName(offset) {
-      if (offset === 8) return "东八区";
-      if (offset > 0) return `东${offset}区`;
-      if (offset < 0) return `西${Math.abs(offset)}区`;
-      return "零时区";
-    }
-
-    function isZoneVisible(key) {
-      if (key === "beijing" || key === "hq") return true;
-      if (key === "kz") return document.getElementById("toggle-kazakhstan").checked;
-      if (key === "ru") return document.getElementById("toggle-russia").checked;
-      return document.getElementById(`toggle-${key}`).checked;
-    }
-
-    // 将太阳的方位角与高度角映射到天空面板内的坐标
-    // 方位角：正南 180° 居中，东(90°)/西(270°) 分居左右
-    function azimuthToX(azimuth) {
-      const delta = ((azimuth - 180 + 540) % 360) - 180;
-      return 50 + delta / 180 * 50;
-    }
-
-    // 高度角：0° 贴地平线，90° 位于天顶
-    function altitudeToY(altitude) {
-      const clamped = Math.max(-18, Math.min(90, altitude));
-      return 88 - (clamped / 90) * 78;
-    }
-
-    function updateSky(key, geo, now) {
-      const scene = document.getElementById(`sky-${key}`);
-      const orb = document.getElementById(`orb-${key}`);
-      const label = document.getElementById(`sky-label-${key}`);
-      if (!scene || !orb) return;
-
-      const sun = getSunPosition(now, geo.lat, geo.lon);
-      const moon = getMoonPosition(now, geo.lat, geo.lon);
-      const polar = getPolarState(now, geo.lat, geo.lon);
-      const palette = samplePalette(sun.altitude);
-      let phase = getSkyPhaseByAltitude(sun.altitude);
-      let phaseText = phase.name;
-
-      // 极地降级：极昼恒为白天，极夜恒为黑夜
-      if (polar === "polar-day") {
-        phase = { name: "极昼", key: "day" };
-        phaseText = "极昼";
-      } else if (polar === "polar-night") {
-        phase = { name: "极夜", key: "night" };
-        phaseText = "极夜";
-      }
-
-      scene.style.setProperty("--sky-zenith", palette.zenith);
-      scene.style.setProperty("--sky-mid", palette.mid);
-      scene.style.setProperty("--sky-horizon", palette.horizon);
-      scene.style.setProperty("--sky-ground", palette.ground);
-      scene.style.setProperty("--star-opacity", palette.star.toFixed(3));
-
-      const isDay = sun.altitude > SUN_THRESHOLDS.daylight;
-      const isTwilight = sun.altitude <= SUN_THRESHOLDS.daylight && sun.altitude > SUN_THRESHOLDS.twilight;
-      const sunUp = sun.altitude > -1;
-
-      if (sunUp) {
-        // 太阳在地平线以上：显示日轮
-        orb.classList.remove("is-moon");
-        scene.style.setProperty("--sun-opacity", Math.max(palette.sun, isTwilight ? 0.8 : 1).toFixed(2));
-        scene.style.setProperty("--moon-opacity", "0");
-        scene.style.setProperty("--orb-x", `${azimuthToX(sun.azimuth).toFixed(2)}%`);
-        scene.style.setProperty("--orb-y", `${altitudeToY(sun.altitude).toFixed(2)}%`);
-        // 贴近地平线时太阳偏暖偏大
-        const warmth = Math.max(0, 1 - sun.altitude / 18);
-        scene.style.setProperty("--orb-tint", warmth > 0.25 ? "#ffc98a" : "#ffdf8a");
-        scene.style.setProperty("--orb-size", `${(46 + warmth * 10).toFixed(0)}px`);
-      } else {
-        // 太阳落下：显示真实位置的月亮，并按月相绘制明暗
-        const moonUp = moon.altitude > 0;
-        orb.classList.toggle("is-moon", moonUp);
-        scene.style.setProperty("--sun-opacity", "0");
-        scene.style.setProperty("--moon-opacity", moonUp ? Math.min(1, palette.star).toFixed(2) : "0");
-        if (moonUp) {
-          scene.style.setProperty("--orb-x", `${azimuthToX(moon.azimuth).toFixed(2)}%`);
-          scene.style.setProperty("--orb-y", `${altitudeToY(moon.altitude).toFixed(2)}%`);
-        }
-        scene.style.setProperty("--orb-size", "38px");
-        // 月相：以 CSS 遮罩近似明暗界线
-        const phaseFraction = Math.round(moon.illuminated * 100);
-        const waxing = moon.elongation < 180;
-        orb.style.setProperty("--moon-lit", `${phaseFraction}%`);
-        orb.style.setProperty("--moon-waxing", waxing ? "1" : "0");
-      }
-
-      label.textContent = `当地 · ${phaseText}`;
-      label.classList.toggle("is-light", isDay);
-      scene.dataset.phase = phase.key;
-      scene.dataset.altitude = sun.altitude.toFixed(1);
-    }
-
-    function updateClock(key, timeZone, geo, now) {
-      const parts = partsToObject(getTimeFormatter(timeZone).formatToParts(now));
-      const hours = Number(parts.hour);
-      const minutes = Number(parts.minute);
-      const preciseSeconds = Number(parts.second) + now.getMilliseconds() / 1000;
-      const preciseMinutes = minutes + preciseSeconds / 60;
-      const preciseHours = (hours % 12) + preciseMinutes / 60;
-
-      document.getElementById(`digital-${key}`).textContent = `${parts.hour}:${parts.minute}:${parts.second}`;
-      document.getElementById(`date-${key}`).textContent = getDateFormatter(timeZone).format(now);
-      document.getElementById(`clock-${key}-hour`).setAttribute("transform", `rotate(${preciseHours * 30} 120 120)`);
-      document.getElementById(`clock-${key}-minute`).setAttribute("transform", `rotate(${preciseMinutes * 6} 120 120)`);
-      document.getElementById(`clock-${key}-second`).setAttribute("transform", `rotate(${preciseSeconds * 6} 120 120)`);
-      updateSky(key, geo, now);
-    }
-
-    function updateAllClocks() {
-      const now = new Date();
-      const russia = getRussiaZone();
-      updateClock("beijing", ZONES.beijing.timeZone, ZONES.beijing, now);
-      if (isZoneVisible("kazakhstan")) updateClock("kazakhstan", ZONES.kazakhstan.timeZone, ZONES.kazakhstan, now);
-      if (isZoneVisible("russia")) updateClock("russia", russia.timeZone, russia, now);
-    }
-
-    const WORK_SCHEDULES = [
-      { key: "hq", name: "集团本部", offset: 8, start: 9 * 60, end: 17 * 60 + 30, className: "hq-bar" },
-      { key: "kz", name: "哈萨克斯坦国动", offset: 5, start: 9 * 60, end: 18 * 60, className: "kz-bar" },
-      { key: "ru", name: "俄罗斯国动", offset: null, start: 9 * 60, end: 17 * 60 + 30, className: "ru-bar" }
-    ];
-
-    function formatClock(minutes) {
-      if (minutes === 1440) return "24:00";
-      const wrapped = ((Math.round(minutes) % 1440) + 1440) % 1440;
-      const hours = Math.floor(wrapped / 60);
-      const mins = wrapped % 60;
-      return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
-    }
-
-    function toBeijing(localMinutes, offset) {
-      return localMinutes + (8 - offset) * 60;
-    }
-
-    function fromBeijing(beijingMinutes, offset) {
-      return beijingMinutes - (8 - offset) * 60;
-    }
-
-    function buildScheduleModel() {
-      const russia = getRussiaZone();
-      return WORK_SCHEDULES.map(item => {
-        const offset = item.key === "ru" ? russia.offset : item.offset;
-        const name = item.key === "ru" ? `俄罗斯国动 · ${russia.name}` : item.name;
-        return {
-          ...item,
-          offset,
-          name,
-          morningStart: toBeijing(item.start, offset),
-          morningEnd: toBeijing(12 * 60, offset),
-          lunchStart: toBeijing(12 * 60, offset),
-          lunchEnd: toBeijing(13 * 60, offset),
-          afternoonStart: toBeijing(13 * 60, offset),
-          afternoonEnd: toBeijing(item.end, offset)
-        };
-      });
-    }
-
-    // 时间轴显示范围：06:00 – 24:00（北京时间），聚焦白天工作时段
-    const AXIS_START = 6 * 60;
-    const AXIS_END = 24 * 60;
-    const AXIS_SPAN = AXIS_END - AXIS_START;
-
-    function toPercent(minutes) {
-      return ((minutes - AXIS_START) / AXIS_SPAN) * 100;
-    }
-
-    function renderAxisLabels() {
-      const container = document.getElementById("axis-labels");
-      container.replaceChildren();
-      for (let hour = 6; hour <= 24; hour += 3) {
-        const label = document.createElement("span");
-        label.textContent = `${String(hour).padStart(2, "0")}:00`;
-        label.style.left = `${toPercent(hour * 60)}%`;
-        label.style.transform = hour === 6 ? "translateX(0)" : hour === 24 ? "translateX(-100%)" : "translateX(-50%)";
-        container.appendChild(label);
-      }
-    }
-
-    function renderWorkSchedule() {
-      // 仅渲染当前开启显示的时区，与上方筛选开关联动
-      const model = buildScheduleModel().filter(zone => isZoneVisible(zone.key));
-      const body = document.getElementById("schedule-body");
-      body.replaceChildren();
-      renderAxisLabels();
-
-      // 顶部说明随可见时区同步
-      document.getElementById("work-schedule-desc").textContent = model.length
-        ? `${model.map(zone => `${zone.name} ${formatClock(zone.start)}–${formatClock(zone.end)}`).join(" ｜ ")} ｜ 各地当地 12:00–13:00 午休`
-        : "当前未显示任何时区";
-
-      model.forEach(zone => {
-        const label = document.createElement("div");
-        label.className = "schedule-label";
-        const name = document.createElement("span");
-        name.textContent = zone.name;
-        const detail = document.createElement("small");
-        detail.textContent = `当地 ${formatClock(zone.start)}–12:00 / 13:00–${formatClock(zone.end)}`;
-        label.appendChild(name);
-        label.appendChild(detail);
-
-        const track = document.createElement("div");
-        track.className = "schedule-track";
-
-        [[zone.morningStart, zone.morningEnd], [zone.afternoonStart, zone.afternoonEnd]].forEach(([start, end]) => {
-          const bar = document.createElement("div");
-          bar.className = `work-bar ${zone.className}`;
-          bar.style.left = `${toPercent(start)}%`;
-          bar.style.width = `${toPercent(end) - toPercent(start)}%`;
-          bar.textContent = `${formatClock(start)}–${formatClock(end)}`;
-          bar.title = `${zone.name}：北京时间 ${formatClock(start)}–${formatClock(end)}`;
-          track.appendChild(bar);
-        });
-        const lunch = document.createElement("span");
-        lunch.className = "lunch-band";
-        lunch.style.left = `${toPercent(zone.lunchStart)}%`;
-        lunch.style.width = `${toPercent(zone.lunchEnd) - toPercent(zone.lunchStart)}%`;
-        lunch.title = `午休 当地 12:00–13:00（北京时间 ${formatClock(zone.lunchStart)}–${formatClock(zone.lunchEnd)}）`;
-        track.appendChild(lunch);
-
-        body.appendChild(label);
-        body.appendChild(track);
-      });
-    }
-
-    /* ============ 联络速览板 ============
-     * 把「现在几点 / 差几小时 / 是否在办公时间内」直接摆在标题下方，
-     * 供同事发起联络前一眼判断。
-     */
-    const DUTY_RULES = {
-      beijing: { start: 9 * 60, end: 17 * 60 + 30 },
-      kazakhstan: { start: 9 * 60, end: 18 * 60 },
-      russia: { start: 9 * 60, end: 17 * 60 + 30 }
-    };
-
-    // 依据当地时间判定办公状态
-    function getDutyState(localMinutes, rule) {
-      if (localMinutes < rule.start) return { text: "未上班", className: "off" };
-      if (localMinutes < 12 * 60) return { text: "办公中", className: "on" };
-      if (localMinutes < 13 * 60) return { text: "午休中", className: "break" };
-      if (localMinutes < rule.end) return { text: "办公中", className: "on" };
-      return { text: "已下班", className: "off" };
-    }
-
-    // 计算北京时间轴上，某方与本部同时在岗的窗口（本地分钟）
-    function getOverlapWindows(rule, offset) {
-      const shift = (8 - offset) * 60;
-      const windows = [];
-      [[rule.start, 12 * 60], [13 * 60, rule.end]].forEach(([localStart, localEnd]) => {
-        const beijingStart = localStart + shift;
-        const beijingEnd = localEnd + shift;
-        if (beijingEnd > 0 && beijingStart < 1440) {
-          windows.push({
-            localStart,
-            localEnd,
-            beijingStart: Math.max(0, beijingStart),
-            beijingEnd: Math.min(1440, beijingEnd)
-          });
-        }
-      });
-      return windows;
-    }
-
-    // 描述某方此刻能否联络，以及下一个可用窗口
-    function describeReach(localMinutes, rule, offset) {
-      const duty = getDutyState(localMinutes, rule);
-      const beijingNow = ((localMinutes + (offset - 8) * 60) % 1440 + 1440) % 1440;
-      const hqRule = DUTY_RULES.beijing;
-      const hqWorking = (beijingNow >= hqRule.start && beijingNow < 12 * 60) ||
-        (beijingNow >= 13 * 60 && beijingNow < hqRule.end);
-
-      if (duty.className === "on") {
-        return {
-          duty,
-          hint: hqWorking ? "双方同时在岗，可直接联络" : "对方在岗，但本部已下班"
-        };
-      }
-      if (duty.className === "break") {
-        return { duty, hint: "13:00 后可联络" };
-      }
-
-      // 对方未上班：给出下一个双方同时在岗的窗口
-      const windows = getOverlapWindows(rule, offset);
-      const upcoming = windows.find(item => localMinutes < item.localStart);
-      if (upcoming) {
-        return {
-          duty,
-          hint: `对方 ${formatClock(upcoming.localStart)} 上班，北京时间 ${formatClock(upcoming.beijingStart)} 可联络`
-        };
-      }
-      const tomorrow = windows[0];
-      if (tomorrow) {
-        return {
-          duty,
-          hint: `今日已下班，明早 ${formatClock(tomorrow.localStart)}（北京时间 ${formatClock(tomorrow.beijingStart)}）可联络`
-        };
-      }
-      return { duty, hint: "当日无双方同时在岗时段" };
-    }
-
-    function updateStatusBoard(now) {
-      const russia = getRussiaZone();
-      const zones = [
-        { key: "beijing", offset: 8, name: "国动集团本部·北京" },
-        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦·阿拉木图" },
-        { key: "russia", offset: russia.offset, name: `俄罗斯·${russia.name}` }
-      ];
-      const utcMinutes = Math.floor((now.getTime() / 60000) % 1440);
-
-      zones.forEach(zone => {
-        const card = document.querySelector(`.status-card.${zone.key}`);
-        const timeEl = document.getElementById(`status-time-${zone.key}`);
-        const dutyEl = document.getElementById(`duty-${zone.key}`);
-        if (!card || !timeEl || !dutyEl) return;
-
-        // 当地分钟数（用 UTC 偏移换算，不依赖浏览器时区）
-        const localMinutes = ((utcMinutes + zone.offset * 60) % 1440 + 1440) % 1440;
-        const hh = String(Math.floor(localMinutes / 60)).padStart(2, "0");
-        const mm = String(localMinutes % 60).padStart(2, "0");
-
-        timeEl.innerHTML = `${hh}:${mm}<small>当地时间</small>`;
-        const reach = describeReach(localMinutes, DUTY_RULES[zone.key], zone.offset);
-        dutyEl.textContent = reach.duty.text;
-        dutyEl.className = `duty-badge ${reach.duty.className}`;
-        dutyEl.title = reach.hint;
-
-        const diff = 8 - zone.offset;
-        const diffText = diff === 0 ? "基准" : diff > 0 ? `晚 ${diff} 小时` : `早 ${Math.abs(diff)} 小时`;
-        const diffEl = document.getElementById(`status-diff-${zone.key}`);
-        if (diffEl) diffEl.textContent = diffText;
-
-      });
-
-      // 俄罗斯卡片额外更新城市名与时区
-      document.getElementById("status-name-russia").textContent = `俄罗斯·${russia.name}`;
-      document.getElementById("status-zone-russia").innerHTML =
-        `${russia.zone} · 较北京 <b id="status-diff-russia">${formatDifference(russia.offset).replace("较北京", "")}</b>`;
-    }
-
-    function formatDifference(offset) {
-      const difference = 8 - offset;
-      if (difference > 0) return `较北京晚 ${difference} 小时`;
-      if (difference < 0) return `较北京早 ${Math.abs(difference)} 小时`;
-      return "与北京相同";
-    }
-
-    function updateTimeSummary() {
-      document.getElementById("time-summary").textContent =
-        "所显示时区均不实行夏令时，全年采用统一时区。";
-    }
-
-    function updateRussiaLabels() {
-      const russia = getRussiaZone();
-      document.getElementById("russia-title").textContent = `俄罗斯·${russia.name}时间`;
-      document.getElementById("russia-offset").textContent = russia.label;
-      document.getElementById("russia-difference").textContent = `${russia.zone} · ${formatDifference(russia.offset)}`;
-      document.getElementById("clock-russia").setAttribute("aria-label", `俄罗斯${russia.name}时间模拟钟表`);
-      updateTimeSummary();
-    }
-
-    function updateVisibility() {
-      const showKazakhstan = isZoneVisible("kazakhstan");
-      const showRussia = isZoneVisible("russia");
-      const visibleCount = 1 + Number(showKazakhstan) + Number(showRussia);
-      document.querySelector(".clock-card.kazakhstan").hidden = !showKazakhstan;
-      document.querySelector(".clock-card.russia").hidden = !showRussia;
-      document.querySelector(".status-card.kazakhstan").hidden = !showKazakhstan;
-      document.querySelector(".status-card.russia").hidden = !showRussia;
-      document.getElementById("status-board").style.setProperty("--visible-zones", visibleCount);
-      document.getElementById("clock-grid").style.setProperty("--visible-clocks", visibleCount);
-      updateTimeSummary();
-      updateAllClocks();
-      updateStatusBoard(new Date());
-      renderWorkSchedule();
-    }
-
-    document.getElementById("toggle-kazakhstan").addEventListener("change", updateVisibility);
-    document.getElementById("toggle-russia").addEventListener("change", updateVisibility);
-
-    /* ============ 刷新调度 ============
-     * 时钟走针需要 100ms 平滑；天空/太阳位置变化极慢，独立用 30s 节拍，
-     * 配合 CSS 1.2s 过渡实现视觉平滑，避免高频重排造成的开销。
-     */
-    function updateClocksOnly() {
-      const now = new Date();
-      const russia = getRussiaZone();
-      const parts = key => partsToObject(getTimeFormatter(
-        key === "beijing" ? ZONES.beijing.timeZone : key === "kz" ? ZONES.kazakhstan.timeZone : russia.timeZone
-      ).formatToParts(now));
-      [
-        ["beijing", ZONES.beijing.timeZone, ZONES.beijing],
-        ["kz", ZONES.kazakhstan.timeZone, ZONES.kazakhstan],
-        ["ru", russia.timeZone, russia]
-      ].forEach(([key, timeZone, geo]) => {
-        if (key !== "beijing" && !isZoneVisible(key)) return;
-        const p = parts(key);
-        const hours = Number(p.hour);
-        const minutes = Number(p.minute);
-        const preciseSeconds = Number(p.second) + now.getMilliseconds() / 1000;
-        const preciseMinutes = minutes + preciseSeconds / 60;
-        const preciseHours = (hours % 12) + preciseMinutes / 60;
-        document.getElementById(`clock-${key}-hour`).setAttribute("transform", `rotate(${preciseHours * 30} 120 120)`);
-        document.getElementById(`clock-${key}-minute`).setAttribute("transform", `rotate(${preciseMinutes * 6} 120 120)`);
-        document.getElementById(`clock-${key}-second`).setAttribute("transform", `rotate(${preciseSeconds * 6} 120 120)`);
-      });
-    }
-
-    function updateSkyOnly() {
-      const now = new Date();
-      const russia = getRussiaZone();
-      updateSky("beijing", ZONES.beijing, now);
-      if (isZoneVisible("kazakhstan")) updateSky("kazakhstan", ZONES.kazakhstan, now);
-      if (isZoneVisible("russia")) updateSky("russia", russia, now);
-      renderGlobe(now);
-    }
-
-    // 速览板每分钟刷新一次即可
-    function updateStatusOnly() {
-      updateStatusBoard(new Date());
-    }
-
-    updateRussiaLabels();
-    updateVisibility();
-    updateStatusBoard(new Date());
-    renderGlobe(new Date());
-    setInterval(updateClocksOnly, 100);
-    setInterval(updateSkyOnly, 30000);
-    setInterval(updateStatusOnly, 30000);
-    // 地球仪单独 5 秒一帧，滚动更连贯
-    setInterval(() => renderGlobe(new Date()), 5000);
-
-    // 页面从后台恢复时立即重算，避免长时间挂起导致的天象滞后
-    document.addEventListener("visibilitychange", () => {
-      if (!document.hidden) {
-        updateAllClocks();
-        updateStatusBoard(new Date());
-        renderGlobe(new Date());
-        renderWorkSchedule();
-      }
+    scene.style.setProperty("--orb-size", "38px");
+    orb.style.setProperty("--moon-lit", `${Math.round(moon.illuminated * 100)}%`);
+  }
+
+  label.textContent = `当地 · ${phaseText}`;
+  label.classList.toggle("is-light", isDay);
+  scene.dataset.phase = phase.key;
+  scene.dataset.altitude = sun.altitude.toFixed(1);
+}
+
+/* ============ 钟表 ============ */
+
+function buildClock(id, accent) {
+  const svg = document.getElementById(id);
+  if (!svg) return;
+  svg.replaceChildren();
+  svg.appendChild(makeSVGElement("circle", {
+    cx: 120, cy: 120, r: 108, fill: "#ffffff", "fill-opacity": 0.72,
+    stroke: "#ffffff", "stroke-opacity": 0.7, "stroke-width": 1.5
+  }));
+
+  for (let index = 0; index < 60; index += 1) {
+    const isHour = index % 5 === 0;
+    svg.appendChild(makeSVGElement("line", {
+      x1: 120, y1: isHour ? 20 : 22, x2: 120, y2: isHour ? 29 : 26,
+      stroke: isHour ? "#6c7888" : "#c8d0da", "stroke-width": isHour ? 2.3 : 1,
+      "stroke-linecap": "round", transform: `rotate(${index * 6} 120 120)`
+    }));
+  }
+
+  [[12, 120, 49], [3, 191, 125], [6, 120, 197], [9, 49, 125]].forEach(([label, x, y]) => {
+    const text = makeSVGElement("text", {
+      x, y, fill: "#526174", "font-size": 14, "font-weight": 600,
+      "font-family": "Segoe UI, Arial, sans-serif", "text-anchor": "middle"
     });
-    // 系统休眠唤醒后同样需要重算
-    window.addEventListener("focus", () => {
-      updateAllClocks();
-      updateStatusBoard(new Date());
-    });
-    window.addEventListener("pageshow", () => {
-      updateAllClocks();
-      updateStatusBoard(new Date());
-    });
+    text.textContent = label;
+    svg.appendChild(text);
+  });
+
+  const hands = [
+    { id: "hour", y2: 76, width: 5, color: "#26364b" },
+    { id: "minute", y2: 55, width: 3.5, color: "#26364b" },
+    { id: "second", y2: 45, width: 1.8, color: accent }
+  ];
+
+  for (const hand of hands) {
+    svg.appendChild(makeSVGElement("line", {
+      id: `${id}-${hand.id}`,
+      x1: 120,
+      y1: hand.id === "second" ? 132 : 128,
+      x2: 120,
+      y2: hand.y2,
+      stroke: hand.color,
+      "stroke-width": hand.width,
+      "stroke-linecap": "round",
+      transform: "rotate(0 120 120)"
+    }));
+  }
+
+  svg.appendChild(makeSVGElement("circle", {
+    cx: 120, cy: 120, r: 5.5, fill: accent, stroke: "#fff", "stroke-width": 2
+  }));
+}
+
+function updateHands(key, parts, now) {
+  const preciseSeconds = parts.second + now.getMilliseconds() / 1000;
+  const preciseMinutes = parts.minute + preciseSeconds / 60;
+  const preciseHours = (parts.hour % 12) + preciseMinutes / 60;
+  const hourHand = document.getElementById(`clock-${key}-hour`);
+  const minuteHand = document.getElementById(`clock-${key}-minute`);
+  const secondHand = document.getElementById(`clock-${key}-second`);
+  if (!hourHand || !minuteHand || !secondHand) return;
+  hourHand.setAttribute("transform", `rotate(${(preciseHours * 30).toFixed(3)} 120 120)`);
+  minuteHand.setAttribute("transform", `rotate(${(preciseMinutes * 6).toFixed(3)} 120 120)`);
+  secondHand.setAttribute("transform", `rotate(${(preciseSeconds * 6).toFixed(3)} 120 120)`);
+}
+
+function updateClock(key, place, now, handsOnly = false) {
+  const parts = getZonedParts(now, place.timeZone);
+  updateHands(key, parts, now);
+  if (handsOnly) return;
+  const digital = document.getElementById(`digital-${key}`);
+  const date = document.getElementById(`date-${key}`);
+  if (digital) digital.textContent = `${pad2(parts.hour)}:${pad2(parts.minute)}:${pad2(parts.second)}`;
+  if (date) date.textContent = getDateFormatter(place.timeZone).format(now);
+  updateSky(key, place, now);
+}
+
+function isZoneVisible(key) {
+  if (key === "beijing") return true;
+  const toggle = document.getElementById(`toggle-${key}`);
+  return toggle ? toggle.checked : true;
+}
+
+function visibleKeys() {
+  return ORDER.filter(isZoneVisible);
+}
+
+function updateAllClocks(now = new Date()) {
+  for (const key of ORDER) {
+    if (!isZoneVisible(key)) continue;
+    updateClock(key, PLACES[key], now);
+  }
+}
+
+function updateHandsOnly() {
+  const now = new Date();
+  for (const key of ORDER) {
+    if (!isZoneVisible(key)) continue;
+    updateHands(key, getZonedParts(now, PLACES[key].timeZone), now);
+  }
+}
+
+/* ============ 速览与状态 ============ */
+
+function buildPlaceHint(place, state, nextWithHq, now) {
+  if (place.key === "beijing") {
+    if (state.code === "weekend") return "本部周末休息";
+    if (state.code === "holiday") return "本部休息日";
+    if (state.code === "work") return "本部在岗";
+    if (state.code === "lunch") return `本部午休中，${formatClock(place.lunchEnd)} 后恢复联络`;
+    if (state.code === "before") return `本部尚未上班，${formatClock(place.workStart)} 后开始`;
+    return "本部已下班";
+  }
+
+  const hqState = getDutyStateAt(PLACES.beijing, now);
+  const nextText = formatNextShort(nextWithHq, now);
+
+  if (state.code === "weekend") return `周末休息；下一次共同窗口：${nextText}`;
+  if (state.code === "holiday") return `休息日；下一次共同窗口：${nextText}`;
+  if (state.code === "lunch") {
+    if (hqState.className === "on") {
+      const beijingLunchEnd = place.lunchEnd + (8 - place.offset) * 60;
+      return `午休中，${formatClock(place.lunchEnd)}（北京时间 ${formatClock(beijingLunchEnd)}）后可联络`;
+    }
+    if (hqState.className === "break") return `双方午休中；下一次共同窗口：${nextText}`;
+    return `午休中；下一次共同窗口：${nextText}`;
+  }
+  if (state.code === "work") {
+    if (hqState.className === "on") return "双方同时在岗，可直接联络";
+    if (hqState.className === "break") return `本部午休中，北京时间 ${formatClock(PLACES.beijing.lunchEnd)} 后可联络`;
+    return `本部已下班；下一次共同窗口：${nextText}`;
+  }
+  if (state.code === "before") return `未上班；下一次共同窗口：${nextText}`;
+  return `已下班；下一次共同窗口：${nextText}`;
+}
+
+function updateReachPanel(states, nextAll, now, keys = visibleKeys()) {
+  const panel = document.getElementById("reach-panel");
+  const title = document.getElementById("reach-title");
+  const detail = document.getElementById("reach-detail");
+  const nextLabel = document.getElementById("reach-next-label");
+  const nextStrong = document.getElementById("reach-next");
+  const nextLocal = document.getElementById("reach-next-local");
+  if (!panel || !title || !detail || !nextLabel || !nextStrong || !nextLocal) return;
+
+  const scope = keys.length === 3
+    ? "三地"
+    : keys.length === 2
+      ? "两地"
+      : keys.length === 1
+        ? PLACES[keys[0]].shortName
+        : "所选地区";
+  const allOn = keys.length > 0 && keys.every(key => states[key].className === "on");
+  const allWeekend = keys.length > 0 && keys.every(key => states[key].code === "weekend");
+  const anyBreak = keys.some(key => states[key].className === "break");
+  const anyOn = keys.some(key => states[key].className === "on");
+  const beijingState = states.beijing;
+  const hqVisible = keys.includes("beijing");
+  const hqBreak = hqVisible && beijingState.code === "lunch";
+  const hqAfter = hqVisible && beijingState.code === "after";
+  const hqBefore = hqVisible && beijingState.code === "before";
+  const localTimes = keys.map(key => `${PLACES[key].shortName} ${formatClock(states[key].parts.minutes)}`).join(" · ");
+  const stateLine = keys.map(key => `${PLACES[key].shortName} ${states[key].text}`).join(" · ");
+
+  let heading = "当前非办公时间";
+  if (!keys.length) heading = "当前未显示时区";
+  else if (allOn) heading = keys.length === 1 ? `${scope}在岗，可联络` : `${scope}均在岗，可直接联络`;
+  else if (allWeekend) heading = `${scope}周末休息`;
+  else if (hqBreak) heading = "本部午休，暂不宜全员联络";
+  else if (hqAfter && anyOn) heading = "本部已下班，暂不宜全员联络";
+  else if (anyBreak) heading = "有人午休，暂不宜全员联络";
+  else if (anyOn) heading = "部分在岗，暂不宜全员联络";
+  else if (hqBefore) heading = "本部尚未上班，暂不宜联络";
+
+  if (title.textContent !== heading) title.textContent = heading;
+  detail.textContent = keys.length ? (allOn ? localTimes : stateLine) : "请在上方选择要显示的地区";
+  panel.dataset.tone = allOn ? "on" : anyBreak ? "break" : "off";
+
+  const nonBeijing = keys.filter(key => key !== "beijing");
+  const windowName = scope === "三地" || scope === "两地" ? `${scope}共同窗口` : "共同窗口";
+  if (!keys.length) {
+    nextLabel.textContent = "下一个共同窗口";
+    nextStrong.textContent = "暂无";
+    nextLocal.textContent = "请选择要显示的地区";
+  } else if (allOn && nextAll) {
+    nextLabel.textContent = "当前共同窗口";
+    nextStrong.textContent = `至 ${clockAt(nextAll.end, BEIJING_TZ)}`;
+    nextLocal.textContent = nonBeijing.map(key => {
+      const place = PLACES[key];
+      return `${place.shortName} ${formatClock(states[key].parts.minutes)}–${clockAt(nextAll.end, place.timeZone)}`;
+    }).join(" · ");
+  } else if (nextAll) {
+    nextLabel.textContent = `下一个${windowName}`;
+    nextStrong.textContent = formatBeijingWindow(nextAll, now);
+    nextLocal.textContent = nonBeijing.map(key => `${PLACES[key].shortName} ${formatLocalRange(PLACES[key], nextAll)}`).join(" · ");
+  } else {
+    nextLabel.textContent = `下一个${windowName}`;
+    nextStrong.textContent = "未来 3 天暂无";
+    nextLocal.textContent = "请检查周末/节假日设置";
+  }
+}
+
+function updateStatusPanel(now = new Date()) {
+  refreshOffsets(now);
+  const keys = visibleKeys();
+  const states = {};
+  for (const key of ORDER) states[key] = getDutyStateAt(PLACES[key], now);
+  const timeline = buildStateTimeline(ORDER.map(key => PLACES[key]), now, 3);
+  const nextAll = findWindow(timeline, sample =>
+    keys.length > 0 && keys.every(key => sample[key].className === "on")
+  );
+  updateReachPanel(states, nextAll, now, keys);
+
+  for (const key of ORDER) {
+    const place = PLACES[key];
+    const state = states[key];
+    const nextWithHq = findWindow(timeline, sample =>
+      sample.beijing.className === "on" && sample[key].className === "on"
+    );
+    const timeElement = document.getElementById(`status-time-${key}`);
+    const dutyElement = document.getElementById(`duty-${key}`);
+    const hintElement = document.getElementById(`hint-${key}`);
+    if (!timeElement || !dutyElement || !hintElement) continue;
+
+    const parts = state.parts;
+    timeElement.innerHTML = `${pad2(parts.hour)}:${pad2(parts.minute)}<small>当地时间</small>`;
+    dutyElement.textContent = state.text;
+    dutyElement.className = `duty-badge ${state.className}`;
+    hintElement.textContent = buildPlaceHint(place, state, nextWithHq, now);
+  }
+
+  renderPlaceMeta();
+}
+
+/* ============ 时间轴 ============ */
+
+const AXIS_START = 6 * 60;
+const AXIS_END = 24 * 60;
+const AXIS_SPAN = AXIS_END - AXIS_START;
+
+function startOfBeijingDay(date) {
+  const parts = getZonedParts(date, BEIJING_TZ);
+  return new Date(Date.UTC(parts.year, parts.month - 1, parts.day) - 8 * 3600000);
+}
+
+function renderAxisLabels() {
+  const container = document.getElementById("axis-labels");
+  if (!container) return;
+  container.replaceChildren();
+  for (let hour = 6; hour <= 24; hour += 3) {
+    const label = document.createElement("span");
+    label.textContent = `${pad2(hour)}:00`;
+    label.style.left = `${((hour * 60 - AXIS_START) / AXIS_SPAN) * 100}%`;
+    label.style.transform = hour === 6 ? "translateX(0)" : hour === 24 ? "translateX(-100%)" : "translateX(-50%)";
+    container.appendChild(label);
+  }
+}
+
+function intervalsFromSamples(samples, predicate) {
+  const intervals = [];
+  let current = null;
+  for (const sample of samples) {
+    const matched = predicate(sample);
+    if (matched && current === null) {
+      current = { start: sample.time, end: new Date(sample.time.getTime() + STEP_MS) };
+    } else if (matched) {
+      current.end = new Date(sample.time.getTime() + STEP_MS);
+    } else if (current !== null) {
+      intervals.push(current);
+      current = null;
+    }
+  }
+  if (current !== null) intervals.push(current);
+  return intervals;
+}
+
+function renderWorkSchedule(now = new Date()) {
+  const keys = visibleKeys();
+  const body = document.getElementById("schedule-body");
+  const commonTrack = document.getElementById("common-track");
+  const commonLabel = document.getElementById("common-label");
+  if (!body || !commonTrack || !commonLabel) return;
+
+  const dayStart = startOfBeijingDay(now);
+  const axisStart = new Date(dayStart.getTime() + AXIS_START * 60000);
+  const axisEnd = new Date(dayStart.getTime() + AXIS_END * 60000);
+  const toPercent = date => (((date.getTime() - dayStart.getTime()) / 60000) - AXIS_START) / AXIS_SPAN * 100;
+  const clockForBar = date => formatClock((date.getTime() - dayStart.getTime()) / 60000);
+
+  const samples = [];
+  for (let time = axisStart.getTime(); time < axisEnd.getTime(); time += STEP_MS) {
+    const at = new Date(time);
+    const states = {};
+    for (const key of keys) states[key] = getDutyStateAt(PLACES[key], at);
+    samples.push({ time: at, states });
+  }
+
+  renderAxisLabels();
+  body.replaceChildren();
+  commonTrack.replaceChildren();
+  const scope = keys.length === 3
+    ? "三地"
+    : keys.length === 2
+      ? "两地"
+      : keys.length === 1
+        ? PLACES[keys[0]].shortName
+        : "所选地区";
+  const schedule = document.getElementById("schedule");
+  const scheduleTitle = document.getElementById("schedule-title");
+  if (schedule) schedule.setAttribute("aria-label", `${scope}工作时间北京时间轴`);
+  if (scheduleTitle) scheduleTitle.textContent = `${scope}工作时段与共同窗口（北京时间）`;
+  document.getElementById("work-schedule-desc").textContent = keys.length
+    ? `${keys.map(key => `${PLACES[key].displayName} ${formatWorkRange(PLACES[key])}`).join(" ｜ ")} ｜ 各地当地 ${formatClock(PLACES.beijing.lunchStart)}–${formatClock(PLACES.beijing.lunchEnd)} 午休`
+    : "当前未显示任何时区";
+
+  const nowMinutes = (now.getTime() - dayStart.getTime()) / 60000;
+  const addNowLine = track => {
+    if (nowMinutes < AXIS_START || nowMinutes > AXIS_END) return;
+    const line = document.createElement("span");
+    line.className = "now-line";
+    line.style.left = `${toPercent(now)}%`;
+    line.title = `当前北京时间 ${formatClock(nowMinutes)}`;
+    track.appendChild(line);
+  };
+
+  for (const key of keys) {
+    const place = PLACES[key];
+    const currentState = getDutyStateAt(place, now);
+    const label = document.createElement("div");
+    label.className = "schedule-label";
+    const name = document.createElement("span");
+    name.textContent = place.displayName;
+    const detail = document.createElement("small");
+    detail.textContent = currentState.code === "weekend"
+      ? "周末休息"
+      : currentState.code === "holiday"
+        ? "休息日"
+        : `当地 ${workWindowsLocal(place).map(window => `${formatClock(window.start)}–${formatClock(window.end)}`).join(" / ")}`;
+    label.appendChild(name);
+    label.appendChild(detail);
+
+    const track = document.createElement("div");
+    track.className = "schedule-track";
+
+    const workIntervals = intervalsFromSamples(samples, sample => sample.states[key].className === "on");
+    for (const interval of workIntervals) {
+      const bar = document.createElement("div");
+      bar.className = `work-bar ${place.className}`;
+      bar.style.left = `${toPercent(interval.start)}%`;
+      bar.style.width = `${toPercent(interval.end) - toPercent(interval.start)}%`;
+      bar.textContent = `${clockForBar(interval.start)}–${clockForBar(interval.end)}`;
+      bar.title = `${place.displayName}：北京时间 ${clockForBar(interval.start)}–${clockForBar(interval.end)}`;
+      track.appendChild(bar);
+    }
+
+    const lunchIntervals = intervalsFromSamples(samples, sample => sample.states[key].className === "break");
+    for (const interval of lunchIntervals) {
+      const lunch = document.createElement("span");
+      lunch.className = "lunch-band";
+      lunch.style.left = `${toPercent(interval.start)}%`;
+      lunch.style.width = `${toPercent(interval.end) - toPercent(interval.start)}%`;
+      lunch.title = `午休 当地 ${formatClock(place.lunchStart)}–${formatClock(place.lunchEnd)}（北京时间 ${clockForBar(interval.start)}–${clockForBar(interval.end)}）`;
+      track.appendChild(lunch);
+    }
+
+    addNowLine(track);
+    body.appendChild(label);
+    body.appendChild(track);
+  }
+
+  const commonIntervals = intervalsFromSamples(samples, sample =>
+    keys.length > 0 && keys.every(key => sample.states[key].className === "on")
+  );
+  if (commonIntervals.length === 0) {
+    const empty = document.createElement("span");
+    empty.className = "common-empty";
+    empty.textContent = keys.length ? "今日暂无可显示的共同窗口" : "当前未显示任何时区";
+    commonTrack.appendChild(empty);
+  } else {
+    for (const interval of commonIntervals) {
+      const bar = document.createElement("div");
+      bar.className = "common-bar";
+      bar.style.left = `${toPercent(interval.start)}%`;
+      bar.style.width = `${toPercent(interval.end) - toPercent(interval.start)}%`;
+      const startLabel = clockForBar(interval.start);
+      const endLabel = clockForBar(interval.end);
+      bar.textContent = `${startLabel.replace(":00", "")}–${endLabel.replace(":00", "")}`;
+      bar.title = `共同在岗：北京时间 ${startLabel}–${endLabel}`;
+      bar.setAttribute("aria-label", `共同在岗：北京时间 ${startLabel}–${endLabel}`);
+      commonTrack.appendChild(bar);
+    }
+  }
+  addNowLine(commonTrack);
+  commonLabel.textContent = keys.length === ORDER.length ? "三地共同在岗" : "所选地区共同在岗";
+
+  const scroller = document.querySelector(".schedule-scroll");
+  if (scroller && !scroller.dataset.initialized) {
+    if (scroller.scrollWidth > scroller.clientWidth) {
+      const progress = Math.max(0, Math.min(1, (nowMinutes - AXIS_START) / AXIS_SPAN));
+      scroller.scrollLeft = (scroller.scrollWidth - scroller.clientWidth) * progress;
+    }
+    scroller.dataset.initialized = "1";
+  }
+}
+
+function updateVisibility() {
+  const showKazakhstan = isZoneVisible("kazakhstan");
+  const showRussia = isZoneVisible("russia");
+  const count = 1 + Number(showKazakhstan) + Number(showRussia);
+  const kazakhstanClock = document.querySelector(".clock-card.kazakhstan");
+  const russiaClock = document.querySelector(".clock-card.russia");
+  const kazakhstanStatus = document.querySelector(".status-card.kazakhstan");
+  const russiaStatus = document.querySelector(".status-card.russia");
+  if (kazakhstanClock) kazakhstanClock.hidden = !showKazakhstan;
+  if (russiaClock) russiaClock.hidden = !showRussia;
+  if (kazakhstanStatus) kazakhstanStatus.hidden = !showKazakhstan;
+  if (russiaStatus) russiaStatus.hidden = !showRussia;
+  document.getElementById("status-board").style.setProperty("--visible-zones", count);
+  document.getElementById("clock-grid").style.setProperty("--visible-clocks", count);
+  updateAllClocks(new Date());
+  updateStatusPanel(new Date());
+  renderWorkSchedule(new Date());
+}
+
+/* ============ 启动与刷新 ============ */
+
+let clockTimer = null;
+let skyTimer = null;
+let statusTimer = null;
+let globeTimer = null;
+
+function stopTimers() {
+  clearInterval(clockTimer);
+  clearInterval(skyTimer);
+  clearInterval(statusTimer);
+  clearInterval(globeTimer);
+  clockTimer = null;
+  skyTimer = null;
+  statusTimer = null;
+  globeTimer = null;
+}
+
+function startTimers() {
+  stopTimers();
+  clockTimer = setInterval(updateHandsOnly, 100);
+  skyTimer = setInterval(() => {
+    const now = new Date();
+    for (const key of ORDER) if (isZoneVisible(key)) updateSky(key, PLACES[key], now);
+    renderGlobe(now);
+  }, 30000);
+  statusTimer = setInterval(() => {
+    const now = new Date();
+    updateStatusPanel(now);
+    renderWorkSchedule(now);
+  }, 30000);
+  globeTimer = setInterval(() => renderGlobe(new Date()), 5000);
+}
+
+function refreshEverything() {
+  const now = new Date();
+  refreshOffsets(now);
+  updateAllClocks(now);
+  updateStatusPanel(now);
+  renderWorkSchedule(now);
+  renderGlobe(now);
+}
+
+function init() {
+  buildClock("clock-beijing", PLACES.beijing.accent);
+  buildClock("clock-kazakhstan", PLACES.kazakhstan.accent);
+  buildClock("clock-russia", PLACES.russia.accent);
+
+  document.getElementById("toggle-kazakhstan").addEventListener("change", updateVisibility);
+  document.getElementById("toggle-russia").addEventListener("change", updateVisibility);
+
+  refreshOffsets();
+  updateVisibility();
+  renderGlobe(new Date());
+  startTimers();
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    stopTimers();
+  } else {
+    refreshEverything();
+    startTimers();
+  }
+});
+window.addEventListener("focus", refreshEverything);
+window.addEventListener("pageshow", refreshEverything);
+
+init();
+
   </script>
 </body>
 </html>

@@ -1,0 +1,17 @@
+{
+  "name": "guodong-world-clock",
+  "version": "1.1.0",
+  "private": true,
+  "description": "国动集团三地世界时钟与共同在岗窗口",
+  "scripts": {
+    "test": "node --test tests/clock.test.js",
+    "test:install": "playwright-core install --with-deps chromium"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "playwright-core": "^1.64.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
