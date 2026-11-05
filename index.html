@@ -143,80 +143,6 @@
 
     .status-clock small { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; font-weight: 400; }
 
-    /* 联络可行性结论面板：置于时钟卡片下方，放大字号并高亮状态 */
-    .reach-panel {
-      display: flex;
-      align-items: flex-start;
-      gap: 18px;
-      margin: 22px 0 26px;
-      padding: 20px 24px;
-      border: 1px solid #d7e2f2;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #f2f7fd 0%, #e9f1fb 100%);
-      box-shadow: 0 6px 22px rgba(28, 46, 74, 0.06);
-    }
-
-    .reach-head {
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding-top: 2px;
-    }
-
-    .reach-title {
-      color: #33507a;
-      font-size: 14px;
-      font-weight: 650;
-      white-space: nowrap;
-    }
-
-    .reach-mark {
-      flex: 0 0 auto;
-      width: 24px;
-      height: 24px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      color: #fff;
-      background: var(--blue);
-      font-family: Georgia, serif;
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-    .reach-body {
-      flex: 1;
-      min-width: 0;
-      color: #2c4467;
-      font-size: 19px;
-      font-weight: 500;
-      line-height: 1.62;
-    }
-
-    /* 状态词高亮 */
-    .reach-body .who {
-      font-weight: 700;
-      color: #16365c;
-    }
-
-    .reach-body .state {
-      display: inline-block;
-      margin: 0 2px;
-      padding: 1px 9px;
-      border-radius: 20px;
-      font-size: 17px;
-      font-weight: 700;
-      vertical-align: 1px;
-    }
-
-    .reach-body .state.on { color: #0b5c46; background: #cdeee1; }
-    .reach-body .state.break { color: #7a4606; background: #fce9c8; }
-    .reach-body .state.off { color: #4d5866; background: #dfe4ea; }
-    .reach-body .hint { color: #526b8c; }
-    .reach-body .sep { color: #a9b8cc; margin: 0 8px; }
-
-    /* 办公状态徽标 */
     /* 办公状态徽标：置于钟表下方 */
     .clock-duty {
       display: flex;
@@ -249,9 +175,6 @@
 
     @media (max-width: 900px) {
       .status-board { grid-template-columns: 1fr; }
-      .reach-panel { flex-direction: column; gap: 10px; padding: 18px 20px; }
-      .reach-body { font-size: 17px; }
-      .reach-body .state { font-size: 15px; }
     }
 
     .eyebrow {
@@ -634,14 +557,6 @@
     .ru-bar { background: #4263d5; }
     .lunch-band { position: absolute; z-index: 3; top: 13px; height: 38px; border: 1px solid #e6b46a; border-radius: 8px; background: repeating-linear-gradient(135deg, #fff3df 0 6px, #f7dfb9 6px 12px); }
 
-    footer {
-      padding: 25px 0 4px;
-      color: #8490a2;
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
     @media (max-width: 900px) {
       main { padding-top: 34px; }
       .intro { align-items: flex-start; }
@@ -684,7 +599,7 @@
 
     @media print {
       body { background: #fff; }
-      .topbar, .filter-bar, footer { display: none; }
+      .topbar, .filter-bar { display: none; }
       main { width: 100%; padding: 0; }
       .clock-grid { grid-template-columns: repeat(var(--visible-clocks, 3), 1fr); }
       .clock-card, .work-card { box-shadow: none; break-inside: avoid; }
@@ -718,8 +633,8 @@
         <h1 id="page-title">联络前，<br>先看对方几点上班</h1>
         <div class="intro-tags">
           <span class="intro-tag"><b>国动集团本部</b> 北京 <i>东八区 · 09:00–17:30</i></span>
-          <span class="intro-tag"><b>哈萨克斯坦国动</b> 阿拉木图 <i>东五区 · 09:00–18:00</i></span>
-          <span class="intro-tag"><b>俄罗斯国动</b> 莫斯科 <i>东三区 · 09:00–17:30</i></span>
+          <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i>东五区 · 09:00–18:00</i></span>
+          <span class="intro-tag"><b>俄罗斯</b> 莫斯科 <i>东三区 · 09:00–17:30</i></span>
         </div>
       </div>
     </section>
@@ -735,7 +650,7 @@
 
       <article class="status-card kazakhstan">
         <div class="status-text">
-          <div class="status-name">哈萨克斯坦国动·阿拉木图</div>
+          <div class="status-name">哈萨克斯坦·阿拉木图</div>
           <div class="status-meta">东五区 · 较北京 <b id="status-diff-kazakhstan">晚 3 小时</b></div>
         </div>
         <div class="status-clock" id="status-time-kazakhstan">--:--<small>当地</small></div>
@@ -743,7 +658,7 @@
 
       <article class="status-card russia">
         <div class="status-text">
-          <div class="status-name" id="status-name-russia">俄罗斯国动·莫斯科</div>
+          <div class="status-name" id="status-name-russia">俄罗斯·莫斯科</div>
           <div class="status-meta" id="status-zone-russia">东三区 · 较北京 <b>晚 5 小时</b></div>
         </div>
         <div class="status-clock" id="status-time-russia">--:--<small>当地</small></div>
@@ -811,7 +726,7 @@
 
       <article class="clock-card russia">
         <div class="clock-head">
-          <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯国动·莫斯科时间</h2></div>
+          <div><div class="country-code">RU · RUSSIA</div><h2 id="russia-title">俄罗斯·莫斯科时间</h2></div>
           <span class="utc-tag" id="russia-offset">UTC+3</span>
         </div>
         <div class="sky-scene" id="sky-russia">
@@ -828,17 +743,9 @@
       </article>
     </section>
 
-    <section class="reach-panel" aria-label="当前联络状态">
-      <div class="reach-head">
-        <span class="reach-mark" aria-hidden="true">i</span>
-        <span class="reach-title">当前联络状态</span>
-      </div>
-      <div class="reach-body" id="reach-text">正在计算联络可行性…</div>
-    </section>
-
     <div class="info-strip">
       <span class="info-icon" aria-hidden="true">i</span>
-      <span id="time-summary">哈萨克斯坦国动（东五区）较北京晚 3 小时；俄罗斯国动·莫斯科（东三区）较北京晚 5 小时。所显示时区均不实行夏令时。</span>
+      <span id="time-summary">所显示时区均不实行夏令时，全年采用统一时区。</span>
     </div>
 
     <section class="work-card" aria-labelledby="work-title">
@@ -865,7 +772,6 @@
       </div>
     </section>
 
-    <footer>时区依据 IANA 时区数据库由浏览器计算 · 哈萨克斯坦自 2024 年起全国统一使用 UTC+5<br>天空场景由各地经纬度与 UTC 时刻实时推算太阳高度角与方位角生成，阈值：＞+6° 白天，−6°～+6° 晨昏，＜−6° 暮色，＜−18° 黑夜<br>本页面无需联网，可作为单个 HTML 文件离线使用</footer>
   </main>
 
   <script>
@@ -1047,19 +953,32 @@
     ];
 
     function mixColor(a, b, t) {
-      const to = (v) => Math.round(v).toString(16).padStart(2, "0");
+      const to = (v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0");
       return `#${to(a[0] + (b[0] - a[0]) * t)}${to(a[1] + (b[1] - a[1]) * t)}${to(a[2] + (b[2] - a[2]) * t)}`;
+    }
+
+    // 把色标统一转成 CSS 颜色字符串，确保边界分支也能安全写入 CSS 变量
+    function toPalette(stop) {
+      return {
+        zenith: mixColor(stop.zenith, stop.zenith, 0),
+        mid: mixColor(stop.mid, stop.mid, 0),
+        horizon: mixColor(stop.horizon, stop.horizon, 0),
+        ground: mixColor(stop.ground, stop.ground, 0),
+        star: stop.star,
+        sun: stop.sun
+      };
     }
 
     function samplePalette(altitude) {
       const stops = SKY_PALETTE;
-      if (altitude <= stops[0].alt) return stops[0];
-      if (altitude >= stops[stops.length - 1].alt) return stops[stops.length - 1];
+      const safe = Number.isFinite(altitude) ? altitude : 0;
+      if (safe <= stops[0].alt) return toPalette(stops[0]);
+      if (safe >= stops[stops.length - 1].alt) return toPalette(stops[stops.length - 1]);
       for (let i = 0; i < stops.length - 1; i++) {
         const lower = stops[i];
         const upper = stops[i + 1];
-        if (altitude >= lower.alt && altitude <= upper.alt) {
-          const t = (altitude - lower.alt) / (upper.alt - lower.alt);
+        if (safe >= lower.alt && safe <= upper.alt) {
+          const t = (safe - lower.alt) / (upper.alt - lower.alt);
           return {
             zenith: mixColor(lower.zenith, upper.zenith, t),
             mid: mixColor(lower.mid, upper.mid, t),
@@ -1070,7 +989,7 @@
           };
         }
       }
-      return stops[stops.length - 1];
+      return toPalette(stops[stops.length - 1]);
     }
 
 
@@ -1465,11 +1384,10 @@
       const russia = getRussiaZone();
       const zones = [
         { key: "beijing", offset: 8, name: "国动集团本部·北京" },
-        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦国动·阿拉木图" },
-        { key: "russia", offset: russia.offset, name: `俄罗斯国动·${russia.name}` }
+        { key: "kazakhstan", offset: 5, name: "哈萨克斯坦·阿拉木图" },
+        { key: "russia", offset: russia.offset, name: `俄罗斯·${russia.name}` }
       ];
       const utcMinutes = Math.floor((now.getTime() / 60000) % 1440);
-      const reachParts = [];
 
       zones.forEach(zone => {
         const card = document.querySelector(`.status-card.${zone.key}`);
@@ -1493,39 +1411,12 @@
         const diffEl = document.getElementById(`status-diff-${zone.key}`);
         if (diffEl) diffEl.textContent = diffText;
 
-        if (zone.key !== "beijing" && isZoneVisible(zone.key)) {
-          const shortName = zone.name.split("·")[0];
-          reachParts.push({
-            name: shortName,
-            duty: reach.duty,
-            hint: reach.hint
-          });
-        }
       });
 
       // 俄罗斯卡片额外更新城市名与时区
-      document.getElementById("status-name-russia").textContent = `俄罗斯国动·${russia.name}`;
+      document.getElementById("status-name-russia").textContent = `俄罗斯·${russia.name}`;
       document.getElementById("status-zone-russia").innerHTML =
         `${russia.zone} · 较北京 <b id="status-diff-russia">${formatDifference(russia.offset).replace("较北京", "")}</b>`;
-
-      // 时钟下方的联络状态面板
-      const reachText = document.getElementById("reach-text");
-      if (!reachText) return;
-      if (!reachParts.length) {
-        reachText.innerHTML =
-          '<span class="hint">当前仅显示国动集团本部（东八区）时间。开启其他时区可查看对方办公状态。</span>';
-      } else {
-        const allOn = reachParts.every(part => part.hint.includes("双方同时在岗"));
-        const lead = allOn
-          ? `<span class="hint">此刻${reachParts.length > 1 ? "双方" : "对方"}均在岗，可直接发起联络。</span>`
-          : '';
-        const items = reachParts.map(part =>
-          `<span class="who">${part.name}</span>` +
-          `<span class="state ${part.duty.className}">${part.duty.text}</span>` +
-          `<span class="hint">${part.hint}</span>`
-        );
-        reachText.innerHTML = lead + items.join('<span class="sep">｜</span>');
-      }
     }
 
     function formatDifference(offset) {
@@ -1536,17 +1427,13 @@
     }
 
     function updateTimeSummary() {
-      const visible = [];
-      if (isZoneVisible("kazakhstan")) visible.push("哈萨克斯坦国动");
-      if (isZoneVisible("russia")) visible.push("俄罗斯国动");
-      document.getElementById("time-summary").textContent = visible.length
-        ? "所显示时区均不实行夏令时，全年采用统一时区。"
-        : "东八区不实行夏令时，全年采用统一时区。";
+      document.getElementById("time-summary").textContent =
+        "所显示时区均不实行夏令时，全年采用统一时区。";
     }
 
     function updateRussiaLabels() {
       const russia = getRussiaZone();
-      document.getElementById("russia-title").textContent = `俄罗斯国动·${russia.name}时间`;
+      document.getElementById("russia-title").textContent = `俄罗斯·${russia.name}时间`;
       document.getElementById("russia-offset").textContent = russia.label;
       document.getElementById("russia-difference").textContent = `${russia.zone} · ${formatDifference(russia.offset)}`;
       document.getElementById("clock-russia").setAttribute("aria-label", `俄罗斯${russia.name}时间模拟钟表`);
