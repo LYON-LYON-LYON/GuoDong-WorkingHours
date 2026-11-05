@@ -324,22 +324,6 @@
     .calendar-country-swatch.kz { background: #06706b; }
     .calendar-country-swatch.ru { background: #3f5fce; }
 
-    .intro-tags { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 14px; }
-    .intro-tag {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      padding: 7px 14px;
-      border: 1px solid var(--line);
-      border-radius: 11px;
-      background: var(--surface);
-      color: var(--muted);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    .intro-tag b { color: #2f4f79; font-weight: 650; }
-    .intro-tag i { font-style: normal; color: #5f6b7a; font-size: 12px; font-variant-numeric: tabular-nums; }
-
     .duty-badge {
       display: inline-flex;
       align-items: center;
@@ -912,11 +896,6 @@
           <span data-country-key="russia"><i class="calendar-country-swatch ru"></i>俄罗斯</span>
         </div>
       </aside>
-      <div class="intro-tags">
-        <span class="intro-tag"><b>国动集团本部</b> 北京 <i id="intro-meta-beijing">东八区 · 09:00–17:30</i></span>
-        <span class="intro-tag"><b>哈萨克斯坦</b> 阿拉木图 <i id="intro-meta-kazakhstan">东五区 · 09:00–18:00</i></span>
-        <span class="intro-tag"><b>俄罗斯</b> 莫斯科 <i id="intro-meta-russia">东三区 · 09:00–17:30</i></span>
-      </div>
     </section>
 
     <section class="filter-bar" aria-label="时区筛选项">
@@ -1371,7 +1350,6 @@ function renderPlaceMeta() {
     const place = PLACES[key];
     const zone = place.zoneLabel || formatUtcOffset(place.offset);
     const workRange = formatWorkRange(place);
-    setText(`intro-meta-${key}`, `${zone} · ${workRange}`);
     setText(`utc-${key}`, formatUtcOffset(place.offset));
     setText(`clock-window-${key}`, `当地办公 ${workRange}`);
     setText(`difference-${key}`, key === "beijing"

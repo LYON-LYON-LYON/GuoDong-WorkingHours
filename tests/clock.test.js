@@ -48,6 +48,7 @@ async function snapshot(page) {
     return {
       reachPanelCount: document.querySelectorAll('#reach-panel').length,
       statusBoardCount: document.querySelectorAll('#status-board').length,
+      introTagCount: document.querySelectorAll('.intro-tag').length,
       badges: ['beijing', 'kazakhstan', 'russia'].map(key => text(`#duty-${key}`)),
       badgeClasses: ['beijing', 'kazakhstan', 'russia'].map(key =>
         document.querySelector(`#duty-${key}`)?.classList.item(1) ?? null
@@ -155,6 +156,7 @@ test('Monday 14:30 shows three-way coverage and refreshes all second hands', { t
     assert.equal(state.h1, '国动 世界时钟');
     assert.equal(state.reachPanelCount, 0);
     assert.equal(state.statusBoardCount, 0);
+    assert.equal(state.introTagCount, 0);
     assert.deepEqual(state.dutyInClock, [true, true, true]);
     assert.deepEqual(state.badges, ['办公中', '办公中', '办公中']);
     assert.deepEqual(state.badgeClasses, ['on', 'on', 'on']);
